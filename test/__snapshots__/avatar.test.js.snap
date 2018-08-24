@@ -37,7 +37,7 @@ exports[`renders correctly 1`] = `
     accessible={true}
     allowFontScaling={false}
     ellipsizeMode="tail"
-    numberOfLines={2}
+    numberOfLines={1}
     style={
       Array [
         undefined,
