@@ -1,0 +1,42 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/0.27.5_1/libexec/bin/yarn.js add --dev jest
+
+PATH: 
+  /usr/local/mysql/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/zoudeyi/go:/Users/zoudeyi/go/bin:/usr/local/opt/go/libexec:/usr/local/opt/go/libexec/bin
+
+Yarn version: 
+  0.27.5
+
+Node version: 
+  9.8.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "empty-project-template",
+    "main": "node_modules/expo/AppEntry.js",
+    "private": true,
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "eject": "expo eject"
+    },
+    "dependencies": {
+      "expo": "^29.0.0",
+      "react": "16.3.1",
+      "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: connect ECONNREFUSED 127.0.0.1:4873
+      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1170:14)
