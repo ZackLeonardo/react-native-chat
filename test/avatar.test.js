@@ -1,24 +1,21 @@
-import React from 'react';
-import Avatar from '../src/base/components/avatar/Avatar';
-import renderer from 'react-test-renderer';
+import React from "react";
+import Avatar from "../src/base/components/avatar/Avatar";
+import renderer from "react-test-renderer";
 
-it('renders correctly', () => {
-
-    const avatarProps = {
-        avatar: 'https://jestjs.io/img/jest.svg', //'https://img3.doubanio.com/img/fmadmin/large/31905.jpg',
-        name: 'jestjs',
-        showName: true,
-        showNameLength: 100,
-        avatarStyle: {
-            width: 60,
-            height: 60,
-        },
+it("renders correctly", () => {
+  const avatarProps = {
+    avatar: "https://jestjs.io/img/jest.svg", //'https://img3.doubanio.com/img/fmadmin/large/31905.jpg',
+    name: "jestjs",
+    showName: true,
+    showNameLength: 100,
+    avatarStyle: {
+      width: 60,
+      height: 60
     }
+  };
 
-    const tree = renderer
-        .create(<Avatar {...avatarProps} />)
-        .toJSON();
-    expect(tree).toMatchSnapshot();
+  const tree = renderer.create(<Avatar {...avatarProps} />).toJSON();
+  expect(tree).toMatchSnapshot();
 });
 
 // it('renders as an anchor when no page is set', () => {
