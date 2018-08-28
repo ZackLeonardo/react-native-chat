@@ -381,10 +381,10 @@ IntroductionItem.propTypes = {
   numberOfInfoLines: PropTypes.number,
   imageslistStyle: ViewPropTypes.style,
   divideStyle: ViewPropTypes.style,
-  avatar: PropTypes.string,
+  avatar: PropTypes.string, //used for chatListItem avatar in renderListItem func.
   name: PropTypes.string,
-  mainTitle: PropTypes.string,
-  info: PropTypes.string,
+  mainTitle: PropTypes.string, //used for chatListItem avatar in renderListItem func.
+  info: PropTypes.string, //used for chatListItem avatar in renderListItem func.
   detailImages: PropTypes.array,
   detailImagesNum: PropTypes.number,
   ellipsesImageUrl: PropTypes.string,

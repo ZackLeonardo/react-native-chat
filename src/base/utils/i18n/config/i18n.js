@@ -17,11 +17,4 @@ export const supportedLocales = {
 
 export const defaultNamespace = "common";
 
-export const namespaces = [
-  "common",
-  "lists",
-  "ListScreen",
-  "ListOfTodos",
-  "AddTodoScreen",
-  "DatePickerAndroid"
-];
+export const namespaces = ["common", "chatBaseList"];

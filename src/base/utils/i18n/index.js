@@ -9,7 +9,7 @@ import date from "./date";
 import languageDetector from "./languageDetector";
 import translationLoader from "./translationLoader";
 
-const i18n = {
+global.i18n = {
   /**
    * @returns {Promise}
    */
