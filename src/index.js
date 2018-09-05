@@ -7,9 +7,12 @@ import {
 } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Expo from "expo";
-import i18n from "../base/utils/i18n";
-import defaultTheme from "../base/styles/defaultTheme";
-import Test from "../../example/ChatList.example";
+import i18n from "./base/utils/i18n";
+import defaultTheme from "./base/styles/defaultTheme";
+import Test from "../example/ChatList.example";
+
+import Main from "./main";
+import Screen from "./main/ran-core/Screen";
 
 // define REM depending on screen width
 const { width } = Dimensions.get("window");
@@ -20,14 +23,14 @@ EStyleSheet.build({
   $rem: width > 340 ? 18 : 16
 });
 
-export default class Main extends React.Component {
+export default class Main1 extends React.Component {
   state = {
     isI18nInitialized: false
   };
 
   render() {
     if (this.state.isI18nInitialized) {
-      return <Test />;
+      return <Main />;
     }
 
     return (
