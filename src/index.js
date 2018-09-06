@@ -1,36 +1,83 @@
 import React from "react";
 import {
   View,
+  Text,
   Dimensions,
   I18nManager as RNI18nManager,
   ActivityIndicator
 } from "react-native";
-import EStyleSheet from "react-native-extended-stylesheet";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
 import Expo from "expo";
+
+import EStyleSheet from "react-native-extended-stylesheet";
+import {
+  reduxifyNavigator,
+  createReactNavigationReduxMiddleware
+} from "react-navigation-redux-helpers";
+
 import i18n from "./base/utils/i18n";
 import defaultTheme from "./base/styles/defaultTheme";
 import Test from "../example/ChatList.example";
 
-import Main from "./main";
-import Screen from "./main/ran-core/Screen";
+import { CoreMain, Screen } from "./main";
 
 // define REM depending on screen width
 const { width } = Dimensions.get("window");
-const rem = 16;
+
+const AppReducer = () => {};
+
+const middleware = createReactNavigationReduxMiddleware(
+  "root",
+  state => state.nav
+);
+
+// store
+const store = createStore(AppReducer, applyMiddleware(middleware));
 
 EStyleSheet.build({
   ...defaultTheme,
   $rem: width > 340 ? 18 : 16
 });
 
-export default class Main1 extends React.Component {
+class HomeScreen extends React.Component {
+  render() {
+    return (
+      <Screen>
+        <Test />
+      </Screen>
+    );
+  }
+}
+
+class SettingsScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Settings!</Text>
+      </View>
+    );
+  }
+}
+
+export default class App extends React.Component {
   state = {
     isI18nInitialized: false
   };
 
   render() {
+    const modules = {
+      Home: HomeScreen,
+      Setting: SettingsScreen
+    };
+    const Nav = CoreMain(modules);
+
     if (this.state.isI18nInitialized) {
-      return <Main />;
+      return (
+        <Provider store={store}>
+          <Nav />
+        </Provider>
+      );
     }
 
     return (

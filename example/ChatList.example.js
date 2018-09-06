@@ -2,7 +2,7 @@ import React from "react";
 import { View, Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-import ChatList from "../src/chatList/components/ChatList";
+import ChatList from "../src/chatModule/chatList/components/ChatList";
 
 export default class Test extends React.Component {
   render() {

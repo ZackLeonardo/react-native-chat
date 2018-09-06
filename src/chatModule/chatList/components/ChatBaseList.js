@@ -5,9 +5,9 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import Swipeout from "react-native-swipeout";
 
 // import i18n from "../../base/utils/i18n";
-import TopSearchBar from "../../base/components/topSearchBar/TopSearchBar";
-import IntroductionItem from "../../base/components/introductionItem/IntroductionItem";
-import { ListStyles } from "../../base/styles/listStyles";
+import TopSearchBar from "../../../base/components/topSearchBar/TopSearchBar";
+import IntroductionItem from "../../../base/components/introductionItem/IntroductionItem";
+import { ListStyles } from "../../../base/styles/listStyles";
 
 class MyListItem extends PureComponent {
   _handleTopPressed = (item, index) => {

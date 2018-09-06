@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import EStyleSheet from "react-native-extended-stylesheet";
 import shallowEqual from "shallowequal";
 
-import { ListStyles } from "../../base/styles/listStyles";
+import { ListStyles } from "../../../base/styles/listStyles";
 import ChatBaseList from "./ChatBaseList";
 
 export default class ChatList extends ChatBaseList {
