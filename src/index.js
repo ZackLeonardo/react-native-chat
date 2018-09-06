@@ -1,7 +1,6 @@
 import React from "react";
 import {
   View,
-  Text,
   Dimensions,
   I18nManager as RNI18nManager,
   ActivityIndicator
@@ -18,12 +17,14 @@ import {
 
 import i18n from "./base/utils/i18n";
 import defaultTheme from "./base/styles/defaultTheme";
-import Test from "../example/ChatList.example";
 
-import { CoreMain, Screen } from "./main";
+import Main from "./main";
 
-// define REM depending on screen width
 const { width } = Dimensions.get("window");
+EStyleSheet.build({
+  ...defaultTheme,
+  $rem: width > 340 ? 18 : 16
+});
 
 const AppReducer = () => {};
 
@@ -35,47 +36,16 @@ const middleware = createReactNavigationReduxMiddleware(
 // store
 const store = createStore(AppReducer, applyMiddleware(middleware));
 
-EStyleSheet.build({
-  ...defaultTheme,
-  $rem: width > 340 ? 18 : 16
-});
-
-class HomeScreen extends React.Component {
-  render() {
-    return (
-      <Screen>
-        <Test />
-      </Screen>
-    );
-  }
-}
-
-class SettingsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-}
-
-export default class App extends React.Component {
+export default class RNChatApp extends React.Component {
   state = {
     isI18nInitialized: false
   };
 
   render() {
-    const modules = {
-      Home: HomeScreen,
-      Setting: SettingsScreen
-    };
-    const Nav = CoreMain(modules);
-
     if (this.state.isI18nInitialized) {
       return (
         <Provider store={store}>
-          <Nav />
+          <Main modules={this.props.modules} />
         </Provider>
       );
     }
@@ -87,7 +57,7 @@ export default class App extends React.Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     i18n
       .init()
       .then(() => {
