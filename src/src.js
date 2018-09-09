@@ -6,19 +6,19 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { all, fork } from "redux-saga/effects";
 import Expo from "expo";
 
 import EStyleSheet from "react-native-extended-stylesheet";
-import {
-  reduxifyNavigator,
-  createReactNavigationReduxMiddleware
-} from "react-navigation-redux-helpers";
 
 import i18n from "./base/utils/i18n";
 import defaultTheme from "./base/styles/defaultTheme";
+import { AppDeskNav } from "./main/main";
+import chatListReducers from "./redux/reducers/chatListReducers";
 
-import Main from "./main";
+import { adminSaga } from "./redux/sagas";
 
 const { width } = Dimensions.get("window");
 EStyleSheet.build({
@@ -26,15 +26,25 @@ EStyleSheet.build({
   $rem: width > 340 ? 18 : 16
 });
 
-const AppReducer = () => {};
+const appReducer = combineReducers({
+  chatList: chatListReducers
+});
+// const appReducer = createAppReducer();
+const customSagas = [];
 
-const middleware = createReactNavigationReduxMiddleware(
-  "root",
-  state => state.nav
-);
+const saga = function* rootSaga() {
+  yield all([adminSaga(), ...customSagas].map(fork));
+};
+const sagaMiddleware = createSagaMiddleware();
 
+const middleware = [sagaMiddleware];
 // store
-const store = createStore(AppReducer, applyMiddleware(middleware));
+const store = createStore(appReducer, applyMiddleware(...middleware));
+// const store = createStore(appReducer);
+
+// const store = createStore(() => {});
+
+sagaMiddleware.run(saga);
 
 export default class RNChatApp extends React.Component {
   state = {
@@ -45,7 +55,7 @@ export default class RNChatApp extends React.Component {
     if (this.state.isI18nInitialized) {
       return (
         <Provider store={store}>
-          <Main modules={this.props.modules} />
+          <AppDeskNav modules={this.props.modules} />
         </Provider>
       );
     }

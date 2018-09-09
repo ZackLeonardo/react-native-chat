@@ -1,15 +1,16 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-import Main from "./src";
-import { Screen } from "./src/main";
+import RNChatApp from "./src/src";
+import { Screen } from "./src/main/main";
 import Test from "./example/ChatList.example";
+import ChatListContainer from "./src/chatModule/chatList/containers/ChatListContainer";
 
 class HomeScreen extends React.Component {
   render() {
     return (
       <Screen>
-        <Test />
+        <ChatListContainer />
       </Screen>
     );
   }
@@ -32,6 +33,6 @@ export default class App extends React.Component {
       Setting: SettingsScreen
     };
 
-    return <Main modules={modules} />;
+    return <RNChatApp modules={modules} />;
   }
 }
