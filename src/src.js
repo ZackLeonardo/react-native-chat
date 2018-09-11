@@ -13,7 +13,7 @@ import Expo from "expo";
 
 import EStyleSheet from "react-native-extended-stylesheet";
 
-import i18n from "./base/utils/i18n";
+import i18n from "./main/ran-i18n";
 import defaultTheme from "./base/styles/defaultTheme";
 import { AppDeskNav } from "./main/main";
 import chatListReducers from "./redux/reducers/chatListReducers";

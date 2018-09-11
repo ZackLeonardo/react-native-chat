@@ -1,1 +1,3 @@
-export adminSaga from "./admin";
+import adminSaga from "./admin";
+
+export { adminSaga };
