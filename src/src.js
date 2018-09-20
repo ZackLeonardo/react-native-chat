@@ -38,6 +38,12 @@ const store = createStore(appReducer, applyMiddleware(...middleware));
 
 sagaMiddleware.run(saga);
 
+/**
+ * RNChatApp props:
+ * modules--stackNavigation views object
+ * dataProvider--saga fetch http datasource
+ * dataRXProvider--reactive datasource such as using ddp
+ */
 export default class RNChatApp extends React.Component {
   render() {
     return (

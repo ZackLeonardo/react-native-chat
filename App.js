@@ -5,12 +5,13 @@ import RNChatApp from "./src/src";
 import { Screen } from "./src/main/main";
 import Test from "./example/ChatList.example";
 import ChatListContainer from "./src/chatModule/chatList/containers/ChatListContainer";
+import ChatListView from "./src/chatModule/chatList/ChatListView";
 
 class HomeScreen extends React.Component {
   render() {
     return (
       <Screen>
-        <ChatListContainer />
+        <ChatListView />
       </Screen>
     );
   }
