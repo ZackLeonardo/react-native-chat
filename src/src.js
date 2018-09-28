@@ -8,7 +8,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 
 import defaultTheme from "./base/styles/defaultTheme";
 import { AppDeskNav } from "./main/main";
-import chatListReducers from "./redux/reducers/chatListReducers";
+import createAppReducer from "./redux/reducers";
 
 import { adminSaga } from "./redux/sagas";
 
@@ -18,23 +18,22 @@ EStyleSheet.build({
   $rem: width > 340 ? 18 : 16
 });
 
-const appReducer = combineReducers({
-  rooms: chatListReducers
-});
-// const appReducer = createAppReducer();
-const customSagas = [];
+//reducers
+const customReducers = {};
+const appReducer = createAppReducer(customReducers);
 
+//sagas
+const customSagas = [];
 const saga = function* rootSaga() {
   yield all([adminSaga(), ...customSagas].map(fork));
 };
-const sagaMiddleware = createSagaMiddleware();
 
+//middlewares
+const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
+
 // store
 const store = createStore(appReducer, applyMiddleware(...middleware));
-// const store = createStore(appReducer);
-
-// const store = createStore(() => {});
 
 sagaMiddleware.run(saga);
 

@@ -1,4 +1,4 @@
-import * as types from "../constants/ActionTypes";
+import * as types from "../constants/actionsTypes";
 
 const initialState = {
   rooms: [
@@ -65,9 +65,9 @@ const initialState = {
   ]
 };
 
-export default function chatListReducers(state = initialState, action) {
+export default function roomReducers(state = initialState, action) {
   switch (action.type) {
-    case types.SET_CLIST:
+    case types.ROOMS.SET_ROOMS:
     default:
       return state;
   }

@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import chatListReducers from "./chatListReducers";
+import roomsReducers from "../../chatModule/redux/reducers/roomReducers";
 
 export default customReducers =>
   combineReducers({
-    rooms: chatListReducers,
+    rooms: roomsReducers,
     ...customReducers
   });

@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-import * as roomsActions from "../../../redux/actions/chatListActions";
+import * as roomsActions from "../../redux/actions/roomsActions";
 import Rooms from "../components/Rooms";
 
 class RoomsContainer extends Component {
