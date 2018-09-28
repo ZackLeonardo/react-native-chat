@@ -2,7 +2,7 @@ import React from "react";
 import { View, Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-import ChatList from "../src/chatModule/chatList/components/ChatList";
+import Rooms from "../src/chatModule/chatList/components/Rooms";
 
 export default class Test extends React.Component {
   render() {
@@ -83,7 +83,7 @@ export default class Test extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ChatList {...chatListProps} />
+        <Rooms {...chatListProps} />
       </View>
     );
   }

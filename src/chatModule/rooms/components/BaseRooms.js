@@ -54,16 +54,14 @@ class MyListItem extends PureComponent {
         close={true}
         right={[
           {
-            text: isToped
-              ? i18n.t("chatBaseList:unTop")
-              : i18n.t("chatBaseList:top"),
+            text: isToped ? i18n.t("baseRooms:unTop") : i18n.t("baseRooms:top"),
             onPress: () => {
               this._handleTopPressed(item, index);
             },
             type: "secondary"
           },
           {
-            text: i18n.t("chatBaseList:delete"),
+            text: i18n.t("baseRooms:delete"),
             onPress: () => {
               this._handleDeletePressed(item, index);
             },
@@ -134,7 +132,7 @@ MyListItem.propTypes = {
   unReadNum: PropTypes.number
 };
 
-export default class ChatBaseList extends TopSearchBar {
+export default class BaseRooms extends TopSearchBar {
   state = {
     hideBack: true
   };
@@ -182,9 +180,9 @@ export default class ChatBaseList extends TopSearchBar {
   }
 }
 
-ChatBaseList.defaultProps = {};
+BaseRooms.defaultProps = {};
 
-ChatBaseList.propTypes = {
+BaseRooms.propTypes = {
   ...TopSearchBar.propTypes,
   hasSearchBar: PropTypes.bool,
   isToped: PropTypes.bool,

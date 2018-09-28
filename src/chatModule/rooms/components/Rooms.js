@@ -5,9 +5,9 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import shallowEqual from "shallowequal";
 
 import { ListStyles } from "../../../base/styles/listStyles";
-import ChatBaseList from "./ChatBaseList";
+import BaseRooms from "./BaseRooms";
 
-export default class ChatList extends ChatBaseList {
+export default class Rooms extends BaseRooms {
   shouldComponentUpdate(nextProps, nextState) {
     if (!shallowEqual(this.props, nextProps)) {
       return true;
@@ -76,7 +76,7 @@ export default class ChatList extends ChatBaseList {
   };
 
   render() {
-    console.log("render ChatList");
+    console.log("render Rooms");
     const { cItems, cTopedIds } = this.props;
     return (
       <View style={styles.container}>
@@ -107,10 +107,10 @@ export default class ChatList extends ChatBaseList {
   // }
 }
 
-ChatList.defaultProps = {};
+Rooms.defaultProps = {};
 
-ChatList.propTypes = {
-  ...ChatBaseList.propTypes,
+Rooms.propTypes = {
+  ...BaseRooms.propTypes,
   cItems: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   onScroll: PropTypes.func
 };

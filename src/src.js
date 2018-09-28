@@ -19,7 +19,7 @@ EStyleSheet.build({
 });
 
 const appReducer = combineReducers({
-  chatList: chatListReducers
+  rooms: chatListReducers
 });
 // const appReducer = createAppReducer();
 const customSagas = [];

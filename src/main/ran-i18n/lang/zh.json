@@ -1,6 +1,6 @@
 {
   "common": {},
-  "chatBaseList": {
+  "baseRooms": {
     "unTop": "取消置顶",
     "top": "置顶",
     "delete": "删除"

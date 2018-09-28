@@ -1,6 +1,6 @@
 {
   "common": {},
-  "chatBaseList": {
+  "baseRooms": {
     "unTop": "Delete From Tops",
     "top": "Add To Tops",
     "delete": "delete"

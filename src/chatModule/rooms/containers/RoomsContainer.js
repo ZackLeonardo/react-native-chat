@@ -4,10 +4,10 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-import * as ChatActions from "../../../redux/actions/chatListActions";
-import ChatList from "../components/ChatList";
+import * as roomsActions from "../../../redux/actions/chatListActions";
+import Rooms from "../components/Rooms";
 
-class ChatListContainer extends Component {
+class RoomsContainer extends Component {
   render() {
     const chatListProps = {
       hasSearchBar: true,
@@ -15,7 +15,7 @@ class ChatListContainer extends Component {
     };
     return (
       <View style={styles.container}>
-        <ChatList {...chatListProps} />
+        <Rooms {...chatListProps} />
       </View>
     );
   }
@@ -30,17 +30,17 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    cItems: state.chatList.cItems
+    cItems: state.rooms.rooms
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(ChatActions, dispatch)
+  actions: bindActionCreators(roomsActions, dispatch)
 });
 
 const ConnectApp = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ChatListContainer);
+)(RoomsContainer);
 
 export default ConnectApp;

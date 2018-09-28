@@ -3,6 +3,6 @@ import chatListReducers from "./chatListReducers";
 
 export default customReducers =>
   combineReducers({
-    chatList: chatListReducers,
+    rooms: chatListReducers,
     ...customReducers
   });

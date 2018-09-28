@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
 import ScrollableTabScreen from "../../base/components/scrollableTabScreen/ScrollableTabScreen";
-import ChatListContainer from "./containers/ChatListContainer";
+import RoomsContainer from "./containers/RoomsContainer";
 
-export default class ChatListView extends Component {
+export default class RoomsView extends Component {
   state = {
     tabLabels: ["聊天"]
   };
@@ -26,12 +26,12 @@ export default class ChatListView extends Component {
   }
 
   render() {
-    console.log("render ChatListView");
+    console.log("render RoomsView");
     const chatListViewProps = this.getInnerComponentProps();
     return (
       <ScrollableTabScreen tabLabels={this.state.tabLabels}>
-        <ChatListContainer
-          key="chatListView"
+        <RoomsContainer
+          key="RoomsView"
           setTabLabel={this.setTabLabel}
           {...chatListViewProps}
         />

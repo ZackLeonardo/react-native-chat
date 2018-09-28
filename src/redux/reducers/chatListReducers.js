@@ -1,7 +1,7 @@
 import * as types from "../constants/ActionTypes";
 
 const initialState = {
-  cItems: [
+  rooms: [
     {
       _id: "a1",
       id: "1",
