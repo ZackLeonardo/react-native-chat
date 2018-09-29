@@ -13,10 +13,10 @@ export default class CoreMain extends React.Component {
       {
         // AuthLoading: AuthLoadingScreen,
         App: Nav,
-        Auth: () => <LoginView />
+        Auth: this.props.loginPage ? this.props.loginPage : () => <LoginView />
       },
       {
-        initialRouteName: "App"
+        initialRouteName: "Auth"
       }
     );
 

@@ -1,3 +1,7 @@
+/**
+ * ing
+ * Integrate existing components
+ */
 import React, { cloneElement, Component } from "react";
 import PropTypes from "prop-types";
 
