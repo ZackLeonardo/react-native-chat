@@ -1,26 +1,38 @@
 import React from "react";
 import {
   View,
-  Dimensions,
   I18nManager as RNI18nManager,
   ActivityIndicator
 } from "react-native";
 import PropTypes from "prop-types";
 import EStyleSheet from "react-native-extended-stylesheet";
+import { createSwitchNavigator } from "react-navigation";
 
 import CoreMainNavigator from "./CoreMainNavigator";
-import Screen from "./Screen";
+import LoginView from "../../defaultLoginModule/LoginView";
 import i18n from "../ran-i18n";
 
 export default class CoreMain extends React.Component {
   state = {
     isI18nInitialized: false
   };
+
   render() {
     const Nav = CoreMainNavigator(this.props.modules);
 
+    const AuthNav = createSwitchNavigator(
+      {
+        // AuthLoading: AuthLoadingScreen,
+        App: Nav,
+        Auth: () => <LoginView />
+      },
+      {
+        initialRouteName: "Auth"
+      }
+    );
+
     if (this.state.isI18nInitialized) {
-      return <Nav />;
+      return <AuthNav />;
     }
 
     return (
