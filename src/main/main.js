@@ -1,3 +1,3 @@
-import { AppDeskNav, Screen } from "./ran-core";
+import { CoreMain, Screen } from "./ran-core";
 
-export { AppDeskNav, Screen };
+export { CoreMain, Screen };

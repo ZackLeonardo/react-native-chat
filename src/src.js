@@ -7,7 +7,7 @@ import { all, fork } from "redux-saga/effects";
 import EStyleSheet from "react-native-extended-stylesheet";
 
 import defaultTheme from "./base/styles/defaultTheme";
-import { AppDeskNav } from "./main/main";
+import { CoreMain as AppDesk } from "./main/main";
 import createAppReducer from "./redux/reducers";
 
 import { adminSaga } from "./redux/sagas";
@@ -47,7 +47,7 @@ export default class RNChatApp extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <AppDeskNav modules={this.props.modules} />
+        <AppDesk modules={this.props.modules} />
       </Provider>
     );
   }

@@ -4,6 +4,7 @@ import { View, Text } from "react-native";
 import RNChatApp from "./src/src";
 import { Screen } from "./src/main/main";
 import RoomsView from "./src/chatModule/rooms/RoomsView";
+import { LoginView } from "./src/defaultLoginModule/LoginView";
 
 class HomeScreen extends React.Component {
   render() {
@@ -32,6 +33,6 @@ export default class App extends React.Component {
       Setting: SettingsScreen
     };
 
-    return <RNChatApp modules={modules} />;
+    return <RNChatApp modules={modules} />; //<LoginView />;
   }
 }
