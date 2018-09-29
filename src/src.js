@@ -7,7 +7,7 @@ import { all, fork } from "redux-saga/effects";
 import EStyleSheet from "react-native-extended-stylesheet";
 
 import defaultTheme from "./base/styles/defaultTheme";
-import { CoreMain as AppDesk } from "./main/main";
+import { AppDesk } from "./main/main";
 import createAppReducer from "./redux/reducers";
 
 import { adminSaga } from "./redux/sagas";
