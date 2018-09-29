@@ -5,7 +5,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 
 import defaultTheme from "./base/styles/defaultTheme";
 import { AppDesk } from "./main/main";
-import createAdminStore from "./redux/store";
+import createAppStore from "./redux/store";
 
 const { width } = Dimensions.get("window");
 EStyleSheet.build({
@@ -26,7 +26,7 @@ export default class RNChatApp extends React.Component {
   render() {
     return (
       <Provider
-        store={createAdminStore({
+        store={createAppStore({
           ...this.props
         })}
       >
