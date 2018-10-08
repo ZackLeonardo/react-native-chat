@@ -26,10 +26,10 @@ export default class ScrollableTabScreen extends Component {
         style={{ marginTop: EStyleSheet.value("$STATUSBAR_HEIGHT") }}
         initialPage={0}
         onChangeTab={this._onChangeTab}
-        tabBarActiveTextColor={EStyleSheet.value("$COLOR")}
-        // tabBarBackgroundColor={EStyleSheet.value("$BGCOLOR")}
+        tabBarActiveTextColor={EStyleSheet.value("$DODERBLUE")}
+        // tabBarBackgroundColor={EStyleSheet.value("$LIGHTGRAY")}
         tabBarUnderlineStyle={{
-          backgroundColor: EStyleSheet.value("$COLOR"),
+          backgroundColor: EStyleSheet.value("$DODERBLUE"),
           height: 1
         }}
         locked={true}

@@ -1,77 +1,104 @@
-import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import { Text, View } from 'react-native-animatable'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import { StyleSheet } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
+import { Text, View } from "react-native-animatable";
+import PropTypes from "prop-types";
+import compose from "recompose/compose";
+import { translate } from "../../../main/ran-i18n";
 
-import CustomButton from '../../components/CustomButton'
-import metrics from '../../config/metrics'
+import CustomButton from "../../components/CustomButton";
 
-export default class Opening extends Component {
-  static propTypes = {
-    onCreateAccountPress: PropTypes.func.isRequired,
-    onSignInPress: PropTypes.func.isRequired
-  }
-
-  render () {
+class Opening extends Component {
+  render() {
+    const {
+      onCreateAccountPress,
+      onSignInPress,
+      loginLabel,
+      orLabel,
+      signLabel,
+      translate
+    } = this.props;
     return (
       <View style={styles.container}>
-        <View animation={'zoomIn'} delay={600} duration={400}>
+        <View animation={"zoomIn"} delay={600} duration={400}>
           <CustomButton
-            text={'注册'}
-            onPress={this.props.onCreateAccountPress}
+            text={translate(signLabel)}
+            onPress={onCreateAccountPress}
             buttonStyle={styles.createAccountButton}
             textStyle={styles.createAccountButtonText}
           />
         </View>
-        <View style={styles.separatorContainer} animation={'zoomIn'} delay={700} duration={400}>
+        <View
+          style={styles.separatorContainer}
+          animation={"zoomIn"}
+          delay={700}
+          duration={400}
+        >
           <View style={styles.separatorLine} />
-          <Text style={styles.separatorOr}>{'或'}</Text>
+          <Text style={styles.separatorOr}>{translate(orLabel)}</Text>
           <View style={styles.separatorLine} />
         </View>
-        <View animation={'zoomIn'} delay={800} duration={400}>
+        <View animation={"zoomIn"} delay={800} duration={400}>
           <CustomButton
-            text={'登录'}
-            onPress={this.props.onSignInPress}
+            text={translate(loginLabel)}
+            onPress={onSignInPress}
             buttonStyle={styles.signInButton}
             textStyle={styles.signInButtonText}
           />
         </View>
       </View>
-    )
+    );
   }
 }
 
-const styles = StyleSheet.create({
+Opening.propTypes = {
+  onCreateAccountPress: PropTypes.func.isRequired,
+  onSignInPress: PropTypes.func.isRequired,
+  loginLabel: PropTypes.string,
+  orLabel: PropTypes.string,
+  signLabel: PropTypes.string,
+  translate: PropTypes.func.isRequired
+};
+
+Opening.defaultProps = {
+  loginLabel: "ran.login.login",
+  orLabel: "ran.login.or",
+  signLabel: "ran.login.sign"
+};
+
+const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: metrics.DEVICE_WIDTH * 0.1,
-    justifyContent: 'center'
+    marginHorizontal: "10%",
+    justifyContent: "center"
   },
   createAccountButton: {
-    backgroundColor: '#9B9FA4'
+    backgroundColor: "$DARKGRAY"
   },
   createAccountButtonText: {
-    color: 'white'
+    color: "white"
   },
   separatorContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
     marginVertical: 20
   },
   separatorLine: {
     flex: 1,
     borderWidth: StyleSheet.hairlineWidth,
     height: StyleSheet.hairlineWidth,
-    borderColor: '#9B9FA4'
+    borderColor: "$DARKGRAY"
   },
   separatorOr: {
-    color: '#9B9FA4',
+    color: "$DARKGRAY",
     marginHorizontal: 8
   },
   signInButton: {
-    backgroundColor: '#1976D2'
+    backgroundColor: "$DODERBLUE"
   },
   signInButtonText: {
-    color: 'white'
+    color: "white"
   }
-})
+});
+
+export default compose(translate)(Opening);

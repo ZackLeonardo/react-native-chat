@@ -16,7 +16,7 @@ export default class CoreMain extends React.Component {
         Auth: this.props.loginPage ? this.props.loginPage : () => <LoginView />
       },
       {
-        initialRouteName: "Auth"
+        initialRouteName: "App"
       }
     );
 

@@ -4,7 +4,6 @@ import { Text, View, TouchableHighlight } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Swipeout from "react-native-swipeout";
 
-// import i18n from "../../base/utils/i18n";
 import TopSearchBar from "../../../base/components/topSearchBar/TopSearchBar";
 import IntroductionItem from "../../../base/components/introductionItem/IntroductionItem";
 import { ListStyles } from "../../../base/styles/listStyles";
@@ -45,7 +44,10 @@ class MyListItem extends PureComponent {
       hasSearchBar,
       isToped,
       onItemPress,
-      unReadNum
+      unReadNum,
+      unTopI18n,
+      topI18n,
+      deleteI18n
     } = this.props;
 
     return (
@@ -54,14 +56,14 @@ class MyListItem extends PureComponent {
         close={true}
         right={[
           {
-            text: isToped ? i18n.t("baseRooms:unTop") : i18n.t("baseRooms:top"),
+            text: isToped ? unTopI18n : topI18n,
             onPress: () => {
               this._handleTopPressed(item, index);
             },
             type: "secondary"
           },
           {
-            text: i18n.t("baseRooms:delete"),
+            text: deleteI18n,
             onPress: () => {
               this._handleDeletePressed(item, index);
             },
@@ -110,6 +112,9 @@ class MyListItem extends PureComponent {
       hasSearchBar,
       isToped,
       unReadNum,
+      unTopI18n,
+      topI18n,
+      deleteI18n,
       ...props
     } = this.props;
     return {
@@ -117,8 +122,6 @@ class MyListItem extends PureComponent {
     };
   }
 }
-
-MyListItem.defaultProps = {};
 
 MyListItem.propTypes = {
   index: PropTypes.number,
@@ -129,7 +132,11 @@ MyListItem.propTypes = {
   topPressed: PropTypes.func,
   unTopPressed: PropTypes.func,
   deletePressed: PropTypes.func,
-  unReadNum: PropTypes.number
+  unReadNum: PropTypes.number,
+  unTopI18n: PropTypes.string,
+  topI18n: PropTypes.string,
+  deleteI18n: PropTypes.string,
+  translate: PropTypes.func
 };
 
 export default class BaseRooms extends TopSearchBar {

@@ -20,7 +20,8 @@ EStyleSheet.build({
  * authProvider--expect a function returning a Promise, to control the application authentication strategy
  * dataProvider--saga fetch http datasource
  * dataRXProvider--reactive datasource such as using ddp
- *
+ * locale--i18n: en zh
+ * i18nProvider--
  */
 export default class RNChatApp extends React.Component {
   render() {

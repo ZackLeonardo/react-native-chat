@@ -5,17 +5,21 @@ import { all, fork } from "redux-saga/effects";
 // import { USER_LOGOUT } from './actions/authActions';
 import createAppReducer from "../reducers";
 import { adminSaga } from "../sagas";
+import defaultI18nProvider from "../../main/ran-i18n/defaultI18nProvider";
 
 export default ({
-  authProvider,
   customReducers = {},
   customSagas = [],
+  authProvider,
+  i18nProvider = defaultI18nProvider,
   dataProvider,
   dataRXProvider,
-  initialState
+  initialState,
+  locale = "en"
 }) => {
   //reducers
-  const appReducer = createAppReducer(customReducers);
+  const messages = i18nProvider(locale);
+  const appReducer = createAppReducer(customReducers, locale, messages);
 
   //sagas
   const saga = function* rootSaga() {

@@ -3,14 +3,20 @@ import { View, Dimensions } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import EStyleSheet from "react-native-extended-stylesheet";
+import compose from "recompose/compose";
 
+import { translate } from "../../../main/ran-i18n";
 import * as roomsActions from "../../redux/actions/roomsActions";
 import Rooms from "../components/Rooms";
 
 class RoomsContainer extends Component {
   render() {
+    const { translate } = this.props;
     const chatListProps = {
       hasSearchBar: true,
+      unTopI18n: translate("ran.rooms.unTop"),
+      topI18n: translate("ran.rooms.top"),
+      deleteI18n: translate("ran.rooms.delete"),
       ...this.props
     };
     return (
@@ -38,9 +44,10 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(roomsActions, dispatch)
 });
 
-const ConnectApp = connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  translate
 )(RoomsContainer);
-
-export default ConnectApp;
