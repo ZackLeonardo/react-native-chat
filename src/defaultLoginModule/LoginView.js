@@ -1,5 +1,6 @@
 //from git
 import React, { Component } from "react";
+import { View } from "react-native";
 import PropTypes from "prop-types";
 
 import AuthScreen from "./containers/AuthScreen";
@@ -15,17 +16,15 @@ export class LoginView extends Component {
 
     this.state = {
       isLoggedIn: false, // Is the user authenticated?
-      isLoading: false, // Is the user loggingIn/signinUp?
-      isAppReady: false // Has the app completed the login animation?
+      isLoading: false // Is the user loggingIn/signinUp?
     };
   }
 
-  // logout={() => this.setState({ isLoggedIn: false, isAppReady: false })}
-  resetStatus(isLoggedIn = false, isLoading = false, isAppReady = false) {
+  // logout={() => this.setState({ isLoggedIn: false})}
+  resetStatus(isLoggedIn = false, isLoading = false) {
     this.setState({
       isLoggedIn: isLoggedIn,
-      isLoading: isLoading,
-      isAppReady: isAppReady
+      isLoading: isLoading
     });
   }
 
@@ -33,16 +32,17 @@ export class LoginView extends Component {
    * Two login function that waits 1000 ms and then authenticates the user succesfully.
    * In your real app they should be replaced with an API call to you backend.
    */
-  _simulateLogin = (username, password) => {
+  _Login = (username, password) => {
     this.setState({ isLoading: true });
     if (this.props.login) {
       this.props.login(username, password);
     } else {
-      console.log("login func is null");
+      this.setState({ isLoggedIn: true, isLoading: false });
+      this.props.navigation.navigate("App");
     }
   };
 
-  _simulateSignup = (username, password, fullName) => {
+  _Signup = (username, password, fullName) => {
     this.setState({ isLoading: true });
     if (this.props.signup) {
       this.props.signup(username, password, fullName);
@@ -52,24 +52,16 @@ export class LoginView extends Component {
     }
   };
 
-  /**
-   * Simple routing.
-   * If the user is authenticated (isAppReady) show the HomeScreen, otherwise show the AuthScreen
-   */
   render() {
-    if (this.state.isAppReady) {
-      return this.props.children;
-    } else {
-      return (
-        <AuthScreen
-          login={this._simulateLogin}
-          signup={this._simulateSignup}
-          isLoggedIn={this.state.isLoggedIn}
-          isLoading={this.state.isLoading}
-          onLoginAnimationCompleted={() => this.setState({ isAppReady: true })}
-        />
-      );
-    }
+    return (
+      <AuthScreen
+        login={this._Login}
+        signup={this._Signup}
+        isLoggedIn={this.state.isLoggedIn}
+        isLoading={this.state.isLoading}
+        onLoginAnimationCompleted={() => this.setState({ isAppReady: true })}
+      />
+    );
   }
 }
 
