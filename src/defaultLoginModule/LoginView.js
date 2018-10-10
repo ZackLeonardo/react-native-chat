@@ -1,4 +1,4 @@
-//from git
+//from git: https://github.com/mmazzarolo/react-native-login-animation-example
 import React, { Component } from "react";
 import { View } from "react-native";
 import PropTypes from "prop-types";
