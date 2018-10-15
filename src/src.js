@@ -23,14 +23,15 @@ EStyleSheet.build({
  * locale--i18n: en zh
  * i18nProvider--
  */
+export var store;
+
 export default class RNChatApp extends React.Component {
   render() {
+    store = createAppStore({
+      ...this.props
+    });
     return (
-      <Provider
-        store={createAppStore({
-          ...this.props
-        })}
-      >
+      <Provider store={store}>
         <AppDesk {...this.props} />
       </Provider>
     );
