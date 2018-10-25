@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "ejson": "^2.1.2",
     "expo": "^30.0.0",
     "i18next": "^11.6.0",
     "lodash": "^4.17.11",
@@ -20,6 +21,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-animatable": "^1.3.0",
     "react-native-extended-stylesheet": "^0.9.0",
+    "react-native-meteor": "^1.4.0",
     "react-native-scrollable-tab-view": "^0.8.0",
     "react-native-searchbar": "^1.15.0",
     "react-native-swipeout": "^2.3.6",
@@ -28,7 +30,9 @@
     "react-redux": "^5.0.7",
     "recompose": "^0.30.0",
     "redux": "^4.0.0",
+    "redux-enhancer-react-native-appstate": "^0.3.1",
     "redux-saga": "^0.16.0",
+    "rn-fetch-blob": "^0.10.13",
     "shallowequal": "^1.1.0"
   },
   "devDependencies": {
