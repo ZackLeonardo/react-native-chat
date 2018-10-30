@@ -6,7 +6,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import compose from "recompose/compose";
 
 import { translate } from "../../../main/ran-i18n";
-import * as roomsActions from "../../redux/actions/roomsActions";
+// import * as roomsActions from "../../redux/actions/roomsActions";
 import Rooms from "../components/Rooms";
 
 class RoomsContainer extends Component {
@@ -41,7 +41,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(roomsActions, dispatch)
+  // actions: bindActionCreators(roomsActions, dispatch)
 });
 
 export default compose(

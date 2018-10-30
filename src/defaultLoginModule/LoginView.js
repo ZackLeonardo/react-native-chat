@@ -69,9 +69,14 @@ export class LoginView extends Component {
 
     return (
       <AuthScreen
+        ref={ref => (this.AuthScreenRef = ref)}
         login={this._Login}
         signup={this._Signup}
-        onLoginAnimationCompleted={() => this.props.navigation.navigate("App")}
+        onLoginAnimationCompleted={() => {
+          if (!store.getState().login.failure) {
+            this.props.navigation.navigate("App");
+          }
+        }}
       />
     );
   }

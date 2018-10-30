@@ -1,4 +1,3 @@
-import { combineReducers } from "redux";
 import settings from "./reducers";
 import login from "./login";
 import meteor from "./connect";

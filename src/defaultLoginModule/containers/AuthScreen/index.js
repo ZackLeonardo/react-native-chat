@@ -17,6 +17,8 @@ import Opening from "./Opening";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
 
+import { store } from "../../../src";
+
 if (Platform.OS === "android")
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
@@ -62,8 +64,7 @@ class AuthScreen extends Component {
   };
 
   componentWillUpdate(nextProps) {
-    // If the user has logged/signed up succesfully start the hide animation
-    if (this.props.failure && !nextProps.failure) {
+    if (this.props.isFetching && !nextProps.isFetching && !nextProps.failure) {
       this._hideAuthScreen();
     }
 
