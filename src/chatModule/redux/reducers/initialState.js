@@ -1,5 +1,8 @@
 export default {
-	server: null,
-	login: {},
-	settings: {}
+  server: "http://localhost:3000",
+  login: {
+    failure: false,
+    isFetching: false
+  },
+  settings: {}
 };

@@ -1,9 +1,11 @@
 //from git: https://github.com/mmazzarolo/react-native-login-animation-example
 import React, { Component } from "react";
-import { View } from "react-native";
-import PropTypes from "prop-types";
+import { Keyboard } from "react-native";
 
 import AuthScreen from "./containers/AuthScreen";
+import RocketChat from "../chatModule/rocketchat/rocketchat";
+import { store } from "../src";
+import { loginRequest } from "../chatModule/redux/actions/login";
 
 /**
  * The root component of the application.
@@ -13,6 +15,8 @@ import AuthScreen from "./containers/AuthScreen";
 export class LoginView extends Component {
   constructor(props) {
     super(props);
+
+    RocketChat.connect("http://localhost:3000");
 
     this.state = {
       isLoggedIn: false, // Is the user authenticated?
@@ -32,13 +36,21 @@ export class LoginView extends Component {
    * Two login function that waits 1000 ms and then authenticates the user succesfully.
    * In your real app they should be replaced with an API call to you backend.
    */
-  _Login = (username, password) => {
-    this.setState({ isLoading: true });
-    if (this.props.login) {
-      this.props.login(username, password);
-    } else {
-      this.setState({ isLoggedIn: true, isLoading: false });
-      this.props.navigation.navigate("App");
+  _Login = async (username, password) => {
+    if (username.trim() === "" || password.trim() === "") {
+      // showToast(I18n.t("Email_or_password_field_is_empty"));
+      console.log("Email_or_password_field_is_empty");
+      return;
+    }
+    Keyboard.dismiss();
+
+    store.dispatch(loginRequest({ username, password }));
+    // this.setState({ isLoading: true });
+
+    try {
+      await RocketChat.loginWithPassword({ username, password });
+    } catch (error) {
+      console.warn("LoginView submit", error);
     }
   };
 
@@ -53,23 +65,42 @@ export class LoginView extends Component {
   };
 
   render() {
+    console.log(this.props);
+
     return (
       <AuthScreen
         login={this._Login}
         signup={this._Signup}
-        isLoggedIn={this.state.isLoggedIn}
-        isLoading={this.state.isLoading}
-        onLoginAnimationCompleted={() => this.setState({ isAppReady: true })}
+        onLoginAnimationCompleted={() => this.props.navigation.navigate("App")}
       />
     );
   }
 }
+// LoginView.propTypes = {
+//   login: PropTypes.func,
+//   logout: PropTypes.func,
+//   signup: PropTypes.func,
+//   children: PropTypes.node,
+//   server: PropTypes.string,
+//   failure: PropTypes.bool,
+//   isFetching: PropTypes.bool,
+//   reason: PropTypes.string,
+//   error: PropTypes.string
+// };
 
-LoginView.propTypes = {
-  login: PropTypes.func,
-  logout: PropTypes.func,
-  signup: PropTypes.func,
-  children: PropTypes.node
-};
+// const mapStateToProps = state => {
+//   return {
+//     server: state.server.server,
+//     failure: state.login.failure,
+//     isFetching: state.login.isFetching,
+//     reason: state.login.error && state.login.error.reason,
+//     error: state.login.error && state.login.error.error
+//   };
+// };
 
+// const LoginViewApp = connect(mapStateToProps)(LoginView);
 export default LoginView;
+// export default compose(
+//   connect(mapStateToProps),
+//   translate
+// )(LoginView);

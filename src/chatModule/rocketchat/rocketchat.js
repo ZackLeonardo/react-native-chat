@@ -1,12 +1,12 @@
 import { AsyncStorage, Platform } from "react-native";
 import { hashPassword } from "react-native-meteor/lib/utils";
 import foreach from "lodash/forEach";
-import RNFetchBlob from "rn-fetch-blob";
+// import RNFetchBlob from "rn-fetch-blob";
 
 import { store as reduxStore } from "../../src";
 import defaultSettings from "../constants/settings";
 import messagesStatus from "../constants/messagesStatus";
-import database from "./realm";
+import database from "../../main/ran-db/sqlite";
 import log from "../../main/utils/log";
 // import * as actions from '../actions';
 
@@ -124,7 +124,7 @@ const RocketChat = {
   },
   async testServer(url) {
     try {
-      let response = await RNFetchBlob.fetch("HEAD", url);
+      // let response = await RNFetchBlob.fetch("HEAD", url);
       response = response.respInfo;
       if (
         response.status === 200 &&
@@ -139,6 +139,7 @@ const RocketChat = {
   },
   _setUser(ddpMessage) {
     this.activeUsers = this.activeUsers || {};
+    const state = reduxStore.getState();
     const { user } = reduxStore.getState().login;
 
     if (ddpMessage.fields && user && user.id === ddpMessage.id) {
@@ -240,7 +241,7 @@ const RocketChat = {
       this.ddp.once(
         "logged",
         protectedFunction(({ id }) => {
-          this.subscribeRooms(id);
+          // this.subscribeRooms(id);
           // this.ddp.subscribe('stream-notify-logged', 'updateAvatar', false);
         })
       );
@@ -274,19 +275,21 @@ const RocketChat = {
               })
             );
           } else if (ev === "deleteMessage") {
-            database.write(() => {
-              if (
-                ddpMessage &&
-                ddpMessage.fields &&
-                ddpMessage.fields.args.length > 0
-              ) {
-                const { _id } = ddpMessage.fields.args[0];
-                const message = database
-                  .objects("messages")
-                  .filtered("_id = $0", _id);
-                database.delete(message);
-              }
-            });
+            console.log("deleteMessage");
+
+            // database.write(() => {
+            //   if (
+            //     ddpMessage &&
+            //     ddpMessage.fields &&
+            //     ddpMessage.fields.args.length > 0
+            //   ) {
+            //     const { _id } = ddpMessage.fields.args[0];
+            //     const message = database
+            //       .objects("messages")
+            //       .filtered("_id = $0", _id);
+            //     database.delete(message);
+            //   }
+            // });
           }
         })
       );
@@ -505,10 +508,10 @@ const RocketChat = {
           this.roleTimer = setTimeout(() => {
             reduxStore.dispatch(setRoles(this.roles));
 
-            database.write(() => {
-              foreach(this.roles, (description, _id) => {
-                database.create("roles", { _id, description }, true);
-              });
+            console.log("database.write roles");
+
+            foreach(this.roles, (description, _id) => {
+              database.create("roles", { _id, description }, true);
             });
 
             this.roleTimer = null;
@@ -529,8 +532,8 @@ const RocketChat = {
       this.ddp.on(
         "open",
         protectedFunction(() => {
-          RocketChat.getSettings();
-          RocketChat.getPermissions();
+          // RocketChat.getSettings();
+          // RocketChat.getPermissions();
           reduxStore.dispatch(connectSuccess());
           resolve();
         })
@@ -541,7 +544,7 @@ const RocketChat = {
         protectedFunction(() => {
           this.ddp.subscribe("activeUsers");
           this.ddp.subscribe("roles");
-          RocketChat.getCustomEmoji();
+          // RocketChat.getCustomEmoji();
         })
       );
     }).catch(e => {
@@ -591,6 +594,10 @@ const RocketChat = {
       }
     }
 
+    if (typeof username === "string" && username.indexOf("@") !== -1) {
+      params.user = { email: username };
+    }
+
     if (code) {
       params = {
         totp: {
@@ -617,7 +624,9 @@ const RocketChat = {
     AsyncStorage.removeItem(TOKEN_KEY);
     AsyncStorage.removeItem(`${TOKEN_KEY}-${server}`);
     setTimeout(() => {
-      database.deleteAll();
+      console.log("database.deleteAll");
+
+      // database.deleteAll();
     }, 1000);
   },
 
@@ -646,6 +655,8 @@ const RocketChat = {
   getRooms,
   readMessages,
   me({ server = reduxStore.getState().server.server, token, userId }) {
+    console.log("server: " + server);
+
     return fetch(`${server}/api/v1/me`, {
       method: "get",
       headers: {

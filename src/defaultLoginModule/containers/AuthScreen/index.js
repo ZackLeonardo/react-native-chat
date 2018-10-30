@@ -8,9 +8,11 @@ import {
 import { Image, View } from "react-native-animatable";
 import EStyleSheet from "react-native-extended-stylesheet";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import compose from "recompose/compose";
 
+import { translate } from "../../../main/ran-i18n";
 import imgLogo from "../../images/logo.png";
-
 import Opening from "./Opening";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
@@ -46,10 +48,10 @@ if (Platform.OS === "android")
  *   _hideAuthScreen then 1. calls the SignupForm.hideForm(), that hides the form buttons (zoomOut) and the form itself (fadeOut),
  *   2. fadeOut the logo, 3. tells the container that the login animation has completed and that the app is ready to show the next screen (HomeScreen).
  */
-export default class AuthScreen extends Component {
+class AuthScreen extends Component {
   static propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    failure: PropTypes.bool.isRequired, //was isLoggedIn
+    isFetching: PropTypes.bool.isRequired, //was isLoading
     signup: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
     onLoginAnimationCompleted: PropTypes.func.isRequired // Called at the end of a succesfull login/signup animation
@@ -61,7 +63,7 @@ export default class AuthScreen extends Component {
 
   componentWillUpdate(nextProps) {
     // If the user has logged/signed up succesfully start the hide animation
-    if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
+    if (this.props.failure && !nextProps.failure) {
       this._hideAuthScreen();
     }
 
@@ -89,7 +91,7 @@ export default class AuthScreen extends Component {
   };
 
   render() {
-    const { isLoggedIn, isLoading, signup, login } = this.props;
+    const { failure, isFetching, signup, login } = this.props;
     const { visibleForm } = this.state;
     // The following style is responsible of the "bounce-up from bottom" animation of the form
     const formStyle = !visibleForm ? { height: 0 } : { marginTop: 40 };
@@ -104,7 +106,7 @@ export default class AuthScreen extends Component {
           source={imgLogo}
         />
         {!visibleForm &&
-          !isLoggedIn && (
+          failure && (
             <Opening
               onCreateAccountPress={() => this._setVisibleForm("SIGNUP")}
               onSignInPress={() => this._setVisibleForm("LOGIN")}
@@ -120,7 +122,7 @@ export default class AuthScreen extends Component {
               ref={ref => (this.formRef = ref)}
               onLoginLinkPress={() => this._setVisibleForm("LOGIN")}
               onSignupPress={signup}
-              isLoading={isLoading}
+              isLoading={isFetching}
             />
           )}
           {visibleForm === "LOGIN" && (
@@ -128,7 +130,7 @@ export default class AuthScreen extends Component {
               ref={ref => (this.formRef = ref)}
               onSignupLinkPress={() => this._setVisibleForm("SIGNUP")}
               onLoginPress={login}
-              isLoading={isLoading}
+              isLoading={isFetching}
             />
           )}
         </KeyboardAvoidingView>
@@ -136,6 +138,11 @@ export default class AuthScreen extends Component {
     );
   }
 }
+
+AuthScreen.defaultProps = {
+  failure: true, //was isLoggedIn
+  isFetching: false
+};
 
 const styles = EStyleSheet.create({
   container: {
@@ -158,3 +165,18 @@ const styles = EStyleSheet.create({
     backgroundColor: "#1976D2"
   }
 });
+
+const mapStateToProps = state => {
+  return {
+    server: state.server.server,
+    failure: state.login.failure,
+    isFetching: state.login.isFetching,
+    reason: state.login.error && state.login.error.reason,
+    error: state.login.error && state.login.error.error
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  translate
+)(AuthScreen);
