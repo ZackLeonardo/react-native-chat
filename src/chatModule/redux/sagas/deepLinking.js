@@ -4,9 +4,9 @@ import { takeLatest, take, select, put } from "redux-saga/effects";
 import * as types from "../actions/actionsTypes";
 import { appStart } from "../actions";
 import { selectServerRequest } from "../actions/server";
-import database from "../../rocketchat/realm";
+import database from "../../../main/ran-db/sqlite";
 import RocketChat from "../../rocketchat/rocketchat";
-import { NavigationActions } from "../../Navigation";
+// import { NavigationActions } from "../../Navigation";
 
 const navigate = function* go({ params, sameServer = true }) {
   if (!sameServer) {
@@ -15,13 +15,15 @@ const navigate = function* go({ params, sameServer = true }) {
   if (params.rid) {
     const canOpenRoom = yield RocketChat.canOpenRoom(params);
     if (canOpenRoom) {
-      return NavigationActions.push({
-        screen: "RoomView",
-        backButtonTitle: "",
-        passProps: {
-          rid: params.rid
-        }
-      });
+      console.log("biubiu: return NavigationActions.push");
+
+      // return NavigationActions.push({
+      //   screen: "RoomView",
+      //   backButtonTitle: "",
+      //   passProps: {
+      //     rid: params.rid
+      //   }
+      // });
     }
   }
 };

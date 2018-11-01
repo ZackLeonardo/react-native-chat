@@ -1,6 +1,6 @@
 import { delay } from "redux-saga";
 import { select, put, call, take, takeLatest } from "redux-saga/effects";
-import { NavigationActions } from "../../Navigation";
+// import { NavigationActions } from "../../Navigation";
 
 import { CREATE_CHANNEL, LOGIN } from "../actions/actionsTypes";
 import {
@@ -23,14 +23,16 @@ const handleRequest = function* handleRequest({ data }) {
     yield put(createChannelSuccess(result));
     yield delay(300);
     const { rid, name } = result;
-    NavigationActions.dismissModal();
+    console.log("biubiu: NavigationActions.dismissModal();");
+    // NavigationActions.dismissModal();
     yield delay(600);
-    NavigationActions.push({
-      screen: "RoomView",
-      title: name,
-      backButtonTitle: "",
-      passProps: { rid }
-    });
+    console.log("biubiu: NavigationActions.push");
+    // NavigationActions.push({
+    //   screen: "RoomView",
+    //   title: name,
+    //   backButtonTitle: "",
+    //   passProps: { rid }
+    // });
   } catch (err) {
     yield put(createChannelFailure(err));
   }

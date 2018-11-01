@@ -3,7 +3,7 @@ import { AsyncStorage } from "react-native";
 import { Navigation } from "react-native-navigation";
 import { Provider } from "react-redux";
 
-import { NavigationActions } from "../Navigation";
+import { NavigationActions } from "../../Navigation";
 import { SERVER } from "../actions/actionsTypes";
 import * as actions from "../actions";
 import { connectRequest } from "../actions/connect";
@@ -14,7 +14,7 @@ import {
 } from "../actions/server";
 import { setRoles } from "../actions/roles";
 import RocketChat from "../../rocketchat/rocketchat";
-import database from "../../rocketchat/realm";
+import database from "../../../main/ran-db/sqlite";
 import log from "../../../main/utils/log";
 import { store } from "../../../src";
 
@@ -67,7 +67,9 @@ const handleSelectServer = function* handleSelectServer({ server }) {
 const handleServerRequest = function* handleServerRequest({ server }) {
   try {
     if (LoginSignupView == null) {
+      console.log("biubiu: Navigation.registerComponent");
       LoginSignupView = require("../views/LoginSignupView").default;
+
       Navigation.registerComponent(
         "LoginSignupView",
         () => LoginSignupView,
@@ -77,11 +79,13 @@ const handleServerRequest = function* handleServerRequest({ server }) {
     }
 
     yield call(validate, server);
-    yield call(NavigationActions.push, {
-      screen: "LoginSignupView",
-      title: server,
-      backButtonTitle: ""
-    });
+    console.log("biubiu: NavigationActions.push");
+
+    // yield call(NavigationActions.push, {
+    //   screen: "LoginSignupView",
+    //   title: server,
+    //   backButtonTitle: ""
+    // });
     database.databases.serversDB.write(() => {
       database.databases.serversDB.create("servers", { id: server }, true);
     });

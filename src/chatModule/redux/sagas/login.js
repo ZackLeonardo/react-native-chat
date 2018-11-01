@@ -23,7 +23,7 @@ import {
 import RocketChat from "../../rocketchat/rocketchat";
 import log from "../../../main/utils/log";
 // import I18n from "../i18n";
-import { NavigationActions } from "../../Navigation";
+// import { NavigationActions } from "../../Navigation";
 
 const getUser = state => state.login.user;
 const getServer = state => state.server.server;
@@ -46,7 +46,8 @@ const handleLoginSuccess = function* handleLoginSuccess() {
     } else {
       yield delay(300);
       if (adding) {
-        NavigationActions.dismissModal();
+        console.log("biubiu: NavigationActions.dismissModal();");
+        // NavigationActions.dismissModal();
       } else {
         yield put(appStart("inside"));
       }

@@ -4,7 +4,7 @@ const initialState = {
   connecting: false,
   connected: false,
   failure: false,
-  server: "http://localhost:3000",
+  server: "",
   loading: true,
   adding: false
 };

@@ -1,18 +1,5 @@
-import { all, takeEvery } from "redux-saga/effects";
-
-function* testfun(action) {}
-
-const test = function* test() {
-  console.log("test");
-  yield takeEvery("ADD_USERSASYNC", testfun);
-};
-
-export default () =>
-  function* admin() {
-    yield all([test()]);
-  };
-
-// import { all } from "redux-saga/effects";
+import { all } from "redux-saga/effects";
+import rocketSagas from "../../chatModule/redux/sagas";
 // import auth from "./auth";
 // import callback from "./callback";
 // import fetch from "./fetch";
@@ -25,19 +12,7 @@ export default () =>
 // import undo from "./undo";
 // import recordForm from "./recordForm";
 
-// export default (authProvider, dataProvider, dataRXProvider, i18nProvider) =>
-//   function* admin() {
-//     yield all([
-//       i18n(i18nProvider)(),
-//       auth(authProvider)(),
-//       undo(),
-//       fetch(dataProvider)(),
-//       error(),
-//       accumulate(),
-//       redirection(),
-//       refresh(),
-//       notification(),
-//       callback(),
-//       recordForm()
-//     ]);
-//   };
+export default (dataProvider, authProvider, dataRXProvider) =>
+  function* admin() {
+    yield all([rocketSagas()]);
+  };

@@ -15,21 +15,6 @@ import { loginRequest } from "../chatModule/redux/actions/login";
 export class LoginView extends Component {
   constructor(props) {
     super(props);
-
-    RocketChat.connect("http://localhost:3000");
-
-    this.state = {
-      isLoggedIn: false, // Is the user authenticated?
-      isLoading: false // Is the user loggingIn/signinUp?
-    };
-  }
-
-  // logout={() => this.setState({ isLoggedIn: false})}
-  resetStatus(isLoggedIn = false, isLoading = false) {
-    this.setState({
-      isLoggedIn: isLoggedIn,
-      isLoading: isLoading
-    });
   }
 
   /**
@@ -45,7 +30,6 @@ export class LoginView extends Component {
     Keyboard.dismiss();
 
     store.dispatch(loginRequest({ username, password }));
-    // this.setState({ isLoading: true });
 
     try {
       await RocketChat.loginWithPassword({ username, password });

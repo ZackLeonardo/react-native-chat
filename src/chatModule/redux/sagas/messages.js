@@ -16,9 +16,9 @@ import {
   replyInit
 } from "../actions/messages";
 import RocketChat from "../../rocketchat/rocketchat";
-import database from "../../rocketchat/realm";
+import database from "../../../main/ran-db/sqlite";
 import log from "../../../main/utils/log";
-import { NavigationActions } from "../../Navigation";
+// import { NavigationActions } from "../../Navigation";
 
 const deleteMessage = message => RocketChat.deleteMessage(message);
 const editMessage = message => RocketChat.editMessage(message);
@@ -76,14 +76,16 @@ const handleTogglePinRequest = function* handleTogglePinRequest({ message }) {
 };
 
 const goRoom = function* goRoom({ rid, name }) {
-  NavigationActions.popToRoot();
+  console.log("biubiu:  NavigationActions.popToRoot();");
+  // NavigationActions.popToRoot();
   yield delay(1000);
-  NavigationActions.push({
-    screen: "RoomView",
-    title: name,
-    backButtonTitle: "",
-    passProps: { rid }
-  });
+  console.log("biubiu:  NavigationActions.push({");
+  // NavigationActions.push({
+  //   screen: "RoomView",
+  //   title: name,
+  //   backButtonTitle: "",
+  //   passProps: { rid }
+  // });
 };
 
 const handleReplyBroadcast = function* handleReplyBroadcast({ message }) {

@@ -18,10 +18,10 @@ import * as types from "../actions/actionsTypes";
 import { addUserTyping, removeUserTyping, setLastOpen } from "../actions/room";
 import { messagesRequest, editCancel, replyCancel } from "../actions/messages";
 import RocketChat from "../../rocketchat/rocketchat";
-import database from "../../rocketchat/realm";
+import database from "../../../main/ran-db/sqlite";
 import log from "../../../main/utils/log";
 // import I18n from "../i18n";
-import { NavigationActions } from "../../Navigation";
+// import { NavigationActions } from "../../Navigation";
 
 const leaveRoom = rid => RocketChat.leaveRoom(rid);
 const eraseRoom = rid => RocketChat.eraseRoom(rid);
@@ -152,7 +152,8 @@ const updateLastOpen = function* updateLastOpen() {
 };
 
 const goRoomsListAndDelete = function* goRoomsListAndDelete(rid) {
-  NavigationActions.popToRoot();
+  console.log("biubiu: NavigationActions.popToRoot();");
+  // NavigationActions.popToRoot();
   yield delay(1000);
   try {
     database.write(() => {
