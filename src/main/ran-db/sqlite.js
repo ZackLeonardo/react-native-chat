@@ -21,7 +21,7 @@ const schemas = [
 
 class DB {
   constructor() {
-    this.database = SQLite.openDatabase("db.chat");
+    this.database = SQLite.openDatabase("default.chat");
 
     schemas.map(schema =>
       this.database.transaction(tx => {
@@ -30,15 +30,25 @@ class DB {
     );
   }
 
-  objects(table) {
-    this.table = table;
+  async objects(table) {
+    let sql = `SELECT * FROM ${table}`;
+    console.log("sql:" + sql);
 
-    filtered = (...args) => {
-      console.log("objects:" + args);
-    };
+    try {
+      // let result = await fetchDoubanApi();
+      // console.log(result);
+      await this.database.transaction(tx => {
+        tx.executeSql(sql, [], (_, { rows }) => {
+          console.log(sql + "   " + JSON.stringify(rows));
+          return rows;
+        });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  create(schema_name, schema_object, create) {
+  create(schema_name, schema_object, update) {
     let sql = `UPDATE ${schema_name} SET `;
     for (key in schema_object) {
       sql = sql + key + " = " + schema_object[key] + ",";
@@ -46,10 +56,15 @@ class DB {
     sql = sql.slice(0, sql.length - 1);
     // const keys = Object.keys(schema_object);
     // const values =  Object.values(schema_object);
-    console.log(sql);
-    this.database.transaction(tx => {
+    console.log("sql:" + sql);
+    return this.database.transaction(tx => {
       tx.executeSql(sql);
     });
+  }
+
+  setActiveDB(db = "") {
+    const path = db.replace(/(^\w+:|^)\/\//, "");
+    return (this.database.activeDB = SQLite.openDatabase(`${path}.chat`));
   }
 }
 export default new DB();

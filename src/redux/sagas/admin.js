@@ -1,5 +1,5 @@
 import { all } from "redux-saga/effects";
-import rocketSagas from "../../chatModule/redux/sagas";
+import rocketSagas from "../../chatModule/sagas";
 // import auth from "./auth";
 // import callback from "./callback";
 // import fetch from "./fetch";

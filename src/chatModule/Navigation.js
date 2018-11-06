@@ -1,19 +1,21 @@
 class NavigationActionsClass {
-	setNavigator(navigator) {
-		this.navigator = navigator;
-	}
+  setNavigator(navigation) {
+    this.navigation = navigation;
+  }
 
-	push = params => this.navigator && this.navigator.push(params)
+  push = action => this.navigation && this.navigation.dispatch(action);
 
-	pop = params => this.navigator && this.navigator.pop(params)
+  pop = action => this.navigation && this.navigation.pop(action);
 
-	popToRoot = params => this.navigator && this.navigator.popToRoot(params)
+  popToRoot = action => this.navigation && this.navigation.popToRoot(action);
 
-	resetTo = params => this.navigator && this.navigator.resetTo(params)
+  resetTo = action => this.navigation && this.navigation.resetTo(action);
 
-	toggleDrawer = params => this.navigator && this.navigator.toggleDrawer(params)
+  toggleDrawer = action =>
+    this.navigation && this.navigation.toggleDrawer(action);
 
-	dismissModal = params => this.navigator && this.navigator.dismissModal(params)
+  dismissModal = action =>
+    this.navigation && this.navigation.dismissModal(action);
 }
 
 export const NavigationActions = new NavigationActionsClass();

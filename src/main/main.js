@@ -9,13 +9,13 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { CoreMain, Screen } from "./ran-core";
 import i18n, { TranslationProvider } from "./ran-i18n";
 import { store } from "../src";
-import { appInit } from "../chatModule/redux/actions";
+// import { appInit } from "../chatModule/actions";
 
 class AppDesk extends React.Component {
   constructor(props) {
     super(props);
 
-    store.dispatch(appInit());
+    // store.dispatch(appInit());
     this.state = {
       isI18nInitialized: true
     };

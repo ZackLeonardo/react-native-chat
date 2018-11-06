@@ -3,9 +3,9 @@ import React, { Component } from "react";
 import { Keyboard } from "react-native";
 
 import AuthScreen from "./containers/AuthScreen";
-import RocketChat from "../chatModule/rocketchat/rocketchat";
+import RocketChat from "../chatModule/lib/rocketchat";
 import { store } from "../src";
-import { loginRequest } from "../chatModule/redux/actions/login";
+import { loginRequest } from "../chatModule/actions/login";
 
 /**
  * The root component of the application.
