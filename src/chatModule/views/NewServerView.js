@@ -19,10 +19,11 @@ import scrollPersistTaps from "../utils/scrollPersistTaps";
 import Button from "../containers/Button";
 import TextInput from "../containers/TextInput";
 import LoggedView from "./View";
-// import I18n from "../i18n";
 import { scale, verticalScale, moderateScale } from "../utils/scaling";
 import KeyboardView from "../presentation/KeyboardView";
 import DeviceInfo from "../utils/deviceInfo";
+import { translate } from "../../main/ran-i18n";
+import compose from "recompose/compose";
 
 const styles = StyleSheet.create({
   image: {
@@ -59,17 +60,8 @@ const styles = StyleSheet.create({
 
 const defaultServer = "https://open.rocket.chat";
 
-@connect(
-  state => ({
-    connecting: state.server.connecting,
-    failure: state.server.failure
-  }),
-  dispatch => ({
-    connectServer: server => dispatch(serverRequest(server))
-  })
-)
 /** @extends React.Component */
-export default class NewServerView extends LoggedView {
+class NewServerView extends LoggedView {
   static propTypes = {
     navigator: PropTypes.object,
     server: PropTypes.string,
@@ -99,7 +91,10 @@ export default class NewServerView extends LoggedView {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.failure && nextProps.failure !== this.props.failure) {
-      Alert.alert('I18n.t("Oops")', 'I18n.t("The_URL_is_invalid")');
+      Alert.alert(
+        this.props.translate("ran.newServerView.Oops"),
+        this.props.translate("ran.newServerView.The_URL_is_invalid")
+      );
     }
   }
 
@@ -158,7 +153,7 @@ export default class NewServerView extends LoggedView {
   };
 
   render() {
-    const { connecting } = this.props;
+    const { connecting, translate } = this.props;
     const { text } = this.state;
     return (
       <KeyboardView
@@ -172,7 +167,9 @@ export default class NewServerView extends LoggedView {
         >
           <SafeAreaView style={sharedStyles.container} testID="new-server-view">
             <Image style={styles.image} source={{ uri: "new_server" }} />
-            <Text style={styles.title}>{'I18n.t("Sign_in_your_server")'}</Text>
+            <Text style={styles.title}>
+              {translate("ran.newServerView.Sign_in_your_server")}
+            </Text>
             <TextInput
               inputRef={e => (this.input = e)}
               containerStyle={styles.inputContainer}
@@ -186,7 +183,7 @@ export default class NewServerView extends LoggedView {
               clearButtonMode="while-editing"
             />
             <Button
-              title={'I18n.t("Connect")'}
+              title={translate("ran.newServerView.Connect")}
               type="primary"
               onPress={this.submit}
               disabled={text.length === 0}
@@ -200,3 +197,16 @@ export default class NewServerView extends LoggedView {
     );
   }
 }
+
+export default compose(
+  connect(
+    state => ({
+      connecting: state.server.connecting,
+      failure: state.server.failure
+    }),
+    dispatch => ({
+      connectServer: server => dispatch(serverRequest(server))
+    })
+  ),
+  translate
+)(NewServerView);

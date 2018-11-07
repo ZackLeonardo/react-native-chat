@@ -14,6 +14,8 @@ import { appInit } from "./actions";
 import { deepLinkingOpen } from "./actions/deepLinking";
 import parseQuery from "./lib/methods/helpers/parseQuery";
 import { connect } from "react-redux";
+import compose from "recompose/compose";
+import { translate } from "../main/ran-i18n";
 
 const handleOpenURL = ({ url }) => {
   if (url) {
@@ -47,13 +49,20 @@ class ChatInit extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
+const ChatInitView = compose(
+  connect(state => ({
     root: state.app.root
-  };
-};
+  })),
+  translate
+)(ChatInit);
 
-const ChatInitView = connect(mapStateToProps)(ChatInit);
+// class NewServer extends Component {
+//   render() {
+//     return <NewServerView {...this.props} />;
+//   }
+// }
+
+// const NewServerPage = compose(translate)(NewServer);
 
 export const ChatStackNavigator = createStackNavigator(
   {

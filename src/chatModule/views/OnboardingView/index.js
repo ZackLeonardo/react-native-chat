@@ -9,6 +9,8 @@ import {
 import PropTypes from "prop-types";
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { connect } from "react-redux";
+// import compose from "recompose/compose";
+// import { translate } from "../../../main/ran-i18n";
 
 import {
   selectServerRequest,
@@ -119,20 +121,23 @@ export default class OnboardingView extends LoggedView {
   };
 
   render() {
+    const { translate } = this.props;
     return (
       <SafeAreaView style={styles.container} testID="onboarding-view">
         <Image
           style={styles.onboarding}
           source={require("../../static/images/logo.png")}
         />
-        <Text style={styles.title}>{'I18n.t("Welcome_to_RocketChat")'}</Text>
+        <Text style={styles.title}>
+          {translate("ran.onboardingView.Welcome_to_RocketChat")}
+        </Text>
         <Text style={styles.subtitle}>
-          {'I18n.t("Open_Source_Communication")'}
+          {translate("ran.onboardingView.Open_Source_Communication")}
         </Text>
         <View style={styles.buttonsContainer}>
           <Button
             type="secondary"
-            title={'I18n.t("Connect_to_a_server")'}
+            title={translate("ran.onboardingView.Connect_to_a_server")}
             icon={
               <Image
                 source={{ uri: "connect_server" }}
@@ -144,7 +149,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="secondary"
-            title={'I18n.t("Join_the_community")'}
+            title={translate("ran.onboardingView.Join_the_community")}
             subtitle="open.rocket.chat"
             icon={
               <Image
@@ -157,7 +162,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="primary"
-            title={'I18n.t("Create_a_new_workspace")'}
+            title={translate("ran.onboardingView.Create_a_new_workspace")}
             icon={
               <Image
                 source={{ uri: "plus_onboarding" }}
