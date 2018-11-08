@@ -8,11 +8,6 @@ const isAndroid = () => Platform.OS === "android";
 
 /** @extends React.Component */
 export default class extends React.Component {
-  static navigatorStyle = {
-    navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
-    navBarTextColor: isAndroid() ? "#FFF" : undefined,
-    navBarButtonColor: isAndroid() ? "#FFF" : undefined
-  };
   static propTypes = {
     navigation: PropTypes.object
   };

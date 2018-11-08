@@ -15,7 +15,9 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
+import compose from "recompose/compose";
 
+import { translate } from "../../../main/ran-i18n";
 import SearchBox from "../../containers/SearchBox";
 import database from "../../../main/ran-db/sqlite";
 import RocketChat from "../../lib/rocketchat";
@@ -60,27 +62,8 @@ if (Platform.OS === "android") {
   });
 }
 
-@connect(
-  state => ({
-    userId: state.login.user && state.login.user.id,
-    server: state.server.server,
-    baseUrl: state.settings.baseUrl || state.server ? state.server.server : "",
-    searchText: state.rooms.searchText,
-    loadingServer: state.server.loading,
-    showServerDropdown: state.rooms.showServerDropdown,
-    showSortDropdown: state.rooms.showSortDropdown,
-    sortBy: state.sortPreferences.sortBy,
-    groupByType: state.sortPreferences.groupByType,
-    showFavorites: state.sortPreferences.showFavorites,
-    showUnread: state.sortPreferences.showUnread,
-    useRealName: state.settings.UI_Use_Real_Name
-  }),
-  dispatch => ({
-    toggleSortDropdown: () => dispatch(toggleSortDropdown())
-  })
-)
 /** @extends React.Component */
-export default class RoomsListView extends LoggedView {
+class RoomsListView extends LoggedView {
   static navigatorButtons = {
     leftButtons,
     rightButtons
@@ -184,34 +167,34 @@ export default class RoomsListView extends LoggedView {
   }
 
   onNavigatorEvent(event) {
-    // const { navigator } = this.props;
-    // if (event.type === "NavBarButtonPress") {
-    //   if (event.id === "newMessage") {
-    //     this.props.navigator.showModal({
-    //       screen: "NewMessageView",
-    //       title: 'I18n.t("New_Message")',
-    //       passProps: {
-    //         onPressItem: this._onPressItem
-    //       }
-    //     });
-    //   } else if (event.id === "settings") {
-    //     navigator.toggleDrawer({
-    //       side: "left"
-    //     });
-    //   } else if (event.id === "search") {
-    //     this.initSearchingAndroid();
-    //   } else if (event.id === "cancelSearch" || event.id === "back") {
-    //     this.cancelSearchingAndroid();
-    //   }
-    // } else if (
-    //   event.type === "ScreenChangedEvent" &&
-    //   event.id === "didAppear"
-    // ) {
-    //   navigator.setDrawerEnabled({
-    //     side: "left",
-    //     enabled: true
-    //   });
-    // }
+    const { navigator } = this.props;
+    if (event.type === "NavBarButtonPress") {
+      if (event.id === "newMessage") {
+        this.props.navigator.showModal({
+          screen: "NewMessageView",
+          title: 'I18n.t("New_Message")',
+          passProps: {
+            onPressItem: this._onPressItem
+          }
+        });
+      } else if (event.id === "settings") {
+        navigator.toggleDrawer({
+          side: "left"
+        });
+      } else if (event.id === "search") {
+        this.initSearchingAndroid();
+      } else if (event.id === "cancelSearch" || event.id === "back") {
+        this.cancelSearchingAndroid();
+      }
+    } else if (
+      event.type === "ScreenChangedEvent" &&
+      event.id === "didAppear"
+    ) {
+      navigator.setDrawerEnabled({
+        side: "left",
+        enabled: true
+      });
+    }
   }
 
   getSubscriptions = () => {
@@ -334,33 +317,33 @@ export default class RoomsListView extends LoggedView {
   };
 
   initDefaultHeader = () => {
-    // const { navigator } = this.props;
-    // navigator.setButtons({ leftButtons, rightButtons });
-    // navigator.setStyle({
-    //   navBarCustomView: "RoomsListHeaderView",
-    //   navBarComponentAlignment: "fill",
-    //   navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
-    //   navBarTextColor: isAndroid() ? "#FFF" : undefined,
-    //   navBarButtonColor: isAndroid() ? "#FFF" : undefined
-    // });
+    const { navigator } = this.props;
+    navigator.setButtons({ leftButtons, rightButtons });
+    navigator.setStyle({
+      navBarCustomView: "RoomsListHeaderView",
+      navBarComponentAlignment: "fill",
+      navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
+      navBarTextColor: isAndroid() ? "#FFF" : undefined,
+      navBarButtonColor: isAndroid() ? "#FFF" : undefined
+    });
   };
 
   initSearchingAndroid = () => {
-    // const { navigator } = this.props;
-    // navigator.setButtons({
-    //   leftButtons: [
-    //     {
-    //       id: "cancelSearch",
-    //       icon: { uri: "back", scale: Dimensions.get("window").scale }
-    //     }
-    //   ],
-    //   rightButtons: []
-    // });
-    // navigator.setStyle({
-    //   navBarCustomView: "RoomsListSearchView",
-    //   navBarComponentAlignment: "fill"
-    // });
-    // BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
+    const { navigator } = this.props;
+    navigator.setButtons({
+      leftButtons: [
+        {
+          id: "cancelSearch",
+          icon: { uri: "back", scale: Dimensions.get("window").scale }
+        }
+      ],
+      rightButtons: []
+    });
+    navigator.setStyle({
+      navBarCustomView: "RoomsListSearchView",
+      navBarComponentAlignment: "fill"
+    });
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   };
 
   // this is necessary during development (enables Cmd + r)
@@ -394,13 +377,13 @@ export default class RoomsListView extends LoggedView {
   };
 
   goRoom = (rid, name) => {
-    // this.props.navigator.push({
-    //   screen: "RoomView",
-    //   title: name,
-    //   backButtonTitle: "",
-    //   passProps: { rid }
-    // });
-    // this.cancelSearchingAndroid();
+    this.props.navigator.push({
+      screen: "RoomView",
+      title: name,
+      backButtonTitle: "",
+      passProps: { rid }
+    });
+    this.cancelSearchingAndroid();
   };
 
   _onPressItem = async (item = {}) => {
@@ -623,3 +606,27 @@ export default class RoomsListView extends LoggedView {
     );
   };
 }
+
+export default compose(
+  connect(
+    state => ({
+      userId: state.login.user && state.login.user.id,
+      server: state.server.server,
+      baseUrl:
+        state.settings.baseUrl || state.server ? state.server.server : "",
+      searchText: state.rooms.searchText,
+      loadingServer: state.server.loading,
+      showServerDropdown: state.rooms.showServerDropdown,
+      showSortDropdown: state.rooms.showSortDropdown,
+      sortBy: state.sortPreferences.sortBy,
+      groupByType: state.sortPreferences.groupByType,
+      showFavorites: state.sortPreferences.showFavorites,
+      showUnread: state.sortPreferences.showUnread,
+      useRealName: state.settings.UI_Use_Real_Name
+    }),
+    dispatch => ({
+      toggleSortDropdown: () => dispatch(toggleSortDropdown())
+    })
+  ),
+  translate
+)(RoomsListView);

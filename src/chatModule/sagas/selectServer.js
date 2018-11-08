@@ -113,8 +113,7 @@ const handleServerRequest = function* handleServerRequest({ server }) {
     const pushAction = StackActions.push({
       routeName: "LoginSignupView",
       params: {
-        title: server,
-        backButtonTitle: ""
+        title: server
       }
     });
     yield call(NavigationActions.push, pushAction);

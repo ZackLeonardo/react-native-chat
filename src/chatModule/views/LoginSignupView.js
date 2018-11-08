@@ -14,7 +14,9 @@ import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Base64 } from "js-base64";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../../main/ran-i18n";
 import { open, close } from "../actions/login";
 import LoggedView from "./View";
 import sharedStyles from "./Styles";
@@ -52,31 +54,10 @@ const styles = StyleSheet.create({
   }
 });
 
-@connect(
-  state => ({
-    server: state.server.server,
-    isFetching: state.login.isFetching,
-    Accounts_EmailOrUsernamePlaceholder:
-      state.settings.Accounts_EmailOrUsernamePlaceholder,
-    Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
-    Accounts_OAuth_Facebook: state.settings.Accounts_OAuth_Facebook,
-    Accounts_OAuth_Github: state.settings.Accounts_OAuth_Github,
-    Accounts_OAuth_Gitlab: state.settings.Accounts_OAuth_Gitlab,
-    Accounts_OAuth_Google: state.settings.Accounts_OAuth_Google,
-    Accounts_OAuth_Linkedin: state.settings.Accounts_OAuth_Linkedin,
-    Accounts_OAuth_Meteor: state.settings.Accounts_OAuth_Meteor,
-    Accounts_OAuth_Twitter: state.settings.Accounts_OAuth_Twitter,
-    services: state.login.services
-  }),
-  dispatch => ({
-    open: () => dispatch(open()),
-    close: () => dispatch(close())
-  })
-)
 /** @extends React.Component */
-export default class LoginSignupView extends LoggedView {
+class LoginSignupView extends LoggedView {
   static propTypes = {
-    navigator: PropTypes.object,
+    navigation: PropTypes.object,
     open: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
     isFetching: PropTypes.bool,
@@ -91,6 +72,13 @@ export default class LoginSignupView extends LoggedView {
     Accounts_OAuth_Meteor: PropTypes.bool,
     Accounts_OAuth_Twitter: PropTypes.bool,
     services: PropTypes.object
+  };
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam("title"),
+      headerBackTitle: null
+    };
   };
 
   constructor(props) {
@@ -188,8 +176,7 @@ export default class LoginSignupView extends LoggedView {
   };
 
   openOAuth = oAuthUrl => {
-    this.props.navigator.showModal({
-      screen: "OAuthView",
+    this.props.navigation.navigate("OAuthView", {
       title: "OAuth",
       passProps: {
         oAuthUrl
@@ -198,18 +185,14 @@ export default class LoginSignupView extends LoggedView {
   };
 
   login = () => {
-    this.props.navigator.push({
-      screen: "LoginView",
-      title: this.props.server,
-      backButtonTitle: ""
+    this.props.navigation.navigate("LoginView", {
+      title: this.props.server
     });
   };
 
   register = () => {
-    this.props.navigator.push({
-      screen: "RegisterView",
-      title: this.props.server,
-      backButtonTitle: ""
+    this.props.navigation.navigate("RegisterView", {
+      title: this.props.server
     });
   };
 
@@ -221,7 +204,7 @@ export default class LoginSignupView extends LoggedView {
     return (
       <View style={styles.servicesContainer}>
         <Text style={styles.servicesTitle}>
-          {'I18n.t("Or_continue_using_social_accounts")'}
+          {translate("ran.loginSignupView.Or_continue_using_social_accounts")}
         </Text>
         <View style={sharedStyles.loginOAuthButtons} key="services">
           {this.props.Accounts_OAuth_Facebook &&
@@ -289,6 +272,7 @@ export default class LoginSignupView extends LoggedView {
   };
 
   render() {
+    const { translate } = this.props;
     return (
       <ScrollView
         style={[sharedStyles.container, sharedStyles.containerScrollView]}
@@ -303,20 +287,23 @@ export default class LoginSignupView extends LoggedView {
                 { color: "#81848A" }
               ]}
             >
-              {'I18n.t("Welcome_title_pt_1")'}
+              {translate("ran.loginSignupView.Welcome_title_pt_1")}
             </Text>
             <Text style={[sharedStyles.loginText, styles.header]}>
-              {'I18n.t("Welcome_title_pt_2")'}
+              {translate("ran.loginSignupView.Welcome_title_pt_2")}
             </Text>
-            <Image style={styles.planetImage} source={{ uri: "new_server" }} />
+            <Image
+              style={styles.planetImage}
+              source={require("../Icons/new_server.imageset/new_server.png")}
+            />
             <Button
-              title={'I18n.t("I_have_an_account")'}
+              title={translate("ran.loginSignupView.I_have_an_account")}
               type="primary"
               onPress={() => this.login()}
               testID="welcome-view-login"
             />
             <Button
-              title={'I18n.t("Create_account")'}
+              title={translate("ran.loginSignupView.Create_account")}
               type="secondary"
               onPress={() => this.register()}
               testID="welcome-view-register"
@@ -329,3 +316,31 @@ export default class LoginSignupView extends LoggedView {
     );
   }
 }
+
+export default hoistStatics(
+  compose(
+    connect(
+      state => ({
+        server: state.server.server,
+        isFetching: state.login.isFetching,
+        Accounts_EmailOrUsernamePlaceholder:
+          state.settings.Accounts_EmailOrUsernamePlaceholder,
+        Accounts_PasswordPlaceholder:
+          state.settings.Accounts_PasswordPlaceholder,
+        Accounts_OAuth_Facebook: state.settings.Accounts_OAuth_Facebook,
+        Accounts_OAuth_Github: state.settings.Accounts_OAuth_Github,
+        Accounts_OAuth_Gitlab: state.settings.Accounts_OAuth_Gitlab,
+        Accounts_OAuth_Google: state.settings.Accounts_OAuth_Google,
+        Accounts_OAuth_Linkedin: state.settings.Accounts_OAuth_Linkedin,
+        Accounts_OAuth_Meteor: state.settings.Accounts_OAuth_Meteor,
+        Accounts_OAuth_Twitter: state.settings.Accounts_OAuth_Twitter,
+        services: state.login.services
+      }),
+      dispatch => ({
+        open: () => dispatch(open()),
+        close: () => dispatch(close())
+      })
+    ),
+    translate
+  )
+)(LoginSignupView);

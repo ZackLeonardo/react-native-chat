@@ -1,12 +1,21 @@
 import React, { Component } from "react";
 import { Linking } from "react-native";
-import { createStackNavigator } from "react-navigation";
+import {
+  createStackNavigator,
+  StackViewTransitionConfigs
+} from "react-navigation";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 import OnboardingView from "./views/OnboardingView";
 import RoomsListView from "./views/RoomsListView";
 import NewServerView from "./views/NewServerView";
 import LoginSignupView from "./views/LoginSignupView";
+import LoginView from "./views/LoginView";
+import RegisterView from "./views/RegisterView";
+import ForgotPasswordView from "./views/ForgotPasswordView";
+import TermsServiceView from "./views/TermsServiceView";
+import PrivacyPolicyView from "./views/PrivacyPolicyView";
+
 import Sidebar from "./containers/Sidebar";
 
 import { store } from "../src";
@@ -14,8 +23,11 @@ import { appInit } from "./actions";
 import { deepLinkingOpen } from "./actions/deepLinking";
 import parseQuery from "./lib/methods/helpers/parseQuery";
 import { connect } from "react-redux";
-import compose from "recompose/compose";
+import { compose, hoistStatics } from "recompose";
 import { translate } from "../main/ran-i18n";
+// import { iconsLoaded } from "./Icons";
+
+// iconsLoaded();
 
 const handleOpenURL = ({ url }) => {
   if (url) {
@@ -49,25 +61,38 @@ class ChatInit extends Component {
   }
 }
 
-const ChatInitView = compose(
-  connect(state => ({
-    root: state.app.root
-  })),
-  translate
+const ChatInitView = hoistStatics(
+  compose(
+    connect(state => ({
+      root: state.app.root
+    })),
+    translate
+  )
 )(ChatInit);
 
-// class NewServer extends Component {
-//   render() {
-//     return <NewServerView {...this.props} />;
-//   }
-// }
+const IOS_MODAL_ROUTES = ["OnboardingView", "NewServerView"];
 
-// const NewServerPage = compose(translate)(NewServer);
+let dynamicModalTransition = (transitionProps, prevTransitionProps) => {
+  const isModal = IOS_MODAL_ROUTES.some(
+    screenName =>
+      screenName === transitionProps.scene.route.routeName ||
+      (prevTransitionProps &&
+        screenName === prevTransitionProps.scene.route.routeName)
+  );
+  return StackViewTransitionConfigs.defaultTransitionConfig(
+    transitionProps,
+    prevTransitionProps,
+    isModal
+  );
+};
 
 export const ChatStackNavigator = createStackNavigator(
   {
     OnboardingView: {
-      screen: ChatInitView
+      screen: ChatInitView,
+      navigationOptions: {
+        header: null
+      }
     },
     RoomsListView: {
       screen: gestureHandlerRootHOC(RoomsListView)
@@ -76,16 +101,33 @@ export const ChatStackNavigator = createStackNavigator(
       screen: Sidebar
     },
     NewServerView: {
-      screen: NewServerView
+      screen: NewServerView,
+      navigationOptions: {
+        header: null
+      }
     },
     LoginSignupView: {
       screen: LoginSignupView
+    },
+    LoginView: {
+      screen: LoginView
+    },
+    RegisterView: {
+      screen: RegisterView
+    },
+    ForgotPasswordView: {
+      screen: ForgotPasswordView
+    },
+    TermsServiceView: {
+      screen: TermsServiceView
+    },
+    PrivacyPolicyView: {
+      screen: PrivacyPolicyView
     }
   },
   {
     initialRouteName: "OnboardingView",
-    headerMode: "none",
-    mode: "modal"
+    transitionConfig: dynamicModalTransition
   }
 );
 
@@ -94,16 +136,12 @@ export const ChatStackNavigator = createStackNavigator(
 // import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 // import CreateChannelView from './CreateChannelView';
-// import ForgotPasswordView from './ForgotPasswordView';
-// import LoginView from './LoginView';
 // import MentionedMessagesView from './MentionedMessagesView';
 // import NewMessageView from './NewMessageView';
 // import OAuthView from './OAuthView';
 // import OnboardingView from "./OnboardingView";
 // import PinnedMessagesView from './PinnedMessagesView';
-// import PrivacyPolicyView from './PrivacyPolicyView';
 // import ProfileView from './ProfileView';
-// import RegisterView from './RegisterView';
 // import RoomActionsView from './RoomActionsView';
 // import RoomFilesView from './RoomFilesView';
 // import RoomInfoEditView from './RoomInfoEditView';
@@ -119,13 +157,11 @@ export const ChatStackNavigator = createStackNavigator(
 // import Sidebar from "../containers/Sidebar";
 // import SnippetedMessagesView from './SnippetedMessagesView';
 // import StarredMessagesView from './StarredMessagesView';
-// import TermsServiceView from './TermsServiceView';
 
 // export const registerScreens = store => {
 // Navigation.registerComponent('CreateChannelView', () => CreateChannelView, store, Provider);
 // Navigation.registerComponent('ForgotPasswordView', () => ForgotPasswordView, store, Provider);
 
-// Navigation.registerComponent('LoginView', () => LoginView, store, Provider);
 // Navigation.registerComponent('MentionedMessagesView', () => gestureHandlerRootHOC(MentionedMessagesView), store, Provider);
 // Navigation.registerComponent('NewMessageView', () => NewMessageView, store, Provider);
 

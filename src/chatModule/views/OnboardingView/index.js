@@ -82,9 +82,6 @@ export default class OnboardingView extends LoggedView {
     this.props.navigation.navigate({
       routeName: "NewServerView",
       params: { backButtonTitle: "" }
-      // navigatorStyle: {
-      //   navBarHidden: true
-      // }
     });
   };
 

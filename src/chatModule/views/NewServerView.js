@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import compose from "recompose/compose";
 
+import { translate } from "../../main/ran-i18n";
 import { serverRequest } from "../actions/server";
 import sharedStyles from "./Styles";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
@@ -22,8 +24,6 @@ import LoggedView from "./View";
 import { scale, verticalScale, moderateScale } from "../utils/scaling";
 import KeyboardView from "../presentation/KeyboardView";
 import DeviceInfo from "../utils/deviceInfo";
-import { translate } from "../../main/ran-i18n";
-import compose from "recompose/compose";
 
 const styles = StyleSheet.create({
   image: {
@@ -78,7 +78,7 @@ class NewServerView extends LoggedView {
   }
 
   componentDidMount() {
-    const { server } = this.props;
+    const { server } = this.props.navigation.state.params;
     if (server) {
       this.props.connectServer(server);
       this.setState({ text: server });
