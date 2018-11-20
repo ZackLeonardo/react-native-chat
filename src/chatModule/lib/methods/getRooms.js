@@ -11,22 +11,14 @@ import { store } from "../../../src";
 
 //"subscriptions", "ORDER BY roomUpdatedAt ASC"
 const lastMessage = async function() {
-  console.log("1119: lastMessage");
-
   const message = await database.objects(
     "subscriptions",
     "ORDER BY roomUpdatedAt ASC"
   );
-
-  console.log("1119: lastMessage");
-  console.log(message);
-
   return message[0] && new Date(message[0].roomUpdatedAt);
 };
 
 const getRoomRest = async function() {
-  console.log("1119: getRoomRest");
-
   const updatedSince = await lastMessage();
   const { user } = store.getState().login;
   const { token, id } = user;
@@ -39,8 +31,6 @@ const getRoomRest = async function() {
 };
 
 const getRoomDpp = async function() {
-  console.log("1119: getRoomDpp");
-
   try {
     const { ddp } = this;
     const updatedSince = await lastMessage();
@@ -51,10 +41,7 @@ const getRoomDpp = async function() {
       ddp.call("subscriptions/get", updatedSince),
       ddp.call("rooms/get", updatedSince)
     ]);
-    let test = mergeSubscriptionsRooms(subscriptions, rooms);
-    console.log(test);
-
-    return test;
+    return mergeSubscriptionsRooms(subscriptions, rooms);
   } catch (e) {
     return getRoomRest.apply(this);
   }

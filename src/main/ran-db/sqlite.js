@@ -111,14 +111,12 @@ class DB {
   objectstest = () => {
     console.log("objectstest");
 
-    setTimeout(() => {
-      console.log("setTimeout");
-    });
+    this.delete();
 
     // this.database.transaction(
     //   tx => {
     //     tx.executeSql(
-    //       "SELECT * FROM subscriptions WHERE (archived = 0 OR archived is null) and open = 1 order by roomUpdatedAt desc",
+    //       "SELECT * FROM subscriptions WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by roomUpdatedAt desc , name desc",
     //       [],
     //       (_, { rows }) => console.log("objectstest" + JSON.stringify(rows))
     //     );
@@ -183,12 +181,24 @@ class DB {
     console.log("create sql:" + sql);
     console.log("create sql values:" + values);
 
-    return this.database.transaction(
+    this.database.transaction(
       tx => {
         tx.executeSql(sql, values);
       },
       null,
-      pubsubs
+      pubsubs(schema_name)
+    );
+  }
+
+  delete() {
+    this.database.transaction(
+      tx => {
+        tx.executeSql(
+          `DELETE FROM subscriptions WHERE _id = "LRaFP8bfaJSLsS8vi"`
+        );
+      },
+      null,
+      pubsubs("subscriptions")
     );
   }
 

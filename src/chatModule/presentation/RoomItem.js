@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import { View, Text, StyleSheet, Image, Platform } from "react-native";
 import { connect } from "react-redux";
 import { emojify } from "react-emojione";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../../main/ran-i18n";
 import Avatar from "../containers/Avatar";
 import Status from "../containers/status";
 import Touch from "../utils/touch/index"; //eslint-disable-line
 import RoomTypeIcon from "../containers/RoomTypeIcon";
-// import I18n from '../i18n';
 
 const styles = StyleSheet.create({
   container: {
@@ -127,12 +128,8 @@ const attrs = [
   "showLastMessage",
   "type"
 ];
-@connect(state => ({
-  username: state.login.user && state.login.user.username,
-  StoreLastMessage: state.settings.Store_Last_Message,
-  baseUrl: state.settings.Site_Url || state.server ? state.server.server : ""
-}))
-export default class RoomItem extends React.Component {
+
+class RoomItem extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -200,13 +197,13 @@ export default class RoomItem extends React.Component {
       return "";
     }
     if (!lastMessageObject) {
-      return 'I18n.t("No_Message")';
+      return this.props.translate("ran.roomItem.No_Message");
     }
 
     let prefix = "";
 
     if (lastMessageObject.u.username === this.props.username) {
-      prefix = 'I18n.t("You_colon")';
+      prefix = this.props.translate("ran.roomItem.You_colon");
     } else if (type !== "d") {
       prefix = `${lastMessageObject.u.username}: `;
     }
@@ -225,7 +222,7 @@ export default class RoomItem extends React.Component {
   }
 
   formatDate = date =>
-    moment(Date(date)).calendar(null, {
+    moment(date).calendar(null, {
       lastDay: `[${"Yesterday"}]`,
       sameDay: "h:mm A",
       lastWeek: "dddd",
@@ -262,17 +259,25 @@ export default class RoomItem extends React.Component {
 
     let accessibilityLabel = name;
     if (unread === 1) {
-      accessibilityLabel += `, ${unread} ${'I18n.t("alert")'}`;
+      accessibilityLabel += `, ${unread} ${this.props.translate(
+        "ran.common.alert"
+      )}`;
     } else if (unread > 1) {
-      accessibilityLabel += `, ${unread} ${'I18n.t("alerts")'}`;
+      accessibilityLabel += `, ${unread} ${this.props.translate(
+        "ran.common.alerts"
+      )}`;
     }
 
     if (userMentions > 0) {
-      accessibilityLabel += `, ${'I18n.t("you_were_mentioned")'}`;
+      accessibilityLabel += `, ${this.props.translate(
+        "ran.roomItem.you_were_mentioned"
+      )}`;
     }
 
     if (date) {
-      accessibilityLabel += `, ${'I18n.t("last_message")'} ${date}`;
+      accessibilityLabel += `, ${this.props.translate(
+        "ran.roomItem.last_message"
+      )} ${date}`;
     }
 
     return (
@@ -326,3 +331,15 @@ export default class RoomItem extends React.Component {
     );
   }
 }
+
+export default hoistStatics(
+  compose(
+    connect(state => ({
+      username: state.login.user && state.login.user.username,
+      StoreLastMessage: state.settings.Store_Last_Message,
+      baseUrl:
+        state.settings.Site_Url || state.server ? state.server.server : ""
+    })),
+    translate
+  )
+)(RoomItem);

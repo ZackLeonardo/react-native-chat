@@ -4464,6 +4464,11 @@ lodash.isarray@^3.0.0:
   resolved "https://registry.npmjs.org/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
   integrity sha1-eeTriMNqgSKvhvhEqpvNhRtfu1U=
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.keys@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/lodash.keys/-/lodash.keys-3.1.2.tgz#4dbc0472b156be50a0b286855d1bd0b0c656098a"
@@ -5769,6 +5774,13 @@ react-native-meteor@^1.4.0:
     trackr "^2.0.2"
     underscore "^1.8.3"
     wolfy87-eventemitter "^4.3.0"
+
+react-native-picker-select@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/react-native-picker-select/-/react-native-picker-select-5.1.0.tgz#528cb6a4bd113d8329ea795a8f4497c14f9d3433"
+  integrity sha512-8CEUwhLthfSr67FailEqW1Cz3e/Bqq+NHpe3FF5bchwfF35Gw0RMXgqQqndS8jMb4lBDm0V9iTfwlHsd04s7Sw==
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-reanimated@1.0.0-alpha.6:
   version "1.0.0-alpha.6"

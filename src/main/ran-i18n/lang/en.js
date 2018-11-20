@@ -5,7 +5,10 @@ module.exports = {
       Email: "Email",
       Sign_Up: "Sign Up",
       Alert: "Alert",
-      Search: "Search"
+      alert: "alert",
+      alerts: "alerts",
+      Search: "Search",
+      setting: "setting"
     },
     onboardingView: {
       Welcome_to_RocketChat: "Welcome to WESTWORD",
@@ -61,6 +64,12 @@ module.exports = {
       name: "name",
       activity: "activity",
       Sorting_by: "Sorting by "
+    },
+    roomItem: {
+      No_Message: "No Message",
+      You_colon: "You: ",
+      you_were_mentioned: "you were mentioned",
+      last_message: "last message"
     },
     rooms: {
       unTop: "Not Top",

@@ -11,11 +11,16 @@ import {
   Image,
   Dimensions,
   ScrollView,
-  Keyboard
+  Keyboard,
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
 import { compose, hoistStatics } from "recompose";
+import PubSub from "pubsub-js";
+import shallowEqual from "shallowequal";
+import Icon from "@expo/vector-icons/Ionicons";
+import Feather from "@expo/vector-icons/Feather";
 
 import { translate } from "../../../main/ran-i18n";
 import SearchBox from "../../containers/SearchBox";
@@ -54,28 +59,8 @@ const rightButtons = [
   }
 ];
 
-if (Platform.OS === "android") {
-  rightButtons.push({
-    id: "search",
-    icon: { uri: "search", scale: Dimensions.get("window").scale }
-  });
-}
-
 /** @extends React.Component */
 class RoomsListView extends LoggedView {
-  static navigatorButtons = {
-    leftButtons,
-    rightButtons
-  };
-
-  static navigatorStyle = {
-    navBarCustomView: "RoomsListHeaderView",
-    navBarComponentAlignment: "fill",
-    navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
-    navBarTextColor: isAndroid() ? "#FFF" : undefined,
-    navBarButtonColor: isAndroid() ? "#FFF" : undefined
-  };
-
   static propTypes = {
     navigation: PropTypes.object,
     userId: PropTypes.string,
@@ -96,7 +81,40 @@ class RoomsListView extends LoggedView {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("title"),
-      headerBackTitle: null
+      headerBackTitle: null,
+      headerRight: (
+        <View style={{ flexDirection: "row" }}>
+          {Platform.OS === "android" ? (
+            <TouchableOpacity onPress={() => {}}>
+              <Icon name="ios-search" size={22} color="#666" />
+            </TouchableOpacity>
+          ) : null}
+
+          <TouchableOpacity
+            style={{ marginHorizontal: 15 }}
+            onPress={() => {
+              navigation.navigate("NewMessageView", {
+                title: `this.props.translate("ran.roomsListView.New_Message")`,
+                onPressItem: this._onPressItem
+              });
+            }}
+          >
+            <Image
+              source={require("../../Icons/new_channel.imageset/new_channel.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerLeft: (
+        <TouchableOpacity
+          style={{ marginHorizontal: 15 }}
+          onPress={() => {
+            navigation.toggleDrawer();
+          }}
+        >
+          <Feather name="settings" size={20} color="#4674F1" />
+        </TouchableOpacity>
+      )
     };
   };
 
@@ -104,6 +122,18 @@ class RoomsListView extends LoggedView {
     super("RoomsListView", props);
 
     this.data = [];
+    this.chats = [];
+    this.unread = [];
+    this.favorites = [];
+    this.channels = [];
+    this.privateGroup = [];
+    this.direct = [];
+    this.livechat = [];
+    this.unreadToken = null;
+    this.favoritesToken = null;
+    this.groupByTypeToken = null;
+    this.chatsToken = null;
+
     this.state = {
       search: [],
       loading: true,
@@ -159,13 +189,10 @@ class RoomsListView extends LoggedView {
   }
 
   componentWillUnmount() {
-    this.removeListener(this.data);
-    this.removeListener(this.unread);
-    this.removeListener(this.favorites);
-    this.removeListener(this.channels);
-    this.removeListener(this.privateGroup);
-    this.removeListener(this.direct);
-    this.removeListener(this.livechat);
+    this.removeListener(this.chatsToken);
+    this.removeListener(this.unreadToken);
+    this.removeListener(this.favoritesToken);
+    this.removeListener(this.groupByTypeToken);
 
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -226,132 +253,145 @@ class RoomsListView extends LoggedView {
 
       // unread
       if (this.props.showUnread) {
-        console.log(this.data);
-
-        this.unread = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${
-            this.data
-          }, name desc`
-        );
-        unread = this.unread.slice();
-        // setTimeout(() => {
-        //   this.unread.addListener(() =>
-        //     this.setState({ unread: this.unread.slice() })
-        //   );
-        // });
+        if (!this.unreadToken) {
+          this.unreadToken = PubSub.subscribe("subscriptions", async () => {
+            this.unread = await database.objects(
+              "subscriptions",
+              `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${
+                this.data
+              }, name desc`
+            );
+            if (!shallowEqual(this.unread, unread)) {
+              //!_.isEqualWith(this.unread, newUnread)
+              console.log("unread updating");
+              unread = this.unread.slice();
+              this.setState({ unread: unread });
+            }
+          });
+        }
       } else {
-        this.removeListener(unread);
+        this.removeListener(this.unreadToken);
       }
       // favorites
       if (this.props.showFavorites) {
-        this.favorites = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${
-            this.data
-          }`
-        );
-        favorites = this.favorites.slice();
-        // setTimeout(() => {
-        //   this.favorites.addListener(() =>
-        //     this.setState({ favorites: this.favorites.slice() })
-        //   );
-        // });
+        if (!this.favoritesToken) {
+          this.favoritesToken = PubSub.subscribe("subscriptions", async () => {
+            this.favorites = await database.objects(
+              "subscriptions",
+              `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${
+                this.data
+              }`
+            );
+            if (!shallowEqual(this.favorites, favorites)) {
+              //!_.isEqualWith(this.unread, newUnread)
+              console.log("favorites updating");
+              favorites = this.favorites.slice();
+              this.setState({ favorites: favorites });
+            }
+          });
+        }
       } else {
-        this.removeListener(favorites);
+        this.removeListener(this.favoritesToken);
       }
       // type
       if (this.props.groupByType) {
-        // channels
-        this.channels = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${
-            this.data
-          }`
-        );
-        channels = this.channels.slice();
-        // private
-        this.privateGroup = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${
-            this.data
-          }`
-        );
-        privateGroup = this.privateGroup.slice();
-        // direct
-        this.direct = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${
-            this.data
-          }`
-        );
-        direct = this.direct.slice();
-        // livechat
-        this.livechat = await database.objects(
-          "subscriptions",
-          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${
-            this.data
-          }`
-        );
-        livechat = this.livechat.slice();
-        // setTimeout(() => {
-        //   this.channels.addListener(() =>
-        //     this.setState({ channels: this.channels.slice() })
-        //   );
-        //   this.privateGroup.addListener(() =>
-        //     this.setState({ privateGroup: this.privateGroup.slice() })
-        //   );
-        //   this.direct.addListener(() =>
-        //     this.setState({ direct: this.direct.slice() })
-        //   );
-        //   this.livechat.addListener(() =>
-        //     this.setState({ livechat: this.livechat.slice() })
-        //   );
-        // });
-        this.removeListener(this.chats);
+        if (!this.groupByTypeToken) {
+          this.groupByTypeToken = PubSub.subscribe(
+            "subscriptions",
+            async () => {
+              // channels
+              this.channels = await database.objects(
+                "subscriptions",
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${
+                  this.data
+                }`
+              );
+              if (!shallowEqual(this.channels, channels)) {
+                //!_.isEqualWith(this.unread, newUnread)
+                console.log("channels updating");
+                channels = this.channels.slice();
+                this.setState({ channels: channels });
+              }
+
+              // private
+              this.privateGroup = await database.objects(
+                "subscriptions",
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${
+                  this.data
+                }`
+              );
+              if (!shallowEqual(this.privateGroup, privateGroup)) {
+                //!_.isEqualWith(this.unread, newUnread)
+                console.log("privateGroup updating");
+                privateGroup = this.privateGroup.slice();
+                this.setState({ privateGroup: privateGroup });
+              }
+
+              // direct
+              this.direct = await database.objects(
+                "subscriptions",
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${
+                  this.data
+                }`
+              );
+              if (!shallowEqual(this.direct, direct)) {
+                //!_.isEqualWith(this.unread, newUnread)
+                console.log("direct updating");
+                direct = this.direct.slice();
+                this.setState({ direct: direct });
+              }
+              // livechat
+              this.livechat = await database.objects(
+                "subscriptions",
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${
+                  this.data
+                }`
+              );
+              if (!shallowEqual(this.livechat, livechat)) {
+                //!_.isEqualWith(this.unread, newUnread)
+                console.log("livechat updating");
+                livechat = this.livechat.slice();
+                this.setState({ livechat: livechat });
+              }
+            }
+          );
+        }
+
+        this.removeListener(this.chatsToken);
       } else {
         // chats
         if (this.props.showUnread) {
-          this.chats = await database.objects(
-            "subscriptions",
-            `WHERE (archived = 0 OR archived is null) and open = 1 and unread = 0 and alert = 0 order by ${
-              this.data
-            }`
-          );
+          if (!this.chatsToken) {
+            this.chatsToken = PubSub.subscribe("subscriptions", async () => {
+              this.chats = await database.objects(
+                "subscriptions",
+                `WHERE (archived = 0 OR archived is null) and open = 1 and unread = 0 and alert = 0 order by ${
+                  this.data
+                }`
+              );
+            });
+          }
         } else {
           this.chats = this.data;
         }
-        chats = this.chats.slice();
-        // setTimeout(() => {
-        //   this.chats.addListener(() =>
-        //     this.setState({ chats: this.chats.slice() })
-        //   );
-        // });
-        this.removeListener(this.channels);
-        this.removeListener(this.privateGroup);
-        this.removeListener(this.direct);
-        this.removeListener(this.livechat);
-      }
+        if (!shallowEqual(this.chats, chats)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("chats updating");
+          chats = this.chats.slice();
+          this.setState({ chats: chats });
+        }
 
-      // setState
-      this.setState({
-        chats,
-        unread,
-        favorites,
-        channels,
-        privateGroup,
-        direct,
-        livechat
-      });
+        this.removeListener(this.groupByTypeToken);
+      }
     }
     this.timeout = setTimeout(() => {
       this.setState({ loading: false });
     }, 200);
   };
 
-  removeListener = data => {
-    if (data && data.removeAllListeners) {
-      data.removeAllListeners();
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
     }
   };
 
@@ -483,14 +523,13 @@ class RoomsListView extends LoggedView {
   );
 
   renderSearchBar = () => {
-    if (Platform.OS === "ios") {
-      return (
-        <SearchBox
-          onChangeText={text => this.search(text)}
-          testID="rooms-list-view-search"
-        />
-      );
-    }
+    // if (Platform.OS === "ios") {}
+    return (
+      <SearchBox
+        onChangeText={text => this.search(text)}
+        testID="rooms-list-view-search"
+      />
+    );
   };
 
   renderItem = ({ item }) => {

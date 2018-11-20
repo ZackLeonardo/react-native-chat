@@ -1,5 +1,5 @@
 export default {
   server: "",
   login: {},
-  settings: {}
+  settings: { Store_Last_Message: true }
 };

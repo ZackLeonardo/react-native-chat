@@ -9,7 +9,7 @@ import CoreMainNavigator from "./CoreMainNavigator";
 // import { selectServerRequest } from "../../chatModule/redux/actions/server";
 // import { iconsLoaded } from "../../chatModule/Icons";
 // import { registerScreens } from "../../chatModule/views";
-import { ChatStackNavigator } from "../../chatModule";
+import { ChatNavigator } from "../../chatModule";
 
 // registerScreens(store);
 // iconsLoaded();
@@ -45,7 +45,7 @@ export default class CoreMain extends React.Component {
       {
         // AuthLoading: AuthLoadingScreen,
         App: Nav,
-        Base: ChatStackNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
+        Base: ChatNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
       },
       {
         initialRouteName: "Base"

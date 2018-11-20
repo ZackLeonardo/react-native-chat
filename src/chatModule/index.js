@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { Linking } from "react-native";
+import { Linking, View, ScrollView } from "react-native";
 import {
   createStackNavigator,
-  StackViewTransitionConfigs
+  StackViewTransitionConfigs,
+  createDrawerNavigator,
+  DrawerItems,
+  SafeAreaView
 } from "react-navigation";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
@@ -15,6 +18,8 @@ import RegisterView from "./views/RegisterView";
 import ForgotPasswordView from "./views/ForgotPasswordView";
 import TermsServiceView from "./views/TermsServiceView";
 import PrivacyPolicyView from "./views/PrivacyPolicyView";
+import NewMessageView from "./views/NewMessageView";
+import SettingsView from "./views/SettingsView";
 
 import Sidebar from "./containers/Sidebar";
 
@@ -86,7 +91,7 @@ let dynamicModalTransition = (transitionProps, prevTransitionProps) => {
   );
 };
 
-export const ChatStackNavigator = createStackNavigator(
+const stackNavigator = createStackNavigator(
   {
     OnboardingView: {
       screen: ChatInitView,
@@ -95,10 +100,10 @@ export const ChatStackNavigator = createStackNavigator(
       }
     },
     RoomsListView: {
-      screen: gestureHandlerRootHOC(RoomsListView),
-      navigationOptions: {
-        header: null
-      }
+      screen: gestureHandlerRootHOC(RoomsListView)
+    },
+    NewMessageView: {
+      screen: NewMessageView
     },
     Sidebar: {
       screen: Sidebar
@@ -126,11 +131,62 @@ export const ChatStackNavigator = createStackNavigator(
     },
     PrivacyPolicyView: {
       screen: PrivacyPolicyView
+    },
+    SettingsView: {
+      screen: SettingsView
     }
   },
   {
     initialRouteName: "OnboardingView",
     transitionConfig: dynamicModalTransition
+  }
+);
+
+const CustomDrawerContent = props => (
+  <ScrollView>
+    <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+      <DrawerItems
+        {...props}
+        onItemPress={navigation => {
+          if (navigation.route.key === "chatNavigator") {
+            props.navigation.navigate("RoomsListView");
+          } else {
+            props.navigation.navigate(navigation.route.key);
+          }
+        }}
+      />
+    </SafeAreaView>
+  </ScrollView>
+  // <View style={{ flex: 1, flexDirection: "column" }}>
+  //   <View style={{ flex: 0.94 }}>
+  //     <DrawerItems
+  //       {...props}
+  //       onItemPress={navigation => {
+  //         if (navigation.focused == false) {
+  //           const navigateAction = NavigationActions.navigate({
+  //             routeName: navigation.route.routeName
+  //           });
+  //           props.navigation.dispatch(navigateAction);
+  //         }
+  //       }}
+  //     />
+  //   </View>
+  // </View>
+);
+
+export const ChatNavigator = createDrawerNavigator(
+  {
+    chatNavigator: {
+      screen: stackNavigator
+    },
+    SettingsView: {
+      screen: SettingsView
+    }
+  },
+  {
+    drawerPosition: "left",
+    drawerType: "slide",
+    contentComponent: CustomDrawerContent
   }
 );
 
@@ -140,7 +196,6 @@ export const ChatStackNavigator = createStackNavigator(
 
 // import CreateChannelView from './CreateChannelView';
 // import MentionedMessagesView from './MentionedMessagesView';
-// import NewMessageView from './NewMessageView';
 // import OAuthView from './OAuthView';
 // import OnboardingView from "./OnboardingView";
 // import PinnedMessagesView from './PinnedMessagesView';
@@ -156,7 +211,6 @@ export const ChatStackNavigator = createStackNavigator(
 // import RoomView from './RoomView';
 // import SearchMessagesView from './SearchMessagesView';
 // import SelectedUsersView from './SelectedUsersView';
-// import SettingsView from './SettingsView';
 // import Sidebar from "../containers/Sidebar";
 // import SnippetedMessagesView from './SnippetedMessagesView';
 // import StarredMessagesView from './StarredMessagesView';
@@ -166,7 +220,6 @@ export const ChatStackNavigator = createStackNavigator(
 // Navigation.registerComponent('ForgotPasswordView', () => ForgotPasswordView, store, Provider);
 
 // Navigation.registerComponent('MentionedMessagesView', () => gestureHandlerRootHOC(MentionedMessagesView), store, Provider);
-// Navigation.registerComponent('NewMessageView', () => NewMessageView, store, Provider);
 
 // Navigation.registerComponent('OAuthView', () => OAuthView, store, Provider);
 // Navigation.registerComponent(

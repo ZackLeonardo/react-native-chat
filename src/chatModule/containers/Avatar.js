@@ -130,10 +130,12 @@ export default class Avatar extends React.PureComponent {
       image = uri ? (
         <Image
           style={[styles.avatar, avatarStyle]}
-          source={{
-            uri,
-            priority: FastImage.priority.high
-          }}
+          source={
+            {
+              // uri,
+              // priority: Image.priority.high
+            }
+          }
         />
       ) : null;
     }
