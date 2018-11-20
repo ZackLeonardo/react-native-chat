@@ -95,7 +95,10 @@ export const ChatStackNavigator = createStackNavigator(
       }
     },
     RoomsListView: {
-      screen: gestureHandlerRootHOC(RoomsListView)
+      screen: gestureHandlerRootHOC(RoomsListView),
+      navigationOptions: {
+        header: null
+      }
     },
     Sidebar: {
       screen: Sidebar

@@ -66,7 +66,7 @@ const handleOpen = function* handleOpen({ params }) {
   } else {
     // if deep link is from a different server
     // search if deep link's server already exists
-    const servers = yield database.databases.serversDB
+    const servers = yield database.database.serversDB
       .objects("servers")
       .filtered("id = $0", host); // TODO: need better test
     if (servers.length) {

@@ -19,8 +19,6 @@ import log from "../utils/log";
 import { store } from "../../src";
 import { StackActions } from "react-navigation";
 
-let LoginSignupView = null;
-
 const validate = function* validate(server) {
   return yield RocketChat.testServer(server);
 };
@@ -36,8 +34,12 @@ const handleSelectServer = function* handleSelectServer({ server }) {
       yield put(actions.appStart("inside"));
     }
 
-    // const settings = database.objects('settings');
-    // yield put(actions.setAllSettings(RocketChat.parseSettings(settings.slice(0, settings.length))));
+    // const settings = yield database.objects("settings");
+    // yield put(
+    //   actions.setAllSettings(
+    //     RocketChat.parseSettings(settings.slice(0, settings.length))
+    //   )
+    // );
     database.objects("settings").then(function*(rows) {
       console.log("settings rows  " + JSON.stringify(rows));
       if (rows) {
@@ -49,7 +51,7 @@ const handleSelectServer = function* handleSelectServer({ server }) {
       }
     });
 
-    // const emojis = database.objects("customEmojis");
+    // const emojis = yield database.objects("customEmojis");
     // yield put(
     //   actions.setCustomEmojis(
     //     RocketChat.parseEmojis(emojis.slice(0, emojis.length))
@@ -66,7 +68,7 @@ const handleSelectServer = function* handleSelectServer({ server }) {
       }
     });
 
-    // const roles = database.objects("roles");
+    // const roles = yield database.objects("roles");
     // yield put(
     //   setRoles(
     //     roles.reduce((result, role) => {

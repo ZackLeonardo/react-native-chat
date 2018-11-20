@@ -138,11 +138,11 @@ export default class RoomItem extends React.Component {
     name: PropTypes.string.isRequired,
     baseUrl: PropTypes.string.isRequired,
     StoreLastMessage: PropTypes.bool,
-    _updatedAt: PropTypes.instanceOf(Date),
-    lastMessage: PropTypes.object,
+    _updatedAt: PropTypes.string,
+    lastMessage: PropTypes.string,
     showLastMessage: PropTypes.bool,
     favorite: PropTypes.bool,
-    alert: PropTypes.bool,
+    alert: PropTypes.number,
     unread: PropTypes.number,
     userMentions: PropTypes.number,
     id: PropTypes.string,
@@ -159,20 +159,20 @@ export default class RoomItem extends React.Component {
     avatarSize: 48
   };
   shouldComponentUpdate(nextProps) {
-    const oldlastMessage = this.props.lastMessage;
-    const newLastmessage = nextProps.lastMessage;
+    const oldlastMessage = JSON.parse(this.props.lastMessage);
+    const newLastmessage = JSON.parse(nextProps.lastMessage);
 
     if (
       oldlastMessage &&
       newLastmessage &&
-      oldlastMessage.ts.toGMTString() !== newLastmessage.ts.toGMTString()
+      oldlastMessage.ts !== newLastmessage.ts
     ) {
       return true;
     }
     if (
       this.props._updatedAt &&
       nextProps._updatedAt &&
-      nextProps._updatedAt.toGMTString() !== this.props._updatedAt.toGMTString()
+      nextProps._updatedAt !== this.props._updatedAt
     ) {
       return true;
     }
@@ -194,22 +194,24 @@ export default class RoomItem extends React.Component {
   get lastMessage() {
     const { lastMessage, type, showLastMessage } = this.props;
 
+    let lastMessageObject = JSON.parse(lastMessage);
+
     if (!this.props.StoreLastMessage || !showLastMessage) {
       return "";
     }
-    if (!lastMessage) {
+    if (!lastMessageObject) {
       return 'I18n.t("No_Message")';
     }
 
     let prefix = "";
 
-    if (lastMessage.u.username === this.props.username) {
+    if (lastMessageObject.u.username === this.props.username) {
       prefix = 'I18n.t("You_colon")';
     } else if (type !== "d") {
-      prefix = `${lastMessage.u.username}: `;
+      prefix = `${lastMessageObject.u.username}: `;
     }
 
-    let msg = `${prefix}${lastMessage.msg.replace(/[\n\t\r]/gim, "")}`;
+    let msg = `${prefix}${lastMessageObject.msg.replace(/[\n\t\r]/gim, "")}`;
     msg = emojify(msg, { output: "unicode" });
     return msg;
   }
@@ -223,7 +225,7 @@ export default class RoomItem extends React.Component {
   }
 
   formatDate = date =>
-    moment(date).calendar(null, {
+    moment(Date(date)).calendar(null, {
       lastDay: `[${"Yesterday"}]`,
       sameDay: "h:mm A",
       lastWeek: "dddd",

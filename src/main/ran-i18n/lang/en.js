@@ -4,7 +4,8 @@ module.exports = {
       Username: "Username",
       Email: "Email",
       Sign_Up: "Sign Up",
-      Alert: "Alert"
+      Alert: "Alert",
+      Search: "Search"
     },
     onboardingView: {
       Welcome_to_RocketChat: "Welcome to WESTWORD",
@@ -54,6 +55,12 @@ module.exports = {
       Forgot_password_If_this_email_is_registered:
         "If this email is registered, we'll send instructions on how to reset your password. If you do not receive an email shortly, please come back and try again.",
       Reset_password: "Reset password"
+    },
+    roomsListView: {
+      New_Message: "New Message",
+      name: "name",
+      activity: "activity",
+      Sorting_by: "Sorting by "
     },
     rooms: {
       unTop: "Not Top",

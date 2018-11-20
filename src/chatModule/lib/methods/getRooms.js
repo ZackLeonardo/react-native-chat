@@ -9,16 +9,25 @@ import database from "../../../main/ran-db/sqlite";
 import log from "../../utils/log";
 import { store } from "../../../src";
 
-const lastMessage = () => {
-  // const message = database
-  //   .objects("subscriptions")
-  //   .sorted("roomUpdatedAt", true)[0];
-  // return message && new Date(message.roomUpdatedAt);
-  return "";
+//"subscriptions", "ORDER BY roomUpdatedAt ASC"
+const lastMessage = async function() {
+  console.log("1119: lastMessage");
+
+  const message = await database.objects(
+    "subscriptions",
+    "ORDER BY roomUpdatedAt ASC"
+  );
+
+  console.log("1119: lastMessage");
+  console.log(message);
+
+  return message[0] && new Date(message[0].roomUpdatedAt);
 };
 
 const getRoomRest = async function() {
-  const updatedSince = lastMessage();
+  console.log("1119: getRoomRest");
+
+  const updatedSince = await lastMessage();
   const { user } = store.getState().login;
   const { token, id } = user;
   const server = this.ddp.url.replace(/^ws/, "http");
@@ -30,14 +39,22 @@ const getRoomRest = async function() {
 };
 
 const getRoomDpp = async function() {
+  console.log("1119: getRoomDpp");
+
   try {
     const { ddp } = this;
-    const updatedSince = lastMessage();
+    const updatedSince = await lastMessage();
+
+    console.log(updatedSince);
+
     const [subscriptions, rooms] = await Promise.all([
       ddp.call("subscriptions/get", updatedSince),
       ddp.call("rooms/get", updatedSince)
     ]);
-    return mergeSubscriptionsRooms(subscriptions, rooms);
+    let test = mergeSubscriptionsRooms(subscriptions, rooms);
+    console.log(test);
+
+    return test;
   } catch (e) {
     return getRoomRest.apply(this);
   }
@@ -55,7 +72,7 @@ export default async function() {
 
       const data = rooms.map(room => ({
         room,
-        sub: database.objects("subscriptions").filtered("rid == $0", room._id)
+        sub: database.objects("subscriptions", `WHERE rid = ${room._id}`)
       }));
 
       InteractionManager.runAfterInteractions(() => {

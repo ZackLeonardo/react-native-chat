@@ -325,7 +325,9 @@ export default class Socket extends EventEmitter {
       method,
       params
     })
-      .then(data => data.result || data.subs)
+      .then(data => {
+        return data.result || data.subs;
+      })
       .catch(err => {
         log("DDP call Error", err);
         if (err && /you've been logged out by the server/i.test(err.reason)) {

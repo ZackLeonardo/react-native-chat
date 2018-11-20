@@ -1,8 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Image, TextInput, Platform } from "react-native";
 import PropTypes from "prop-types";
+import { compose, hoistStatics } from "recompose";
 
-// import I18n from '../i18n';
+import { translate } from "../../main/ran-i18n";
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const SearchBox = ({ onChangeText, testID }) => (
+const SearchBox = ({ onChangeText, testID, translate }) => (
   <View style={styles.container}>
     <View style={styles.searchBox}>
       <Image source={{ uri: "textinput_search" }} style={styles.icon} />
@@ -43,7 +44,7 @@ const SearchBox = ({ onChangeText, testID }) => (
         autoCorrect={false}
         blurOnSubmit
         clearButtonMode="while-editing"
-        placeholder={'I18n.t("Search")'}
+        placeholder={translate("ran.common.Search")}
         returnKeyType="search"
         style={styles.input}
         testID={testID}
@@ -59,4 +60,4 @@ SearchBox.propTypes = {
   testID: PropTypes.string
 };
 
-export default SearchBox;
+export default hoistStatics(compose(translate))(SearchBox);

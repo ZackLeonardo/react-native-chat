@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
-import compose from "recompose/compose";
+import { compose, hoistStatics } from "recompose";
 
 import { translate } from "../../../main/ran-i18n";
 import SearchBox from "../../containers/SearchBox";
@@ -25,7 +25,6 @@ import RoomItem from "../../presentation/RoomItem";
 import styles from "./styles";
 import LoggedView from "../View";
 import log from "../../utils/log";
-// import I18n from '../../i18n';
 import SortDropdown from "./SortDropdown";
 import ServerDropdown from "./ServerDropdown";
 import Touch from "../../utils/touch";
@@ -78,7 +77,7 @@ class RoomsListView extends LoggedView {
   };
 
   static propTypes = {
-    navigator: PropTypes.object,
+    navigation: PropTypes.object,
     userId: PropTypes.string,
     baseUrl: PropTypes.string,
     server: PropTypes.string,
@@ -92,6 +91,13 @@ class RoomsListView extends LoggedView {
     showUnread: PropTypes.bool,
     toggleSortDropdown: PropTypes.func,
     useRealName: PropTypes.bool
+  };
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam("title"),
+      headerBackTitle: null
+    };
   };
 
   constructor(props) {
@@ -109,12 +115,12 @@ class RoomsListView extends LoggedView {
       direct: [],
       livechat: []
     };
-    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    // props.navigation.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-  componentWillMount() {
-    this.initDefaultHeader();
-  }
+  // componentWillMount() {
+  //   this.initDefaultHeader();
+  // }
 
   componentDidMount() {
     this.getSubscriptions();
@@ -167,18 +173,15 @@ class RoomsListView extends LoggedView {
   }
 
   onNavigatorEvent(event) {
-    const { navigator } = this.props;
+    const { navigation } = this.props;
     if (event.type === "NavBarButtonPress") {
       if (event.id === "newMessage") {
-        this.props.navigator.showModal({
-          screen: "NewMessageView",
-          title: 'I18n.t("New_Message")',
-          passProps: {
-            onPressItem: this._onPressItem
-          }
+        this.props.navigation.navigate("NewMessageView", {
+          title: this.props.translate("ran.roomsListView.New_Message"),
+          onPressItem: this._onPressItem
         });
       } else if (event.id === "settings") {
-        navigator.toggleDrawer({
+        navigation.toggleDrawer({
           side: "left"
         });
       } else if (event.id === "search") {
@@ -190,25 +193,27 @@ class RoomsListView extends LoggedView {
       event.type === "ScreenChangedEvent" &&
       event.id === "didAppear"
     ) {
-      navigator.setDrawerEnabled({
+      navigation.setDrawerEnabled({
         side: "left",
         enabled: true
       });
     }
   }
 
-  getSubscriptions = () => {
+  getSubscriptions = async () => {
     if (this.props.server && this.hasActiveDB()) {
       if (this.props.sortBy === "alphabetical") {
-        this.data = database
-          .objects("subscriptions")
-          .filtered("archived != true && open == true")
-          .sorted("name", false);
+        // this.data = await database.objects(
+        //   "subscriptions",
+        //   "WHERE (archived = 0 OR archived is null) and open = 1 order by name asc"
+        // );
+        this.data = "name asc";
       } else {
-        this.data = database
-          .objects("subscriptions")
-          .filtered("archived != true && open == true")
-          .sorted("roomUpdatedAt", true);
+        // this.data = await database.objects(
+        //   "subscriptions",
+        //   "WHERE (archived = 0 OR archived is null) and open = 1 order by roomUpdatedAt desc"
+        // );
+        this.data = "roomUpdatedAt desc";
       }
 
       let chats = [];
@@ -221,73 +226,107 @@ class RoomsListView extends LoggedView {
 
       // unread
       if (this.props.showUnread) {
-        this.unread = this.data
-          .filtered("archived != true && open == true")
-          .sorted("name", false)
-          .filtered("(unread > 0 || alert == true)");
+        console.log(this.data);
+
+        this.unread = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${
+            this.data
+          }, name desc`
+        );
         unread = this.unread.slice();
-        setTimeout(() => {
-          this.unread.addListener(() =>
-            this.setState({ unread: this.unread.slice() })
-          );
-        });
+        // setTimeout(() => {
+        //   this.unread.addListener(() =>
+        //     this.setState({ unread: this.unread.slice() })
+        //   );
+        // });
       } else {
         this.removeListener(unread);
       }
       // favorites
       if (this.props.showFavorites) {
-        this.favorites = this.data.filtered("f == true");
+        this.favorites = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${
+            this.data
+          }`
+        );
         favorites = this.favorites.slice();
-        setTimeout(() => {
-          this.favorites.addListener(() =>
-            this.setState({ favorites: this.favorites.slice() })
-          );
-        });
+        // setTimeout(() => {
+        //   this.favorites.addListener(() =>
+        //     this.setState({ favorites: this.favorites.slice() })
+        //   );
+        // });
       } else {
         this.removeListener(favorites);
       }
       // type
       if (this.props.groupByType) {
         // channels
-        this.channels = this.data.filtered("t == $0", "c");
+        this.channels = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${
+            this.data
+          }`
+        );
         channels = this.channels.slice();
         // private
-        this.privateGroup = this.data.filtered("t == $0", "p");
+        this.privateGroup = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${
+            this.data
+          }`
+        );
         privateGroup = this.privateGroup.slice();
         // direct
-        this.direct = this.data.filtered("t == $0", "d");
+        this.direct = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${
+            this.data
+          }`
+        );
         direct = this.direct.slice();
         // livechat
-        this.livechat = this.data.filtered("t == $0", "l");
+        this.livechat = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${
+            this.data
+          }`
+        );
         livechat = this.livechat.slice();
-        setTimeout(() => {
-          this.channels.addListener(() =>
-            this.setState({ channels: this.channels.slice() })
-          );
-          this.privateGroup.addListener(() =>
-            this.setState({ privateGroup: this.privateGroup.slice() })
-          );
-          this.direct.addListener(() =>
-            this.setState({ direct: this.direct.slice() })
-          );
-          this.livechat.addListener(() =>
-            this.setState({ livechat: this.livechat.slice() })
-          );
-        });
+        // setTimeout(() => {
+        //   this.channels.addListener(() =>
+        //     this.setState({ channels: this.channels.slice() })
+        //   );
+        //   this.privateGroup.addListener(() =>
+        //     this.setState({ privateGroup: this.privateGroup.slice() })
+        //   );
+        //   this.direct.addListener(() =>
+        //     this.setState({ direct: this.direct.slice() })
+        //   );
+        //   this.livechat.addListener(() =>
+        //     this.setState({ livechat: this.livechat.slice() })
+        //   );
+        // });
         this.removeListener(this.chats);
       } else {
         // chats
         if (this.props.showUnread) {
-          this.chats = this.data.filtered("(unread == 0 && alert == false)");
+          this.chats = await database.objects(
+            "subscriptions",
+            `WHERE (archived = 0 OR archived is null) and open = 1 and unread = 0 and alert = 0 order by ${
+              this.data
+            }`
+          );
         } else {
           this.chats = this.data;
         }
         chats = this.chats.slice();
-        setTimeout(() => {
-          this.chats.addListener(() =>
-            this.setState({ chats: this.chats.slice() })
-          );
-        });
+        // setTimeout(() => {
+        //   this.chats.addListener(() =>
+        //     this.setState({ chats: this.chats.slice() })
+        //   );
+        // });
         this.removeListener(this.channels);
         this.removeListener(this.privateGroup);
         this.removeListener(this.direct);
@@ -316,21 +355,21 @@ class RoomsListView extends LoggedView {
     }
   };
 
-  initDefaultHeader = () => {
-    const { navigator } = this.props;
-    navigator.setButtons({ leftButtons, rightButtons });
-    navigator.setStyle({
-      navBarCustomView: "RoomsListHeaderView",
-      navBarComponentAlignment: "fill",
-      navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
-      navBarTextColor: isAndroid() ? "#FFF" : undefined,
-      navBarButtonColor: isAndroid() ? "#FFF" : undefined
-    });
-  };
+  // initDefaultHeader = () => {
+  //   const { navigation } = this.props;
+  //   navigation.setButtons({ leftButtons, rightButtons });
+  //   navigation.setStyle({
+  //     navBarCustomView: "RoomsListHeaderView",
+  //     navBarComponentAlignment: "fill",
+  //     navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
+  //     navBarTextColor: isAndroid() ? "#FFF" : undefined,
+  //     navBarButtonColor: isAndroid() ? "#FFF" : undefined
+  //   });
+  // };
 
   initSearchingAndroid = () => {
-    const { navigator } = this.props;
-    navigator.setButtons({
+    const { navigation } = this.props;
+    navigation.setButtons({
       leftButtons: [
         {
           id: "cancelSearch",
@@ -339,7 +378,7 @@ class RoomsListView extends LoggedView {
       ],
       rightButtons: []
     });
-    navigator.setStyle({
+    navigation.setStyle({
       navBarCustomView: "RoomsListSearchView",
       navBarComponentAlignment: "fill"
     });
@@ -348,7 +387,7 @@ class RoomsListView extends LoggedView {
 
   // this is necessary during development (enables Cmd + r)
   hasActiveDB = () =>
-    database && database.databases && database.databases.activeDB;
+    database && database.database && database.database.activeDB;
 
   cancelSearchingAndroid = () => {
     if (Platform.OS === "android") {
@@ -377,7 +416,7 @@ class RoomsListView extends LoggedView {
   };
 
   goRoom = (rid, name) => {
-    this.props.navigator.push({
+    this.props.navigation.push({
       screen: "RoomView",
       title: name,
       backButtonTitle: "",
@@ -408,6 +447,8 @@ class RoomsListView extends LoggedView {
   };
 
   toggleSort = () => {
+    database.objectstest();
+
     if (Platform.OS === "ios") {
       this.scroll.scrollTo({ x: 0, y: SCROLL_OFFSET, animated: true });
     } else {
@@ -429,12 +470,12 @@ class RoomsListView extends LoggedView {
     <Touch onPress={this.toggleSort} style={styles.dropdownContainerHeader}>
       <View style={styles.sortItemContainer}>
         <Text style={styles.sortToggleText}>
-          {/* {I18n.t("Sorting_by", {
-            key: I18n.t(
-              this.props.sortBy === "alphabetical" ? "name" : "activity"
-            )
-					})} */}
-          "Sorting_by"
+          {this.props.translate("ran.roomsListView.Sorting_by") +
+            this.props.translate(
+              this.props.sortBy === "alphabetical"
+                ? "ran.roomsListView.name"
+                : "ran.roomsListView.activity"
+            )}
         </Text>
         <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
       </View>
@@ -600,33 +641,35 @@ class RoomsListView extends LoggedView {
           />
         ) : null}
         {showServerDropdown ? (
-          <ServerDropdown navigator={this.props.navigator} />
+          <ServerDropdown navigation={this.props.navigation} />
         ) : null}
       </SafeAreaView>
     );
   };
 }
 
-export default compose(
-  connect(
-    state => ({
-      userId: state.login.user && state.login.user.id,
-      server: state.server.server,
-      baseUrl:
-        state.settings.baseUrl || state.server ? state.server.server : "",
-      searchText: state.rooms.searchText,
-      loadingServer: state.server.loading,
-      showServerDropdown: state.rooms.showServerDropdown,
-      showSortDropdown: state.rooms.showSortDropdown,
-      sortBy: state.sortPreferences.sortBy,
-      groupByType: state.sortPreferences.groupByType,
-      showFavorites: state.sortPreferences.showFavorites,
-      showUnread: state.sortPreferences.showUnread,
-      useRealName: state.settings.UI_Use_Real_Name
-    }),
-    dispatch => ({
-      toggleSortDropdown: () => dispatch(toggleSortDropdown())
-    })
-  ),
-  translate
+export default hoistStatics(
+  compose(
+    connect(
+      state => ({
+        userId: state.login.user && state.login.user.id,
+        server: state.server.server,
+        baseUrl:
+          state.settings.baseUrl || state.server ? state.server.server : "",
+        searchText: state.rooms.searchText,
+        loadingServer: state.server.loading,
+        showServerDropdown: state.rooms.showServerDropdown,
+        showSortDropdown: state.rooms.showSortDropdown,
+        sortBy: state.sortPreferences.sortBy,
+        groupByType: state.sortPreferences.groupByType,
+        showFavorites: state.sortPreferences.showFavorites,
+        showUnread: state.sortPreferences.showUnread,
+        useRealName: state.settings.UI_Use_Real_Name
+      }),
+      dispatch => ({
+        toggleSortDropdown: () => dispatch(toggleSortDropdown())
+      })
+    ),
+    translate
+  )
 )(RoomsListView);
