@@ -101,7 +101,7 @@ export default class NewMessageView extends LoggedView {
   }
 
   onPressItem = item => {
-    this.props.navigator.dismissModal();
+    this.props.navigation.goBack();
     setTimeout(() => {
       this.props.navigation.state.params.onPressItem(item);
     }, 600);
@@ -167,16 +167,16 @@ export default class NewMessageView extends LoggedView {
   renderItem = ({ item, index }) => {
     let style = {};
     if (index === 0) {
-      style = { ...sharedStyles.separatorTop };
+      style = sharedStyles.separatorTop;
     }
     if (
       this.state.search.length > 0 &&
       index === this.state.search.length - 1
     ) {
-      style = { ...style, ...sharedStyles.separatorBottom };
+      style = StyleSheet.flatten([style, sharedStyles.separatorBottom]);
     }
     if (this.state.search.length === 0 && index === this.data.length - 1) {
-      style = { ...style, ...sharedStyles.separatorBottom };
+      style = StyleSheet.flatten([style, sharedStyles.separatorBottom]);
     }
     return (
       <UserItem

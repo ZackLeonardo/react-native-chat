@@ -20,7 +20,7 @@ import TermsServiceView from "./views/TermsServiceView";
 import PrivacyPolicyView from "./views/PrivacyPolicyView";
 import NewMessageView from "./views/NewMessageView";
 import SettingsView from "./views/SettingsView";
-
+import RoomView from "./views/RoomView";
 import Sidebar from "./containers/Sidebar";
 
 import { store } from "../src";
@@ -152,6 +152,9 @@ const StackNavigator = createStackNavigator(
     },
     SettingsView: {
       screen: SettingsView
+    },
+    RoomView: {
+      screen: () => gestureHandlerRootHOC(RoomView)
     }
   },
   {
@@ -209,7 +212,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import RoomsListHeaderView from './RoomsListView/Header';
 // import RoomsListSearchView from './RoomsListView/Search';
 // import RoomsListView from "./RoomsListView";
-// import RoomView from './RoomView';
 // import SearchMessagesView from './SearchMessagesView';
 // import SelectedUsersView from './SelectedUsersView';
 // import Sidebar from "../containers/Sidebar";
@@ -246,7 +248,7 @@ export const ChatModuleNavigator = createDrawerNavigator(
 //   store,
 //   Provider
 // );
-// Navigation.registerComponent('RoomView', () => gestureHandlerRootHOC(RoomView), store, Provider);
+
 // Navigation.registerComponent('SearchMessagesView', () => gestureHandlerRootHOC(SearchMessagesView), store, Provider);
 // Navigation.registerComponent('SelectedUsersView', () => SelectedUsersView, store, Provider);
 // Navigation.registerComponent('SettingsView', () => SettingsView, store, Provider);

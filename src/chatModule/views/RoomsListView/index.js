@@ -114,8 +114,7 @@ export default class RoomsListView extends LoggedView {
             onPress={() => {
               navigation.navigate("NewMessageView", {
                 title: screenProps.translate("ran.roomsListView.New_Message"),
-                onPressItem: this._onPressItem,
-                headerBackTitle: "取消"
+                onPressItem: navigation.state.params.onPressItem
               });
             }}
           >
@@ -165,12 +164,11 @@ export default class RoomsListView extends LoggedView {
       direct: [],
       livechat: []
     };
-    // props.navigation.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-  // componentWillMount() {
-  //   this.initDefaultHeader();
-  // }
+  componentWillMount() {
+    this.props.navigation.setParams({ onPressItem: this._onPressItem });
+  }
 
   componentDidMount() {
     this.getSubscriptions();
@@ -476,10 +474,8 @@ export default class RoomsListView extends LoggedView {
   };
 
   goRoom = (rid, name) => {
-    this.props.navigation.push({
-      screen: "RoomView",
+    this.props.navigation.navigate("RoomView", {
       title: name,
-      backButtonTitle: "",
       passProps: { rid }
     });
     this.cancelSearchingAndroid();
