@@ -8,6 +8,7 @@ module.exports = {
       alert: "alert",
       alerts: "alerts",
       Search: "Search",
+      Settings: "Settings",
       setting: "setting"
     },
     onboardingView: {
@@ -70,6 +71,13 @@ module.exports = {
       You_colon: "You: ",
       you_were_mentioned: "you were mentioned",
       last_message: "last message"
+    },
+    settingsView: {
+      Preferences_saved: "Preferences saved!",
+      There_was_an_error_while_action: "There was an error!",
+      saving_preferences: "saving preferences",
+      Language: "Language",
+      Save_Changes: "Save Changes"
     },
     rooms: {
       unTop: "Not Top",

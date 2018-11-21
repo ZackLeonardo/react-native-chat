@@ -1,12 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Dimensions,
-  TouchableOpacity
-} from "react-native";
+import { View, ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { connect } from "react-redux";
 import Feather from "@expo/vector-icons/Feather";
@@ -24,7 +18,6 @@ import Loading from "../../containers/Loading";
 import { showErrorAlert, showToast } from "../../utils/info";
 import log from "../../utils/log";
 import { setUser } from "../../actions/login";
-import Styles from "../Styles";
 
 /** @extends React.Component */
 class SettingsView extends LoggedView {
@@ -61,31 +54,13 @@ class SettingsView extends LoggedView {
           value: "en"
         },
         {
-          label: "Russian",
-          value: "ru"
+          label: "Simple Chinese",
+          value: "cn_zh"
         }
       ],
       saving: false
     };
     // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
-  // componentWillMount() {
-  //   this.props.navigator.setButtons({
-  //     leftButtons: [
-  //       {
-  //         id: "settings",
-  //         icon: { uri: "settings", scale: Dimensions.get("window").scale }
-  //       }
-  //     ]
-  //   });
-  // }
-
-  componentDidMount() {
-    // this.props.navigator.setDrawerEnabled({
-    //   side: "left",
-    //   enabled: true
-    // });
   }
 
   onNavigatorEvent(event) {
@@ -135,22 +110,25 @@ class SettingsView extends LoggedView {
 
       this.setState({ saving: false });
       setTimeout(() => {
-        showToast('I18n.t("Preferences_saved")');
+        showToast(this.props.translate("ran.settingsView.Preferences_saved"));
 
-        if (params.language) {
-          this.props.navigator.setTitle({ title: 'I18n.t("Settings")' });
-        }
+        // if (params.language) {
+        //   this.props.navigation.setTitle({
+        //     title: this.props.translate("ran.common.Settings")
+        //   });
+        // }
       }, 300);
     } catch (e) {
       this.setState({ saving: false });
       setTimeout(() => {
         if (e && e.error) {
-          return showErrorAlert("I18n.t(e.error, e.details)");
+          return showErrorAlert(e.error, e.details);
         }
         showErrorAlert(
-          `I18n.t("There_was_an_error_while_action", {
-            action: I18n.t("saving_preferences")
-          })`
+          this.props.translate(
+            "ran.settingsView.There_was_an_error_while_action"
+          ),
+          this.props.translate("ran.settingsView.saving_preferences")
         );
         log("saveUserPreferences", e);
       }, 300);
@@ -158,6 +136,7 @@ class SettingsView extends LoggedView {
   };
 
   render() {
+    console.log("render SettingsView");
     const { language, languages, placeholder } = this.state;
     return (
       <KeyboardView
@@ -182,22 +161,22 @@ class SettingsView extends LoggedView {
                 inputRef={e => {
                   this.name = e;
                 }}
-                label={'I18n.t("Language")'}
-                placeholder={'I18n.t("Language")'}
+                label={this.props.translate("ran.settingsView.Language")}
+                placeholder={this.props.translate("ran.settingsView.Language")}
                 value={this.getLabel(language)}
                 testID="settings-view-language"
               />
             </RNPickerSelect>
             <View style={sharedStyles.alignItemsFlexStart}>
               <Button
-                title={'I18n.t("Save_Changes")'}
+                title={this.props.translate("ran.settingsView.Save_Changes")}
                 type="primary"
                 onPress={this.submit}
                 disabled={!this.formIsChanged()}
                 testID="settings-view-button"
               />
             </View>
-            <Loading visible={this.state.saving} />
+            {/* <Loading visible={this.state.saving} /> */}
           </SafeAreaView>
         </ScrollView>
       </KeyboardView>

@@ -157,21 +157,6 @@ const CustomDrawerContent = props => (
       />
     </SafeAreaView>
   </ScrollView>
-  // <View style={{ flex: 1, flexDirection: "column" }}>
-  //   <View style={{ flex: 0.94 }}>
-  //     <DrawerItems
-  //       {...props}
-  //       onItemPress={navigation => {
-  //         if (navigation.focused == false) {
-  //           const navigateAction = NavigationActions.navigate({
-  //             routeName: navigation.route.routeName
-  //           });
-  //           props.navigation.dispatch(navigateAction);
-  //         }
-  //       }}
-  //     />
-  //   </View>
-  // </View>
 );
 
 export const ChatNavigator = createDrawerNavigator(

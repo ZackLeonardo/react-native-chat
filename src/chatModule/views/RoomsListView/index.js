@@ -658,6 +658,7 @@ class RoomsListView extends LoggedView {
   };
 
   render = () => {
+    console.log("render roomsListView");
     const {
       sortBy,
       groupByType,
@@ -668,7 +669,7 @@ class RoomsListView extends LoggedView {
     } = this.props;
 
     return (
-      <SafeAreaView style={styles.container} testID="rooms-list-view">
+      <View style={styles.container} testID="rooms-list-view">
         {this.renderScroll()}
         {showSortDropdown ? (
           <SortDropdown
@@ -682,7 +683,7 @@ class RoomsListView extends LoggedView {
         {showServerDropdown ? (
           <ServerDropdown navigation={this.props.navigation} />
         ) : null}
-      </SafeAreaView>
+      </View>
     );
   };
 }
