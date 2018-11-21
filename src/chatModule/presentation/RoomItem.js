@@ -4,9 +4,7 @@ import PropTypes from "prop-types";
 import { View, Text, StyleSheet, Image, Platform } from "react-native";
 import { connect } from "react-redux";
 import { emojify } from "react-emojione";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import Avatar from "../containers/Avatar";
 import Status from "../containers/status";
 import Touch from "../utils/touch/index"; //eslint-disable-line
@@ -129,7 +127,12 @@ const attrs = [
   "type"
 ];
 
-class RoomItem extends React.Component {
+@connect(state => ({
+  username: state.login.user && state.login.user.username,
+  StoreLastMessage: state.settings.Store_Last_Message,
+  baseUrl: state.settings.Site_Url || state.server ? state.server.server : ""
+}))
+export default class RoomItem extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -331,15 +334,3 @@ class RoomItem extends React.Component {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(state => ({
-      username: state.login.user && state.login.user.username,
-      StoreLastMessage: state.settings.Store_Last_Message,
-      baseUrl:
-        state.settings.Site_Url || state.server ? state.server.server : ""
-    })),
-    translate
-  )
-)(RoomItem);

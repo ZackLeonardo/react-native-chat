@@ -9,7 +9,8 @@ module.exports = {
       alerts: "alerts",
       Search: "Search",
       Settings: "Settings",
-      setting: "setting"
+      setting: "setting",
+      Cancel: "Cancel"
     },
     onboardingView: {
       Welcome_to_RocketChat: "Welcome to WESTWORD",
@@ -78,6 +79,9 @@ module.exports = {
       saving_preferences: "saving preferences",
       Language: "Language",
       Save_Changes: "Save Changes"
+    },
+    newMessageView: {
+      Create_Channel: "Create Channel"
     },
     rooms: {
       unTop: "Not Top",

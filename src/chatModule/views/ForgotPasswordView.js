@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Text, View, SafeAreaView, ScrollView } from "react-native";
 import { connect } from "react-redux";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import LoggedView from "./View";
 import { forgotPasswordInit, forgotPasswordRequest } from "../actions/login";
 import KeyboardView from "../presentation/KeyboardView";
@@ -14,10 +12,18 @@ import Loading from "../containers/Loading";
 import styles from "./Styles";
 import { showErrorAlert } from "../utils/info";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
-// import I18n from '../i18n';
 
+@connect(
+  state => ({
+    login: state.login
+  }),
+  dispatch => ({
+    forgotPasswordInit: () => dispatch(forgotPasswordInit()),
+    forgotPasswordRequest: email => dispatch(forgotPasswordRequest(email))
+  })
+)
 /** @extends React.Component */
-class ForgotPasswordView extends LoggedView {
+export default class ForgotPasswordView extends LoggedView {
   static propTypes = {
     navigation: PropTypes.object,
     forgotPasswordInit: PropTypes.func.isRequired,
@@ -45,7 +51,9 @@ class ForgotPasswordView extends LoggedView {
   }
 
   componentDidUpdate() {
-    const { login, translate } = this.props;
+    const { login } = this.props;
+    const { translate } = this.props.screenProps;
+
     if (login.success) {
       this.props.navigation.pop();
       setTimeout(() => {
@@ -78,7 +86,7 @@ class ForgotPasswordView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props;
+    const { translate } = this.props.screenProps;
     return (
       <KeyboardView
         contentContainerStyle={styles.container}
@@ -125,18 +133,3 @@ class ForgotPasswordView extends LoggedView {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        login: state.login
-      }),
-      dispatch => ({
-        forgotPasswordInit: () => dispatch(forgotPasswordInit()),
-        forgotPasswordRequest: email => dispatch(forgotPasswordRequest(email))
-      })
-    ),
-    translate
-  )
-)(ForgotPasswordView);

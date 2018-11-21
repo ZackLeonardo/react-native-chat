@@ -2,13 +2,17 @@ import React from "react";
 import { View, TextInput } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../../../main/ran-i18n";
 import { setSearch } from "../../../actions/rooms";
 import styles from "./styles";
 
-class RoomsListSearchView extends React.Component {
+@connect(
+  null,
+  dispatch => ({
+    setSearch: searchText => dispatch(setSearch(searchText))
+  })
+)
+export default class RoomsListSearchView extends React.Component {
   static propTypes = {
     setSearch: PropTypes.func
   };
@@ -30,7 +34,7 @@ class RoomsListSearchView extends React.Component {
           style={styles.inputSearch}
           onChangeText={text => this.onSearchChangeText(text)}
           returnKeyType="search"
-          placeholder={this.props.translate("ran.common.Search")}
+          placeholder={this.props.screenProps.translate("ran.common.Search")}
           placeholderTextColor="#eee"
           clearButtonMode="while-editing"
           blurOnSubmit
@@ -41,15 +45,3 @@ class RoomsListSearchView extends React.Component {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      null,
-      dispatch => ({
-        setSearch: searchText => dispatch(setSearch(searchText))
-      })
-    ),
-    translate
-  )
-)(RoomsListSearchView);

@@ -12,9 +12,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
-import compose from "recompose/compose";
 
-import { translate } from "../../main/ran-i18n";
 import { serverRequest } from "../actions/server";
 import sharedStyles from "./Styles";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
@@ -60,8 +58,17 @@ const styles = StyleSheet.create({
 
 const defaultServer = "https://open.rocket.chat";
 
+@connect(
+  state => ({
+    connecting: state.server.connecting,
+    failure: state.server.failure
+  }),
+  dispatch => ({
+    connectServer: server => dispatch(serverRequest(server))
+  })
+)
 /** @extends React.Component */
-class NewServerView extends LoggedView {
+export default class NewServerView extends LoggedView {
   static propTypes = {
     navigator: PropTypes.object,
     server: PropTypes.string,
@@ -92,8 +99,8 @@ class NewServerView extends LoggedView {
   componentWillReceiveProps(nextProps) {
     if (nextProps.failure && nextProps.failure !== this.props.failure) {
       Alert.alert(
-        this.props.translate("ran.newServerView.Oops"),
-        this.props.translate("ran.newServerView.The_URL_is_invalid")
+        this.props.screenProps.translate("ran.newServerView.Oops"),
+        this.props.screenProps.translate("ran.newServerView.The_URL_is_invalid")
       );
     }
   }
@@ -153,7 +160,8 @@ class NewServerView extends LoggedView {
   };
 
   render() {
-    const { connecting, translate } = this.props;
+    const { connecting } = this.props;
+    const { translate } = this.props.screenProps;
     const { text } = this.state;
     return (
       <KeyboardView
@@ -197,16 +205,3 @@ class NewServerView extends LoggedView {
     );
   }
 }
-
-export default compose(
-  connect(
-    state => ({
-      connecting: state.server.connecting,
-      failure: state.server.failure
-    }),
-    dispatch => ({
-      connectServer: server => dispatch(serverRequest(server))
-    })
-  ),
-  translate
-)(NewServerView);

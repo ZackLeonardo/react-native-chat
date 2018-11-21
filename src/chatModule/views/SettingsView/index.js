@@ -4,9 +4,7 @@ import { View, ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { connect } from "react-redux";
 import Feather from "@expo/vector-icons/Feather";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../../main/ran-i18n";
 import LoggedView from "../View";
 import RocketChat from "../../lib/rocketchat";
 import KeyboardView from "../../presentation/KeyboardView";
@@ -19,8 +17,16 @@ import { showErrorAlert, showToast } from "../../utils/info";
 import log from "../../utils/log";
 import { setUser } from "../../actions/login";
 
+@connect(
+  state => ({
+    userLanguage: state.login.user && state.login.user.language
+  }),
+  dispatch => ({
+    setUser: params => dispatch(setUser(params))
+  })
+)
 /** @extends React.Component */
-class SettingsView extends LoggedView {
+export default class SettingsView extends LoggedView {
   static propTypes = {
     navigator: PropTypes.object,
     userLanguage: PropTypes.string,
@@ -110,7 +116,9 @@ class SettingsView extends LoggedView {
 
       this.setState({ saving: false });
       setTimeout(() => {
-        showToast(this.props.translate("ran.settingsView.Preferences_saved"));
+        showToast(
+          this.props.screenProps.translate("ran.settingsView.Preferences_saved")
+        );
 
         // if (params.language) {
         //   this.props.navigation.setTitle({
@@ -125,10 +133,12 @@ class SettingsView extends LoggedView {
           return showErrorAlert(e.error, e.details);
         }
         showErrorAlert(
-          this.props.translate(
+          this.props.screenProps.translate(
             "ran.settingsView.There_was_an_error_while_action"
           ),
-          this.props.translate("ran.settingsView.saving_preferences")
+          this.props.screenProps.translate(
+            "ran.settingsView.saving_preferences"
+          )
         );
         log("saveUserPreferences", e);
       }, 300);
@@ -161,39 +171,31 @@ class SettingsView extends LoggedView {
                 inputRef={e => {
                   this.name = e;
                 }}
-                label={this.props.translate("ran.settingsView.Language")}
-                placeholder={this.props.translate("ran.settingsView.Language")}
+                label={this.props.screenProps.translate(
+                  "ran.settingsView.Language"
+                )}
+                placeholder={this.props.screenProps.translate(
+                  "ran.settingsView.Language"
+                )}
                 value={this.getLabel(language)}
                 testID="settings-view-language"
               />
             </RNPickerSelect>
             <View style={sharedStyles.alignItemsFlexStart}>
               <Button
-                title={this.props.translate("ran.settingsView.Save_Changes")}
+                title={this.props.screenProps.translate(
+                  "ran.settingsView.Save_Changes"
+                )}
                 type="primary"
                 onPress={this.submit}
                 disabled={!this.formIsChanged()}
                 testID="settings-view-button"
               />
             </View>
-            {/* <Loading visible={this.state.saving} /> */}
+            <Loading visible={this.state.saving} />
           </SafeAreaView>
         </ScrollView>
       </KeyboardView>
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        userLanguage: state.login.user && state.login.user.language
-      }),
-      dispatch => ({
-        setUser: params => dispatch(setUser(params))
-      })
-    ),
-    translate
-  )
-)(SettingsView);

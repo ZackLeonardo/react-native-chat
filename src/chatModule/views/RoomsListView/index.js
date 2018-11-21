@@ -16,13 +16,11 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
-import { compose, hoistStatics } from "recompose";
 import PubSub from "pubsub-js";
 import shallowEqual from "shallowequal";
 import Icon from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 
-import { translate } from "../../../main/ran-i18n";
 import SearchBox from "../../containers/SearchBox";
 import database from "../../../main/ran-db/sqlite";
 import RocketChat from "../../lib/rocketchat";
@@ -59,8 +57,28 @@ const rightButtons = [
   }
 ];
 
+@connect(
+  state => ({
+    userId: state.login.user && state.login.user.id,
+    server: state.server.server,
+    baseUrl: state.settings.baseUrl || state.server ? state.server.server : "",
+    searchText: state.rooms.searchText,
+    loadingServer: state.server.loading,
+    showServerDropdown: state.rooms.showServerDropdown,
+    showSortDropdown: state.rooms.showSortDropdown,
+    sortBy: state.sortPreferences.sortBy,
+    groupByType: state.sortPreferences.groupByType,
+    showFavorites: state.sortPreferences.showFavorites,
+    showUnread: state.sortPreferences.showUnread,
+    useRealName: state.settings.UI_Use_Real_Name
+  }),
+  dispatch => ({
+    toggleSortDropdown: () => dispatch(toggleSortDropdown())
+  })
+)
+
 /** @extends React.Component */
-class RoomsListView extends LoggedView {
+export default class RoomsListView extends LoggedView {
   static propTypes = {
     navigation: PropTypes.object,
     userId: PropTypes.string,
@@ -78,7 +96,8 @@ class RoomsListView extends LoggedView {
     useRealName: PropTypes.bool
   };
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = props => {
+    const { navigation, screenProps } = props;
     return {
       title: navigation.getParam("title"),
       headerBackTitle: null,
@@ -94,8 +113,9 @@ class RoomsListView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("NewMessageView", {
-                title: `this.props.translate("ran.roomsListView.New_Message")`,
-                onPressItem: this._onPressItem
+                title: screenProps.translate("ran.roomsListView.New_Message"),
+                onPressItem: this._onPressItem,
+                headerBackTitle: "取消"
               });
             }}
           >
@@ -199,33 +219,33 @@ class RoomsListView extends LoggedView {
     }
   }
 
-  onNavigatorEvent(event) {
-    const { navigation } = this.props;
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "newMessage") {
-        this.props.navigation.navigate("NewMessageView", {
-          title: this.props.translate("ran.roomsListView.New_Message"),
-          onPressItem: this._onPressItem
-        });
-      } else if (event.id === "settings") {
-        navigation.toggleDrawer({
-          side: "left"
-        });
-      } else if (event.id === "search") {
-        this.initSearchingAndroid();
-      } else if (event.id === "cancelSearch" || event.id === "back") {
-        this.cancelSearchingAndroid();
-      }
-    } else if (
-      event.type === "ScreenChangedEvent" &&
-      event.id === "didAppear"
-    ) {
-      navigation.setDrawerEnabled({
-        side: "left",
-        enabled: true
-      });
-    }
-  }
+  // onNavigatorEvent(event) {
+  //   const { navigation } = this.props;
+  //   if (event.type === "NavBarButtonPress") {
+  //     if (event.id === "newMessage") {
+  //       this.props.navigation.navigate("NewMessageView", {
+  //         title: this.props.translate("ran.roomsListView.New_Message"),
+  //         onPressItem: this._onPressItem
+  //       });
+  //     } else if (event.id === "settings") {
+  //       navigation.toggleDrawer({
+  //         side: "left"
+  //       });
+  //     } else if (event.id === "search") {
+  //       this.initSearchingAndroid();
+  //     } else if (event.id === "cancelSearch" || event.id === "back") {
+  //       this.cancelSearchingAndroid();
+  //     }
+  //   } else if (
+  //     event.type === "ScreenChangedEvent" &&
+  //     event.id === "didAppear"
+  //   ) {
+  //     navigation.setDrawerEnabled({
+  //       side: "left",
+  //       enabled: true
+  //     });
+  //   }
+  // }
 
   getSubscriptions = async () => {
     if (this.props.server && this.hasActiveDB()) {
@@ -506,21 +526,24 @@ class RoomsListView extends LoggedView {
     return this.renderSort();
   };
 
-  renderSort = () => (
-    <Touch onPress={this.toggleSort} style={styles.dropdownContainerHeader}>
-      <View style={styles.sortItemContainer}>
-        <Text style={styles.sortToggleText}>
-          {this.props.translate("ran.roomsListView.Sorting_by") +
-            this.props.translate(
-              this.props.sortBy === "alphabetical"
-                ? "ran.roomsListView.name"
-                : "ran.roomsListView.activity"
-            )}
-        </Text>
-        <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
-      </View>
-    </Touch>
-  );
+  renderSort = () => {
+    const { translate } = this.props.screenProps;
+    return (
+      <Touch onPress={this.toggleSort} style={styles.dropdownContainerHeader}>
+        <View style={styles.sortItemContainer}>
+          <Text style={styles.sortToggleText}>
+            {translate("ran.roomsListView.Sorting_by") +
+              translate(
+                this.props.sortBy === "alphabetical"
+                  ? "ran.roomsListView.name"
+                  : "ran.roomsListView.activity"
+              )}
+          </Text>
+          <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
+        </View>
+      </Touch>
+    );
+  };
 
   renderSearchBar = () => {
     // if (Platform.OS === "ios") {}
@@ -551,6 +574,7 @@ class RoomsListView extends LoggedView {
         onPress={() => this._onPressItem(item)}
         testID={`rooms-list-view-item-${item.name}`}
         height={ROW_HEIGHT}
+        translate={this.props.screenProps.translate}
       />
     );
   };
@@ -687,29 +711,3 @@ class RoomsListView extends LoggedView {
     );
   };
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        userId: state.login.user && state.login.user.id,
-        server: state.server.server,
-        baseUrl:
-          state.settings.baseUrl || state.server ? state.server.server : "",
-        searchText: state.rooms.searchText,
-        loadingServer: state.server.loading,
-        showServerDropdown: state.rooms.showServerDropdown,
-        showSortDropdown: state.rooms.showSortDropdown,
-        sortBy: state.sortPreferences.sortBy,
-        groupByType: state.sortPreferences.groupByType,
-        showFavorites: state.sortPreferences.showFavorites,
-        showUnread: state.sortPreferences.showUnread,
-        useRealName: state.settings.UI_Use_Real_Name
-      }),
-      dispatch => ({
-        toggleSortDropdown: () => dispatch(toggleSortDropdown())
-      })
-    ),
-    translate
-  )
-)(RoomsListView);

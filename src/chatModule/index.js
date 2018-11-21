@@ -59,7 +59,7 @@ class ChatInit extends Component {
 
   render() {
     if (this.props.root === "inside") {
-      return this.props.navigation.navigate("RoomsListView");
+      return this.props.navigation.navigate("RoomsListView", {});
     } else {
       return <OnboardingView {...this.props} />;
     }
@@ -91,7 +91,25 @@ let dynamicModalTransition = (transitionProps, prevTransitionProps) => {
   );
 };
 
-const stackNavigator = createStackNavigator(
+const NewMessageViewStack = createStackNavigator(
+  {
+    RoomsListView: {
+      screen: gestureHandlerRootHOC(RoomsListView),
+      navigationOptions: {
+        // headerBackTitle: "Cancel"
+      }
+    },
+    NewMessageView: {
+      screen: NewMessageView
+    }
+  },
+  {
+    mode: "modal"
+    // headerMode: "none"
+  }
+);
+
+const StackNavigator = createStackNavigator(
   {
     OnboardingView: {
       screen: ChatInitView,
@@ -100,10 +118,10 @@ const stackNavigator = createStackNavigator(
       }
     },
     RoomsListView: {
-      screen: gestureHandlerRootHOC(RoomsListView)
-    },
-    NewMessageView: {
-      screen: NewMessageView
+      screen: NewMessageViewStack,
+      navigationOptions: {
+        header: null
+      }
     },
     Sidebar: {
       screen: Sidebar
@@ -148,7 +166,7 @@ const CustomDrawerContent = props => (
       <DrawerItems
         {...props}
         onItemPress={navigation => {
-          if (navigation.route.key === "chatNavigator") {
+          if (navigation.route.key === "StackNavigator") {
             props.navigation.navigate("RoomsListView");
           } else {
             props.navigation.navigate(navigation.route.key);
@@ -159,11 +177,9 @@ const CustomDrawerContent = props => (
   </ScrollView>
 );
 
-export const ChatNavigator = createDrawerNavigator(
+export const ChatModuleNavigator = createDrawerNavigator(
   {
-    chatNavigator: {
-      screen: stackNavigator
-    },
+    StackNavigator: StackNavigator,
     SettingsView: {
       screen: SettingsView
     }

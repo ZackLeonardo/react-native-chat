@@ -708,14 +708,20 @@ const RocketChat = {
       return [];
     }
 
-    let data = database
-      .objects("subscriptions")
-      .filtered("name CONTAINS[c] $0", searchText);
+    let data;
 
     if (filterUsers && !filterRooms) {
-      data = data.filtered("t = $0", "d");
+      data = await database.objects(
+        "subscriptions",
+        `WHERE t="d" AND name LIKE "%${searchText}%"`
+      );
+      // data = data.filtered("t = $0", "d");
     } else if (!filterUsers && filterRooms) {
-      data = data.filtered("t != $0", "d");
+      data = await database.objects(
+        "subscriptions",
+        `WHERE t != "d" AND name LIKE "%${searchText}%"`
+      );
+      // data = data.filtered("t != $0", "d");
     }
     data = data.slice(0, 7);
 

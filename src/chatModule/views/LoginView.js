@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import { Keyboard, Text, ScrollView, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 // import { Answers } from "react-native-fabric";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import RocketChat from "../lib/rocketchat";
 import KeyboardView from "../presentation/KeyboardView";
 import TextInput from "../containers/TextInput";
@@ -17,8 +15,20 @@ import { showToast } from "../utils/info";
 import { COLOR_BUTTON_PRIMARY } from "../constants/colors";
 import LoggedView from "./View";
 
+@connect(
+  state => ({
+    server: state.server.server,
+    failure: state.login.failure,
+    isFetching: state.login.isFetching,
+    reason: state.login.error && state.login.error.reason,
+    error: state.login.error && state.login.error.error
+  }),
+  () => ({
+    loginSubmit: params => RocketChat.loginWithPassword(params)
+  })
+)
 /** @extends React.Component */
-class LoginView extends LoggedView {
+export default class LoginView extends LoggedView {
   static propTypes = {
     navigation: PropTypes.object,
     loginSubmit: PropTypes.func.isRequired,
@@ -51,7 +61,9 @@ class LoginView extends LoggedView {
     const { username, password, code } = this.state;
     if (username.trim() === "" || password.trim() === "") {
       showToast(
-        this.props.translate("ran.loginView.Email_or_password_field_is_empty")
+        this.props.screenProps.translate(
+          "ran.loginView.Email_or_password_field_is_empty"
+        )
       );
       return;
     }
@@ -73,7 +85,7 @@ class LoginView extends LoggedView {
 
   forgotPassword = () => {
     this.props.navigation.navigate("ForgotPasswordView", {
-      title: this.props.translate("ran.loginView.Forgot_Password")
+      title: this.props.screenProps.translate("ran.loginView.Forgot_Password")
     });
   };
 
@@ -82,9 +94,9 @@ class LoginView extends LoggedView {
       return (
         <TextInput
           inputRef={ref => (this.codeInput = ref)}
-          label={this.props.translate("ran.loginView.Code")}
+          label={this.props.screenProps.translate("ran.loginView.Code")}
           onChangeText={code => this.setState({ code })}
-          placeholder={this.props.translate("ran.loginView.Code")}
+          placeholder={this.props.screenProps.translate("ran.loginView.Code")}
           keyboardType="numeric"
           returnKeyType="done"
           autoCapitalize="none"
@@ -96,7 +108,7 @@ class LoginView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props;
+    const { translate } = this.props.screenProps;
     return (
       <KeyboardView
         contentContainerStyle={styles.container}
@@ -181,21 +193,3 @@ class LoginView extends LoggedView {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        server: state.server.server,
-        failure: state.login.failure,
-        isFetching: state.login.isFetching,
-        reason: state.login.error && state.login.error.reason,
-        error: state.login.error && state.login.error.error
-      }),
-      () => ({
-        loginSubmit: params => RocketChat.loginWithPassword(params)
-      })
-    ),
-    translate
-  )
-)(LoginView);

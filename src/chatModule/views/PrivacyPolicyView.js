@@ -2,14 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { WebView, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import styles from "./Styles";
 import LoggedView from "./View";
 
+@connect(state => ({
+  privacyPolicy: state.settings.Layout_Privacy_Policy
+}))
 /** @extends React.Component */
-class PrivacyPolicyView extends LoggedView {
+export default class PrivacyPolicyView extends LoggedView {
   static propTypes = {
     privacyPolicy: PropTypes.string
   };
@@ -35,12 +36,3 @@ class PrivacyPolicyView extends LoggedView {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(state => ({
-      privacyPolicy: state.settings.Layout_Privacy_Policy
-    })),
-    translate
-  )
-)(PrivacyPolicyView);

@@ -14,9 +14,7 @@ import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Base64 } from "js-base64";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import { open, close } from "../actions/login";
 import LoggedView from "./View";
 import sharedStyles from "./Styles";
@@ -44,7 +42,7 @@ const styles = StyleSheet.create({
   },
   servicesTitle: {
     color: "#292E35",
-    textAlign: "left",
+    textAlign: "center",
     fontWeight: "700"
   },
   planetImage: {
@@ -54,8 +52,29 @@ const styles = StyleSheet.create({
   }
 });
 
+@connect(
+  state => ({
+    server: state.server.server,
+    isFetching: state.login.isFetching,
+    Accounts_EmailOrUsernamePlaceholder:
+      state.settings.Accounts_EmailOrUsernamePlaceholder,
+    Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
+    Accounts_OAuth_Facebook: state.settings.Accounts_OAuth_Facebook,
+    Accounts_OAuth_Github: state.settings.Accounts_OAuth_Github,
+    Accounts_OAuth_Gitlab: state.settings.Accounts_OAuth_Gitlab,
+    Accounts_OAuth_Google: state.settings.Accounts_OAuth_Google,
+    Accounts_OAuth_Linkedin: state.settings.Accounts_OAuth_Linkedin,
+    Accounts_OAuth_Meteor: state.settings.Accounts_OAuth_Meteor,
+    Accounts_OAuth_Twitter: state.settings.Accounts_OAuth_Twitter,
+    services: state.login.services
+  }),
+  dispatch => ({
+    open: () => dispatch(open()),
+    close: () => dispatch(close())
+  })
+)
 /** @extends React.Component */
-class LoginSignupView extends LoggedView {
+export default class LoginSignupView extends LoggedView {
   static propTypes = {
     navigation: PropTypes.object,
     open: PropTypes.func.isRequired,
@@ -198,6 +217,7 @@ class LoginSignupView extends LoggedView {
 
   renderServices = () => {
     const { services } = this.props;
+    const { translate } = this.props.screenProps;
     if (!Object.keys(services).length) {
       return null;
     }
@@ -272,7 +292,7 @@ class LoginSignupView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props;
+    const { translate } = this.props.screenProps;
     return (
       <ScrollView
         style={[sharedStyles.container, sharedStyles.containerScrollView]}
@@ -316,31 +336,3 @@ class LoginSignupView extends LoggedView {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        server: state.server.server,
-        isFetching: state.login.isFetching,
-        Accounts_EmailOrUsernamePlaceholder:
-          state.settings.Accounts_EmailOrUsernamePlaceholder,
-        Accounts_PasswordPlaceholder:
-          state.settings.Accounts_PasswordPlaceholder,
-        Accounts_OAuth_Facebook: state.settings.Accounts_OAuth_Facebook,
-        Accounts_OAuth_Github: state.settings.Accounts_OAuth_Github,
-        Accounts_OAuth_Gitlab: state.settings.Accounts_OAuth_Gitlab,
-        Accounts_OAuth_Google: state.settings.Accounts_OAuth_Google,
-        Accounts_OAuth_Linkedin: state.settings.Accounts_OAuth_Linkedin,
-        Accounts_OAuth_Meteor: state.settings.Accounts_OAuth_Meteor,
-        Accounts_OAuth_Twitter: state.settings.Accounts_OAuth_Twitter,
-        services: state.login.services
-      }),
-      dispatch => ({
-        open: () => dispatch(open()),
-        close: () => dispatch(close())
-      })
-    ),
-    translate
-  )
-)(LoginSignupView);

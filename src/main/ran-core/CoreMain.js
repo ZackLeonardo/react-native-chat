@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { createSwitchNavigator } from "react-navigation";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../ran-i18n";
 import CoreMainNavigator from "./CoreMainNavigator";
 // import LoginView from "../../defaultLoginModule/LoginView";
 // import { store } from "../../src";
@@ -9,12 +11,12 @@ import CoreMainNavigator from "./CoreMainNavigator";
 // import { selectServerRequest } from "../../chatModule/redux/actions/server";
 // import { iconsLoaded } from "../../chatModule/Icons";
 // import { registerScreens } from "../../chatModule/views";
-import { ChatNavigator } from "../../chatModule";
+import { ChatModuleNavigator } from "../../chatModule";
 
 // registerScreens(store);
 // iconsLoaded();
 
-export default class CoreMain extends React.Component {
+class CoreMain extends React.Component {
   // constructor(props) {
   //   super(props);
 
@@ -45,17 +47,19 @@ export default class CoreMain extends React.Component {
       {
         // AuthLoading: AuthLoadingScreen,
         App: Nav,
-        Base: ChatNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
+        Base: ChatModuleNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
       },
       {
         initialRouteName: "Base"
       }
     );
 
-    return <AuthNav />;
+    return <AuthNav screenProps={{ translate: this.props.translate }} />;
   }
 }
 
 CoreMain.propTypes = {
   modules: PropTypes.object.isRequired
 };
+
+export default hoistStatics(compose(translate))(CoreMain);

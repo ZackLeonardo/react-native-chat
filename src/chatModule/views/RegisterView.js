@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Keyboard, Text, View, ScrollView, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
-import { compose, hoistStatics } from "recompose";
 
-import { translate } from "../../main/ran-i18n";
 import { registerSubmit, setUsernameSubmit } from "../actions/login";
 import TextInput from "../containers/TextInput";
 import Button from "../containers/Button";
@@ -16,8 +14,24 @@ import scrollPersistTaps from "../utils/scrollPersistTaps";
 import LoggedView from "./View";
 // import I18n from "../i18n";
 
+@connect(
+  state => ({
+    server: state.server.server,
+    Accounts_NamePlaceholder: state.settings.Accounts_NamePlaceholder,
+    Accounts_EmailOrUsernamePlaceholder:
+      state.settings.Accounts_EmailOrUsernamePlaceholder,
+    Accounts_PasswordPlaceholder: state.settings.Accounts_PasswordPlaceholder,
+    Accounts_RepeatPasswordPlaceholder:
+      state.settings.Accounts_RepeatPasswordPlaceholder,
+    login: state.login
+  }),
+  dispatch => ({
+    registerSubmit: params => dispatch(registerSubmit(params)),
+    setUsernameSubmit: params => dispatch(setUsernameSubmit(params))
+  })
+)
 /** @extends React.Component */
-class RegisterView extends LoggedView {
+export default class RegisterView extends LoggedView {
   static propTypes = {
     navigation: PropTypes.object,
     server: PropTypes.string,
@@ -71,7 +85,9 @@ class RegisterView extends LoggedView {
     const { name, email, password, code } = this.state;
     if (!this.valid()) {
       showToast(
-        this.props.translate("ran.registerView.Some_field_is_invalid_or_empty")
+        this.props.screenProps.translate(
+          "ran.registerView.Some_field_is_invalid_or_empty"
+        )
       );
       return;
     }
@@ -88,7 +104,9 @@ class RegisterView extends LoggedView {
   usernameSubmit = () => {
     const { username } = this.state;
     if (!username) {
-      showToast(this.props.translate("ran.registerView.Username_is_empty"));
+      showToast(
+        this.props.screenProps.translate("ran.registerView.Username_is_empty")
+      );
       return;
     }
 
@@ -98,18 +116,20 @@ class RegisterView extends LoggedView {
 
   termsService = () => {
     this.props.navigation.navigate("TermsServiceView", {
-      title: this.props.translate("ran.registerView.Terms_of_Service")
+      title: this.props.screenProps.translate(
+        "ran.registerView.Terms_of_Service"
+      )
     });
   };
 
   privacyPolicy = () => {
     this.props.navigation.navigate("PrivacyPolicyView", {
-      title: this.props.translate("ran.registerView.Privacy_Policy")
+      title: this.props.screenProps.translate("ran.registerView.Privacy_Policy")
     });
   };
 
   _renderRegister() {
-    const { translate } = this.props;
+    const { translate } = this.props.screenProps;
     if (this.props.login.token) {
       return null;
     }
@@ -228,7 +248,7 @@ class RegisterView extends LoggedView {
   }
 
   _renderUsername() {
-    const { translate } = this.props;
+    const { translate } = this.props.screenProps;
     if (!this.props.login.token) {
       return null;
     }
@@ -276,7 +296,7 @@ class RegisterView extends LoggedView {
         >
           <SafeAreaView style={styles.container} testID="register-view">
             <Text style={[styles.loginText, styles.loginTitle]}>
-              {this.props.translate("ran.common.Sign_Up")}
+              {this.props.screenProps.translate("ran.common.Sign_Up")}
             </Text>
             {this._renderRegister()}
             {this._renderUsername()}
@@ -292,26 +312,3 @@ class RegisterView extends LoggedView {
     );
   }
 }
-
-export default hoistStatics(
-  compose(
-    connect(
-      state => ({
-        server: state.server.server,
-        Accounts_NamePlaceholder: state.settings.Accounts_NamePlaceholder,
-        Accounts_EmailOrUsernamePlaceholder:
-          state.settings.Accounts_EmailOrUsernamePlaceholder,
-        Accounts_PasswordPlaceholder:
-          state.settings.Accounts_PasswordPlaceholder,
-        Accounts_RepeatPasswordPlaceholder:
-          state.settings.Accounts_RepeatPasswordPlaceholder,
-        login: state.login
-      }),
-      dispatch => ({
-        registerSubmit: params => dispatch(registerSubmit(params)),
-        setUsernameSubmit: params => dispatch(setUsernameSubmit(params))
-      })
-    ),
-    translate
-  )
-)(RegisterView);

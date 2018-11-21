@@ -54,37 +54,38 @@ const styles = StyleSheet.create({
 }))
 /** @extends React.Component */
 export default class NewMessageView extends LoggedView {
-  static navigatorButtons = {
-    leftButtons: [
-      {
-        id: "cancel",
-        title: 'I18n.t("Cancel")'
-      }
-    ]
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam("title")
+    };
   };
 
   static propTypes = {
     navigator: PropTypes.object,
-    baseUrl: PropTypes.string,
-    onPressItem: PropTypes.func.isRequired
+    baseUrl: PropTypes.string
+    // onPressItem: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super("NewMessageView", props);
-    // this.data = database
-    //   .objects("subscriptions")
-    //   .filtered("t = $0", "d")
-    //   .sorted("roomUpdatedAt", true);
+    this.data = null;
     this.state = {
       search: []
     };
-    this.data.addListener(this.updateState);
-    props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    // this.data.addListener(this.updateState);
+    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+  }
+
+  async componentWillMount() {
+    this.data = await database.objects(
+      "subscriptions",
+      `WHERE t="d" ORDER BY roomUpdatedAt ASC`
+    );
   }
 
   componentWillUnmount() {
     this.updateState.stop();
-    this.data.removeAllListeners();
+    // this.data.removeAllListeners();
   }
 
   async onNavigatorEvent(event) {
@@ -102,7 +103,7 @@ export default class NewMessageView extends LoggedView {
   onPressItem = item => {
     this.props.navigator.dismissModal();
     setTimeout(() => {
-      this.props.onPressItem(item);
+      this.props.navigation.state.params.onPressItem(item);
     }, 600);
   };
 
@@ -145,9 +146,14 @@ export default class NewMessageView extends LoggedView {
             styles.createChannelContainer
           ]}
         >
-          <Image style={styles.createChannelIcon} source={{ uri: "plus" }} />
+          <Image
+            style={styles.createChannelIcon}
+            source={require("../Icons/plus.imageset/plus.png")}
+          />
           <Text style={styles.createChannelText}>
-            {'I18n.t("Create_Channel")'}
+            {this.props.screenProps.translate(
+              "ran.newMessageView.Create_Channel"
+            )}
           </Text>
         </View>
       </Touch>
