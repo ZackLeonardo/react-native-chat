@@ -154,7 +154,7 @@ const StackNavigator = createStackNavigator(
       screen: SettingsView
     },
     RoomView: {
-      screen: () => gestureHandlerRootHOC(RoomView)
+      screen: gestureHandlerRootHOC(RoomView)
     }
   },
   {

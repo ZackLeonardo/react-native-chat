@@ -19,24 +19,23 @@ const readMessagesDDP = function readMessagesDDP(rid) {
 };
 
 export default async function readMessages(rid) {
-  const { database: db } = database;
+  // const { database: db } = database;
   try {
     // eslint-disable-next-line
     const data = await (this.ddp && this.ddp.status
       ? readMessagesDDP.call(this, rid)
       : readMessagesREST.call(this, rid));
-    const [subscription] = db
-      .objects("subscriptions")
-      .filtered("rid = $0", rid);
-    db.write(() => {
-      subscription.open = true;
-      subscription.alert = false;
-      subscription.unread = 0;
-      subscription.userMentions = 0;
-      subscription.groupMentions = 0;
-      subscription.ls = new Date();
-      subscription.lastOpen = new Date();
-    });
+    const [subscription] = await database.objects(
+      "subscriptions",
+      `WHERE rid = "${rid}"`
+    );
+    subscription.open = true;
+    subscription.alert = false;
+    subscription.unread = 0;
+    subscription.userMentions = 0;
+    subscription.groupMentions = 0;
+    subscription.ls = new Date();
+    subscription.lastOpen = new Date();
     return data;
   } catch (e) {
     log("readMessages", e);

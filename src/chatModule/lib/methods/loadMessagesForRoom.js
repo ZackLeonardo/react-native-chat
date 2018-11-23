@@ -42,7 +42,7 @@ async function loadMessagesForRoomDDP(...args) {
 }
 
 export default async function loadMessagesForRoom(...args) {
-  const { database: db } = database;
+  // const { database: db } = database;
   return new Promise(async (resolve, reject) => {
     try {
       const data = (await (this.ddp && this.ddp.status
@@ -51,9 +51,7 @@ export default async function loadMessagesForRoom(...args) {
 
       if (data && data.length) {
         InteractionManager.runAfterInteractions(() => {
-          db.write(() =>
-            data.forEach(message => db.create("messages", message, true))
-          );
+          data.forEach(message => database.create("messages", message, true));
           return resolve(data);
         });
       } else {

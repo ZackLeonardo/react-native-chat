@@ -105,7 +105,7 @@ export default class RoomsListView extends LoggedView {
         <View style={{ flexDirection: "row" }}>
           {Platform.OS === "android" ? (
             <TouchableOpacity onPress={() => {}}>
-              <Icon name="ios-search" size={22} color="#666" />
+              <Icon name="ios-search" size={22} color="#4674F1" />
             </TouchableOpacity>
           ) : null}
 
@@ -476,7 +476,7 @@ export default class RoomsListView extends LoggedView {
   goRoom = (rid, name) => {
     this.props.navigation.navigate("RoomView", {
       title: name,
-      passProps: { rid }
+      rid: rid
     });
     this.cancelSearchingAndroid();
   };
