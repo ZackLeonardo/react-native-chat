@@ -274,7 +274,7 @@ export default class RoomsListView extends LoggedView {
           this.unreadToken = PubSub.subscribe("subscriptions", async () => {
             this.unread = await database.objects(
               "subscriptions",
-              `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${
+              `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) and lastMessage IS NOT null order by ${
                 this.data
               }, name desc`
             );
@@ -285,6 +285,9 @@ export default class RoomsListView extends LoggedView {
               console.log(unread);
               this.setState({ unread: unread });
             }
+            // if (this.unread && this.unread[0] && this.unread[0].lastMessage) {
+
+            // }
           });
         }
       } else {
@@ -296,7 +299,7 @@ export default class RoomsListView extends LoggedView {
           this.favoritesToken = PubSub.subscribe("subscriptions", async () => {
             this.favorites = await database.objects(
               "subscriptions",
-              `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${
+              `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 and lastMessage IS NOT null order by ${
                 this.data
               }`
             );
@@ -320,7 +323,7 @@ export default class RoomsListView extends LoggedView {
               // channels
               this.channels = await database.objects(
                 "subscriptions",
-                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" and lastMessage IS NOT null order by ${
                   this.data
                 }`
               );
@@ -334,7 +337,7 @@ export default class RoomsListView extends LoggedView {
               // private
               this.privateGroup = await database.objects(
                 "subscriptions",
-                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" and lastMessage IS NOT null order by ${
                   this.data
                 }`
               );
@@ -348,7 +351,7 @@ export default class RoomsListView extends LoggedView {
               // direct
               this.direct = await database.objects(
                 "subscriptions",
-                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" and lastMessage IS NOT null order by ${
                   this.data
                 }`
               );
@@ -361,7 +364,7 @@ export default class RoomsListView extends LoggedView {
               // livechat
               this.livechat = await database.objects(
                 "subscriptions",
-                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${
+                `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" and lastMessage IS NOT null order by ${
                   this.data
                 }`
               );

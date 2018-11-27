@@ -17,7 +17,6 @@ export default async function subscribeRooms(id) {
   ]);
 
   let timer = null;
-  let subs = null;
 
   const loop = (time = new Date()) => {
     if (timer) {
@@ -79,19 +78,17 @@ export default async function subscribeRooms(id) {
               "rooms",
               `WHERE _id == "${data.rid}"`
             );
-            subs = merge(data, rooms[0]);
-            // database.create("subscriptions", tpm, true);
+            database.create("subscriptions", merge(data, rooms[0]), true);
             database.delete(rooms);
           }
         }
         if (/rooms/.test(ev)) {
           if (type === "updated") {
-            // const [sub] = await database.objects(
-            //   "subscriptions",
-            //   `WHERE rid == "${data._id}"`
-            // );
-            const tmp = merge(subs, data);
-            database.create("subscriptions", tmp, true);
+            const [sub] = await database.objects(
+              "subscriptions",
+              `WHERE rid == "${data._id}"`
+            );
+            database.create("subscriptions", merge(sub, data), true);
           } else if (type === "inserted") {
             database.create("rooms", data, true);
           }

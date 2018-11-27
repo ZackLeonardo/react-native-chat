@@ -1,4 +1,6 @@
 import { SQLite } from "expo";
+import { isArray } from "lodash";
+
 import { pubsubs } from "./pubsubs";
 
 const serversSchema =
@@ -320,19 +322,26 @@ class DB {
     );
   }
 
-  delete(args) {
-    console.log("delete 1126");
-    console.log(args);
+  delete(schema_name, schema_object) {
+    console.log(schema_object);
 
-    // this.database.transaction(
-    //   tx => {
-    //     tx.executeSql(
-    //       `DELETE FROM subscriptions WHERE _id = "LRaFP8bfaJSLsS8vi"`
-    //     );
-    //   },
-    //   null,
-    //   pubsubs("subscriptions")
-    // );
+    if (isArray(schema_object)) {
+      schema_object.map(item => {
+        let key = keys[schema_name][0];
+        let value = item[key];
+        if (key) {
+          this.database.transaction(
+            tx => {
+              tx.executeSql(
+                `DELETE FROM ${schema_name} WHERE ${key} = "${value}"`
+              );
+            },
+            null,
+            pubsubs("delete")
+          );
+        }
+      });
+    }
   }
 
   setActiveDB(db = "") {
