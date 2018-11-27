@@ -246,7 +246,7 @@ class DB {
     this.database.transaction(
       tx => {
         tx.executeSql(
-          `SELECT * FROM messages WHERE rid="9RfXcpDkbFvbqf3nhNPq7a9ZFS7qWdcTdY" ORDER BY ts ASC`,
+          `SELECT * FROM subscriptions WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by roomUpdatedAt desc , name desc`,
           [],
           (_, { rows }) => console.log("objectstest" + JSON.stringify(rows))
         );
@@ -320,16 +320,19 @@ class DB {
     );
   }
 
-  delete() {
-    this.database.transaction(
-      tx => {
-        tx.executeSql(
-          `DELETE FROM subscriptions WHERE _id = "LRaFP8bfaJSLsS8vi"`
-        );
-      },
-      null,
-      pubsubs("subscriptions")
-    );
+  delete(args) {
+    console.log("delete 1126");
+    console.log(args);
+
+    // this.database.transaction(
+    //   tx => {
+    //     tx.executeSql(
+    //       `DELETE FROM subscriptions WHERE _id = "LRaFP8bfaJSLsS8vi"`
+    //     );
+    //   },
+    //   null,
+    //   pubsubs("subscriptions")
+    // );
   }
 
   setActiveDB(db = "") {

@@ -17,7 +17,6 @@ import {
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
 import PubSub from "pubsub-js";
-import shallowEqual from "shallowequal";
 import Icon from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 
@@ -182,7 +181,7 @@ export default class RoomsListView extends LoggedView {
       if (nextProps.loadingServer) {
         this.setState({ loading: true });
       } else {
-        this.getSubscriptions();
+        // this.getSubscriptions();
       }
     } else if (this.props.searchText !== nextProps.searchText) {
       this.search(nextProps.searchText);
@@ -202,7 +201,7 @@ export default class RoomsListView extends LoggedView {
         prevProps.showUnread === this.props.showUnread
       )
     ) {
-      this.getSubscriptions();
+      // this.getSubscriptions();
     }
   }
 
@@ -279,10 +278,11 @@ export default class RoomsListView extends LoggedView {
                 this.data
               }, name desc`
             );
-            if (!shallowEqual(this.unread, unread)) {
+            if (!isEqual(this.unread, unread)) {
               //!_.isEqualWith(this.unread, newUnread)
               console.log("unread updating");
               unread = this.unread.slice();
+              console.log(unread);
               this.setState({ unread: unread });
             }
           });
@@ -300,7 +300,7 @@ export default class RoomsListView extends LoggedView {
                 this.data
               }`
             );
-            if (!shallowEqual(this.favorites, favorites)) {
+            if (!isEqual(this.favorites, favorites)) {
               //!_.isEqualWith(this.unread, newUnread)
               console.log("favorites updating");
               favorites = this.favorites.slice();
@@ -324,7 +324,7 @@ export default class RoomsListView extends LoggedView {
                   this.data
                 }`
               );
-              if (!shallowEqual(this.channels, channels)) {
+              if (!isEqual(this.channels, channels)) {
                 //!_.isEqualWith(this.unread, newUnread)
                 console.log("channels updating");
                 channels = this.channels.slice();
@@ -338,7 +338,7 @@ export default class RoomsListView extends LoggedView {
                   this.data
                 }`
               );
-              if (!shallowEqual(this.privateGroup, privateGroup)) {
+              if (!isEqual(this.privateGroup, privateGroup)) {
                 //!_.isEqualWith(this.unread, newUnread)
                 console.log("privateGroup updating");
                 privateGroup = this.privateGroup.slice();
@@ -352,7 +352,7 @@ export default class RoomsListView extends LoggedView {
                   this.data
                 }`
               );
-              if (!shallowEqual(this.direct, direct)) {
+              if (!isEqual(this.direct, direct)) {
                 //!_.isEqualWith(this.unread, newUnread)
                 console.log("direct updating");
                 direct = this.direct.slice();
@@ -365,7 +365,7 @@ export default class RoomsListView extends LoggedView {
                   this.data
                 }`
               );
-              if (!shallowEqual(this.livechat, livechat)) {
+              if (!isEqual(this.livechat, livechat)) {
                 //!_.isEqualWith(this.unread, newUnread)
                 console.log("livechat updating");
                 livechat = this.livechat.slice();
@@ -392,7 +392,7 @@ export default class RoomsListView extends LoggedView {
         } else {
           this.chats = this.data;
         }
-        if (!shallowEqual(this.chats, chats)) {
+        if (!isEqual(this.chats, chats)) {
           //!_.isEqualWith(this.unread, newUnread)
           console.log("chats updating");
           chats = this.chats.slice();

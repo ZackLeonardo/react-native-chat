@@ -331,8 +331,6 @@ export default class Socket extends EventEmitter {
       .catch(err => {
         log("DDP call Error", err);
         if (err && /you've been logged out by the server/i.test(err.reason)) {
-          console.log("hhhh");
-
           return this.emit("forbidden");
         }
         return Promise.reject(err);

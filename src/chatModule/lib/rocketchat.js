@@ -134,15 +134,6 @@ const RocketChat = {
     } catch (error) {
       console.error("error---" + error);
     }
-    // try {
-    // 	let response = await RNFetchBlob.fetch('HEAD', url);
-    // 	response = response.respInfo;
-    // 	if (response.status === 200 && RocketChat._hasInstanceId(response.headers)) {
-    // 		return url;
-    // 	}
-    // } catch (e) {
-    // 	log('testServer', e);
-    // }
     throw new Error({ error: "invalid server" });
   },
   _setUser(ddpMessage) {
@@ -249,7 +240,7 @@ const RocketChat = {
       this.ddp.once(
         "logged",
         protectedFunction(({ id }) => {
-          // this.subscribeRooms(id);
+          this.subscribeRooms(id);
           // this.ddp.subscribe('stream-notify-logged', 'updateAvatar', false);
         })
       );

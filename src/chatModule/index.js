@@ -21,6 +21,8 @@ import PrivacyPolicyView from "./views/PrivacyPolicyView";
 import NewMessageView from "./views/NewMessageView";
 import SettingsView from "./views/SettingsView";
 import RoomView from "./views/RoomView";
+import CreateChannelView from "./views/CreateChannelView";
+
 import Sidebar from "./containers/Sidebar";
 
 import { store } from "../src";
@@ -117,6 +119,9 @@ const StackNavigator = createStackNavigator(
         header: null
       }
     },
+    CreateChannelView: {
+      screen: CreateChannelView
+    },
     RoomsListView: {
       screen: NewMessageViewStack,
       navigationOptions: {
@@ -198,7 +203,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import { Provider } from "react-redux";
 // import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
-// import CreateChannelView from './CreateChannelView';
 // import MentionedMessagesView from './MentionedMessagesView';
 // import OAuthView from './OAuthView';
 // import OnboardingView from "./OnboardingView";

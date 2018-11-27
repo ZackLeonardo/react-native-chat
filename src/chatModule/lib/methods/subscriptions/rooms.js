@@ -17,6 +17,8 @@ export default async function subscribeRooms(id) {
   ]);
 
   let timer = null;
+  let subs = null;
+
   const loop = (time = new Date()) => {
     if (timer) {
       return;
@@ -53,48 +55,45 @@ export default async function subscribeRooms(id) {
 
     this.ddp.on(
       "stream-notify-user",
-      protectedFunction(ddpMessage => {
+      protectedFunction(async ddpMessage => {
         const [type, data] = ddpMessage.fields.args;
         const [, ev] = ddpMessage.fields.eventName.split("/");
         if (/subscriptions/.test(ev)) {
           if (type === "removed") {
             let messages = [];
-            const [subscription] = database
-              .objects("subscriptions")
-              .filtered("_id == $0", data._id);
+            const [subscription] = await database.objects(
+              "subscriptions",
+              `WHERE _id == "${data._id}"`
+            );
 
             if (subscription) {
-              messages = database
-                .objects("messages")
-                .filtered("rid == $0", subscription.rid);
+              messages = await database.objects(
+                "messages",
+                `WHERE rid == "${subscription.rid}"`
+              );
             }
-            database.write(() => {
-              database.delete(messages);
-              database.delete(subscription);
-            });
+            database.delete(messages);
+            database.delete(subscription);
           } else {
-            const rooms = database
-              .objects("rooms")
-              .filtered("_id == $0", data.rid);
-            const tpm = merge(data, rooms[0]);
-            database.write(() => {
-              database.create("subscriptions", tpm, true);
-              database.delete(rooms);
-            });
+            const rooms = await database.objects(
+              "rooms",
+              `WHERE _id == "${data.rid}"`
+            );
+            subs = merge(data, rooms[0]);
+            // database.create("subscriptions", tpm, true);
+            database.delete(rooms);
           }
         }
         if (/rooms/.test(ev)) {
           if (type === "updated") {
-            const [sub] = database
-              .objects("subscriptions")
-              .filtered("rid == $0", data._id);
-            database.write(() => {
-              merge(sub, data);
-            });
+            // const [sub] = await database.objects(
+            //   "subscriptions",
+            //   `WHERE rid == "${data._id}"`
+            // );
+            const tmp = merge(subs, data);
+            database.create("subscriptions", tmp, true);
           } else if (type === "inserted") {
-            database.write(() => {
-              database.create("rooms", data, true);
-            });
+            database.create("rooms", data, true);
           }
         }
         if (/message/.test(ev)) {
@@ -113,9 +112,7 @@ export default async function subscribeRooms(id) {
             }
           };
           requestAnimationFrame(() =>
-            database.write(() => {
-              database.create("messages", message, true);
-            })
+            database.create("messages", message, true)
           );
         }
       })

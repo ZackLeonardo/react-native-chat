@@ -21,6 +21,7 @@ export const merge = (subscription, room) => {
     subscription.broadcast = room.broadcast;
 
     if (room.muted && room.muted.length) {
+      console.log("~~~~~~~~~~~~~~~");
       subscription.muted = room.muted
         .filter(user => user)
         .map(user => ({ value: user }));

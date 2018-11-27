@@ -72,9 +72,7 @@ const handleMessageReceived = function* handleMessageReceived({ message }) {
     const room = yield select(state => state.room);
 
     if (message.rid === room.rid) {
-      database.write(() => {
-        database.create("messages", message, true);
-      });
+      database.create("messages", message, true);
 
       if (room._id) {
         RocketChat.readMessages(room.rid);
