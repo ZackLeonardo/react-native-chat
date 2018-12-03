@@ -83,15 +83,18 @@ export default async function subscribeRooms(id) {
           }
         }
         if (/rooms/.test(ev)) {
-          if (type === "updated") {
-            const [sub] = await database.objects(
-              "subscriptions",
-              `WHERE rid == "${data._id}"`
-            );
-            database.create("subscriptions", merge(sub, data), true);
-          } else if (type === "inserted") {
-            database.create("rooms", data, true);
-          }
+          setTimeout(async () => {
+            // wait for subscriptions created.
+            if (type === "updated") {
+              const [sub] = await database.objects(
+                "subscriptions",
+                `WHERE rid == "${data._id}"`
+              );
+              database.create("subscriptions", merge(sub, data), true);
+            } else if (type === "inserted") {
+              database.create("rooms", data, true);
+            }
+          }, 10);
         }
         if (/message/.test(ev)) {
           const [args] = ddpMessage.fields.args;
