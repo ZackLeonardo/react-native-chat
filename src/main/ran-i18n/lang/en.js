@@ -68,7 +68,7 @@ module.exports = {
       Sorting_by: "Sorting by "
     },
     roomItem: {
-      No_Message: "No Message",
+      No_Message: "No Preview Message",
       You_colon: "You: ",
       you_were_mentioned: "you were mentioned",
       last_message: "last message"

@@ -52,18 +52,24 @@ export class List extends React.Component {
     this.state = {
       data: []
     };
+
+    this.dataToken = null;
     // this.dataSource = ds.cloneWithRows(this.data);
   }
   async componentDidMount() {
-    let data = await database.objects(
-      "messages",
-      `WHERE rid="${this.props.room}" ORDER BY ts ASC`
-    );
-
-    this.setState({
-      data: data
-    });
-    // this.data.addListener(this.updateState);
+    if (!this.dataToken) {
+      this.dataToken = PubSub.subscribe("messages", async () => {
+        let data = await database.objects(
+          "messages",
+          `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
+        );
+        if (this.state.data.length !== data.slice().length) {
+          //!_.isEqualWith(this.unread, newUnread)  //!shallowequal(this.state.data, data.slice())
+          console.log("messages updating");
+          this.setState({ data: data.slice() });
+        }
+      });
+    }
   }
   shouldComponentUpdate(nextProps, nextState) {
     return (
@@ -72,20 +78,16 @@ export class List extends React.Component {
     );
   }
   componentWillUnmount() {
-    // this.data.removeAllListeners();
-    // this.updateState.stop();
+    this.removeListener(this.dataToken);
   }
-  // updateState = throttle(() => {
-  //   // this.setState({
-  //   this.dataSource = this.dataSource.cloneWithRows(this.data);
-  //   // LayoutAnimation.easeInEaseOut();
-  //   this.forceUpdate();
-  //   // });
-  // }, 1000);
+
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
+    }
+  };
 
   render() {
-    console.log("1123");
-
     console.log(this.state.data);
 
     return (
@@ -106,22 +108,6 @@ export class List extends React.Component {
         testID="room-view-messages"
         {...scrollPersistTaps}
       />
-      // <ListView
-      // 	enableEmptySections
-      // 	style={styles.list}
-      // 	data={this.data}
-      // 	keyExtractor={item => item._id}
-      // 	onEndReachedThreshold={100}
-      // 	renderFooter={this.props.renderFooter}
-      // 	renderHeader={() => <Typing />}
-      // 	onEndReached={() => this.props.onEndReached(this.data[this.data.length - 1])}
-      // 	dataSource={this.dataSource}
-      // 	renderRow={(item, previousItem) => this.props.renderRow(item, previousItem)}
-      // 	initialListSize={1}
-      // 	pageSize={20}
-      // 	testID='room-view-messages'
-      // 	{...scrollPersistTaps}
-      // />
     );
   }
 }

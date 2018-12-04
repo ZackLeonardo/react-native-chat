@@ -122,7 +122,9 @@ export default class RoomView extends LoggedView {
       "subscriptions",
       `WHERE rid="${this.rid}"`
     );
+
     this.setState({ joined: this.rooms.length > 0, loaded: true });
+
     this.updateRoom();
     // this.rooms.addListener(this.updateRoom);
     // this.props.navigator.setDrawerEnabled({
@@ -301,6 +303,7 @@ export default class RoomView extends LoggedView {
       _updatedAt={new Date(item._updatedAt)}
       onReactionPress={this.onReactionPress}
       onLongPress={this.onMessageLongPress}
+      customTimeFormat="MMMM Do YYYY, h:mm:ss a"
     />
   );
 

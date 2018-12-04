@@ -141,7 +141,7 @@ export default class RoomItem extends React.Component {
     _updatedAt: PropTypes.string,
     lastMessage: PropTypes.string,
     showLastMessage: PropTypes.bool,
-    favorite: PropTypes.bool,
+    favorite: PropTypes.string,
     alert: PropTypes.number,
     unread: PropTypes.number,
     userMentions: PropTypes.number,
@@ -225,7 +225,8 @@ export default class RoomItem extends React.Component {
   }
 
   formatDate = date =>
-    moment(date, "ddd MMM DD YYYY HH:mm:ss").calendar(null, {
+    moment(date, "YYYY-MM-DDTHH:mm:ss.SSS").calendar(null, {
+      // "ddd MMM DD YYYY HH:mm:ss"
       lastDay: `[${"Yesterday"}]`,
       sameDay: "h:mm A",
       lastWeek: "dddd",

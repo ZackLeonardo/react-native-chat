@@ -4,7 +4,7 @@ const initialState = {
   sortBy: "activity",
   groupByType: true,
   showFavorites: true,
-  showUnread: false
+  showUnread: true
 };
 
 export default (state = initialState, action) => {

@@ -35,7 +35,7 @@ export default class User extends React.PureComponent {
     timeFormat: PropTypes.string.isRequired,
     username: PropTypes.string,
     alias: PropTypes.string,
-    ts: PropTypes.instanceOf(Date),
+    ts: PropTypes.string,
     temp: PropTypes.bool
   };
 
@@ -50,7 +50,9 @@ export default class User extends React.PureComponent {
     const aliasUsername = alias ? (
       <Text style={styles.alias}>@{username}</Text>
     ) : null;
-    const time = moment(ts).format(this.props.timeFormat);
+    const time = moment(ts, "YYYY-MM-DDTHH:mm:ss.SSS").format(
+      this.props.timeFormat
+    );
 
     return (
       <View style={styles.usernameView}>

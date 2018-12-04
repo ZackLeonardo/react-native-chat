@@ -194,7 +194,7 @@ export default class MessageContainer extends React.Component {
       <Message
         msg={msg}
         author={JSON.parse(u)}
-        ts={new Date(ts)}
+        ts={ts}
         type={t}
         status={status}
         attachments={
