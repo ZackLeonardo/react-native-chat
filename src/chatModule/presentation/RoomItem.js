@@ -194,7 +194,7 @@ export default class RoomItem extends React.Component {
   get lastMessage() {
     const { lastMessage, type, showLastMessage } = this.props;
 
-    let lastMessageObject = JSON.parse(lastMessage);
+    let lastMessageObject = lastMessage ? JSON.parse(lastMessage) : null;
 
     if (!this.props.StoreLastMessage || !showLastMessage) {
       return "";

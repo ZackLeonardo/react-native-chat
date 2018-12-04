@@ -42,95 +42,95 @@ export default class Markdown extends React.Component {
     m = m.replace(/^\[([^\]]*)\]\(([^)]*)\)/, "").trim();
     return (
       <MarkdownRenderer
-        rules={{
-          paragraph: (node, children) => (
-            <Text key={node.key} style={styles.paragraph}>
-              {children}
-              {edited ? <Text style={styles.edited}> (edited)</Text> : null}
-            </Text>
-          ),
-          mention: node => {
-            const { content, key } = node;
-            let mentionStyle = styles.mention;
-            if (content === "all" || content === "here") {
-              mentionStyle = {
-                ...mentionStyle,
-                ...styles.mentionAll
-              };
-            } else if (content === username) {
-              mentionStyle = {
-                ...mentionStyle,
-                ...styles.mentionLoggedUser
-              };
-            }
-            return (
-              <Text style={mentionStyle} key={key}>
-                &nbsp;{content}&nbsp;
-              </Text>
-            );
-          },
-          hashtag: node => (
-            <Text key={node.key} style={styles.mention}>
-              &nbsp;#{node.content}&nbsp;
-            </Text>
-          ),
-          emoji: node => {
-            if (
-              node.children &&
-              node.children.length &&
-              node.children[0].content
-            ) {
-              const { content } = node.children[0];
-              const emojiExtension = customEmojis[content];
-              if (emojiExtension) {
-                const emoji = { extension: emojiExtension, content };
-                return (
-                  <CustomEmoji
-                    key={node.key}
-                    baseUrl={baseUrl}
-                    style={styles.customEmoji}
-                    emoji={emoji}
-                  />
-                );
-              }
-              return <Text key={node.key}>:{content}:</Text>;
-            }
-            return null;
-          },
-          hardbreak: () => null,
-          blocklink: () => null,
-          image: node => (
-            <Image
-              key={node.key}
-              style={styles.inlineImage}
-              source={{ uri: node.attributes.src }}
-            />
-          ),
-          ...rules
-        }}
-        style={{
-          paragraph: styles.paragraph,
-          text: {
-            color: "#0C0D0F",
-            fontSize: 16,
-            letterSpacing: 0.1
-          },
-          codeInline: {
-            borderWidth: 1,
-            borderColor: "#CCCCCC",
-            backgroundColor: "#f5f5f5",
-            padding: 2,
-            borderRadius: 4
-          },
-          link: {
-            color: "#1D74F5"
-          },
-          ...style
-        }}
-        plugins={[
-          new PluginContainer(MarkdownFlowdock),
-          new PluginContainer(MarkdownEmojiPlugin)
-        ]}
+      // rules={{
+      //   paragraph: (node, children) => (
+      //     <Text key={node.key} style={styles.paragraph}>
+      //       {children}
+      //       {edited ? <Text style={styles.edited}> (edited)</Text> : null}
+      //     </Text>
+      //   ),
+      //   mention: node => {
+      //     const { content, key } = node;
+      //     let mentionStyle = styles.mention;
+      //     if (content === "all" || content === "here") {
+      //       mentionStyle = {
+      //         ...mentionStyle,
+      //         ...styles.mentionAll
+      //       };
+      //     } else if (content === username) {
+      //       mentionStyle = {
+      //         ...mentionStyle,
+      //         ...styles.mentionLoggedUser
+      //       };
+      //     }
+      //     return (
+      //       <Text style={mentionStyle} key={key}>
+      //         &nbsp;{content}&nbsp;
+      //       </Text>
+      //     );
+      //   },
+      //   hashtag: node => (
+      //     <Text key={node.key} style={styles.mention}>
+      //       &nbsp;#{node.content}&nbsp;
+      //     </Text>
+      //   ),
+      //   emoji: node => {
+      //     if (
+      //       node.children &&
+      //       node.children.length &&
+      //       node.children[0].content
+      //     ) {
+      //       const { content } = node.children[0];
+      //       const emojiExtension = customEmojis[content];
+      //       if (emojiExtension) {
+      //         const emoji = { extension: emojiExtension, content };
+      //         return (
+      //           <CustomEmoji
+      //             key={node.key}
+      //             baseUrl={baseUrl}
+      //             style={styles.customEmoji}
+      //             emoji={emoji}
+      //           />
+      //         );
+      //       }
+      //       return <Text key={node.key}>:{content}:</Text>;
+      //     }
+      //     return null;
+      //   },
+      //   hardbreak: () => null,
+      //   blocklink: () => null,
+      //   image: node => (
+      //     <Image
+      //       key={node.key}
+      //       style={styles.inlineImage}
+      //       source={{ uri: node.attributes.src }}
+      //     />
+      //   ),
+      //   ...rules
+      // }}
+      // style={{
+      //   paragraph: styles.paragraph,
+      //   text: {
+      //     color: "#0C0D0F",
+      //     fontSize: 16,
+      //     letterSpacing: 0.1
+      //   },
+      //   codeInline: {
+      //     borderWidth: 1,
+      //     borderColor: "#CCCCCC",
+      //     backgroundColor: "#f5f5f5",
+      //     padding: 2,
+      //     borderRadius: 4
+      //   },
+      //   link: {
+      //     color: "#1D74F5"
+      //   },
+      //   ...style
+      // }}
+      // plugins={[
+      //   new PluginContainer(MarkdownFlowdock),
+      //   new PluginContainer(MarkdownEmojiPlugin)
+      // ]}
       >
         {m}
       </MarkdownRenderer>

@@ -321,7 +321,7 @@ class DB {
       tx => {
         tx.executeSql(
           // "SELECT * FROM roles",
-          `SELECT * FROM messages WHERE rid="GENERAL" ORDER BY datetime("ts") ASC;`,
+          `SELECT * FROM subscriptions WHERE t = "d" AND name LIKE "%te%";`,
           [],
           (_, { rows }) => console.log("objectstest" + JSON.stringify(rows))
         );

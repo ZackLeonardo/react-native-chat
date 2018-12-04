@@ -35,8 +35,6 @@ const getRoomDpp = async function() {
     const { ddp } = this;
     const updatedSince = await lastMessage();
 
-    console.log(updatedSince);
-
     const [subscriptions, rooms] = await Promise.all([
       ddp.call("subscriptions/get", updatedSince),
       ddp.call("rooms/get", updatedSince)

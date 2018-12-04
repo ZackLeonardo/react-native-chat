@@ -713,6 +713,11 @@ const RocketChat = {
         `WHERE t != "d" AND name LIKE "%${searchText}%"`
       );
       // data = data.filtered("t != $0", "d");
+    } else {
+      data = await database.objects(
+        "subscriptions",
+        `WHERE name LIKE "%${searchText}%"`
+      );
     }
     data = data.slice(0, 7);
 

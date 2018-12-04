@@ -31,7 +31,7 @@ async function loadMissedMessagesDDP(...args) {
 }
 
 export default async function loadMissedMessages(...args) {
-  const { database: db } = database;
+  const db = database;
   return new Promise(async (resolve, reject) => {
     try {
       const data = await (this.ddp && this.ddp.status
@@ -43,22 +43,19 @@ export default async function loadMissedMessages(...args) {
           const { updated } = data;
           updated.forEach(buildMessage);
           InteractionManager.runAfterInteractions(() => {
-            db.write(() =>
-              updated.forEach(message => db.create("messages", message, true))
-            );
+            updated.forEach(message => db.create("messages", message, true));
             resolve(updated);
           });
         }
         if (data.deleted && data.deleted.length) {
           const { deleted } = data;
           InteractionManager.runAfterInteractions(() => {
-            db.write(() => {
-              deleted.forEach(m => {
-                const message = database
-                  .objects("messages")
-                  .filtered("_id = $0", m._id);
-                database.delete(message);
-              });
+            deleted.forEach(async m => {
+              const message = await database.objects(
+                "messages",
+                `WHERE _id ="${m._id}"`
+              );
+              database.delete(message);
             });
           });
         }

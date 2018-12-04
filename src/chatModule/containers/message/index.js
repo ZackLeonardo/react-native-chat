@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Vibration, ViewPropTypes } from "react-native";
 import { connect } from "react-redux";
 import equal from "deep-equal";
+import moment from "moment";
 
 import Message from "./Message";
 import {
@@ -129,15 +130,19 @@ export default class MessageContainer extends React.Component {
     const { item, previousItem } = this.props;
     if (
       previousItem &&
-      (previousItem.ts.toDateString() === item.ts.toDateString() &&
-        previousItem.u.username === item.u.username &&
+      (moment(previousItem.ts, "YYYY-MM-DD").isSame(
+        moment(item.ts, "YYYY-MM-DD")
+      ) &&
+        JSON.parse(previousItem.u).username === JSON.parse(item.u).username &&
         !(
           previousItem.groupable === false ||
           item.groupable === false ||
           this.props.broadcast === true
         ) &&
         previousItem.status === item.status &&
-        item.ts - previousItem.ts < this.props.Message_GroupingPeriod * 1000)
+        moment(item.ts, "YYYY-MM-DDTHH:mm:ss.SSS") -
+          moment(previousItem.ts, "YYYY-MM-DDTHH:mm:ss.SSS") <
+          this.props.Message_GroupingPeriod * 1000)
     ) {
       return false;
     }

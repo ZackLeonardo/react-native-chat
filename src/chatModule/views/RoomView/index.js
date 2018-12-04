@@ -290,7 +290,7 @@ export default class RoomView extends LoggedView {
     return false;
   };
 
-  renderItem = (item, index) => (
+  renderItem = (item, previousItem) => (
     <Message
       key={item._id}
       item={item}
@@ -298,8 +298,8 @@ export default class RoomView extends LoggedView {
       reactions={JSON.parse(item.reactions)}
       user={this.props.user}
       archived={this.state.room.archived}
-      broadcast={this.state.room.broadcast}
-      // previousItem={previousItem}
+      broadcast={this.state.room.broadcast ? true : false}
+      previousItem={previousItem}
       _updatedAt={new Date(item._updatedAt)}
       onReactionPress={this.onReactionPress}
       onLongPress={this.onMessageLongPress}

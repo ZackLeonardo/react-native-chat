@@ -29,10 +29,13 @@ export const merge = (subscription, room) => {
       subscription.muted = [];
     }
   }
-  if (subscription.roles && subscription.roles.length) {
-    subscription.roles = subscription.roles.map(role =>
-      role.value ? role : { value: role }
-    );
+  if (subscription.roles && subscription.roles !== "null") {
+    subscriptionRoles = subscription.roles.split(",");
+    if (subscriptionRoles && subscriptionRoles.length) {
+      subscription.roles = subscriptionRoles.map(role =>
+        role.value ? role : { value: role }
+      );
+    }
   }
 
   if (subscription.mobilePushNotifications === "nothing") {

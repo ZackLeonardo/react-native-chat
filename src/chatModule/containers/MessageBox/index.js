@@ -12,6 +12,7 @@ import Icon from "@expo/vector-icons/MaterialIcons";
 import { connect } from "react-redux";
 import { emojify } from "react-emojione";
 // import { KeyboardAccessoryView } from "react-native-keyboard-input";
+import InputToolbar from "../InputToolbar";
 // import ImagePicker from "react-native-image-crop-picker";
 
 import { userTyping } from "../../actions/room";
@@ -177,18 +178,17 @@ export default class MessageBox extends React.PureComponent {
     const icons = [];
 
     if (this.state.text) {
-      icons
-        .push
-        // <MyIcon
-        //   style={[styles.actionButtons, { color: "#1D74F5" }]}
-        //   name="send"
-        //   key="sendIcon"
-        //   accessibilityLabel={I18n.t("Send message")}
-        //   accessibilityTraits="button"
-        //   onPress={() => this.submit(this.state.text)}
-        //   testID="messagebox-send-message"
-        // />
-        ();
+      icons.push(
+        <Icon
+          style={[styles.actionButtons, { color: "#1D74F5" }]}
+          name="send"
+          key="sendIcon"
+          accessibilityLabel={I18n.t("Send message")}
+          accessibilityTraits="button"
+          onPress={() => this.submit(this.state.text)}
+          testID="messagebox-send-message"
+        />
+      );
       return icons;
     }
     icons.push(
@@ -205,18 +205,17 @@ export default class MessageBox extends React.PureComponent {
         testID="messagebox-send-audio"
       />
     );
-    icons
-      .push
-      // <MyIcon
-      //   style={[styles.actionButtons, { color: "#2F343D", fontSize: 16 }]}
-      //   name="plus"
-      //   key="fileIcon"
-      //   accessibilityLabel={I18n.t("Message actions")}
-      //   accessibilityTraits="button"
-      //   onPress={this.toggleFilesActions}
-      //   testID="messagebox-actions"
-      // />
-      ();
+    icons.push(
+      <Icon
+        style={[styles.actionButtons, { color: "#2F343D", fontSize: 16 }]}
+        name="plus"
+        key="fileIcon"
+        accessibilityLabel={I18n.t("Message actions")}
+        accessibilityTraits="button"
+        onPress={this.toggleFilesActions}
+        testID="messagebox-actions"
+      />
+    );
     return icons;
   }
 
@@ -356,7 +355,7 @@ export default class MessageBox extends React.PureComponent {
   }
 
   async _getUsers(keyword) {
-    this.users = database.objects("users");
+    this.users = await database.objects("users");
     if (keyword) {
       this.users = this.users.filtered("username CONTAINS[c] $0", keyword);
     }
@@ -380,19 +379,16 @@ export default class MessageBox extends React.PureComponent {
         new Promise((resolve, reject) => (this.oldPromise = reject))
       ]);
       if (results.users && results.users.length) {
-        database.write(() => {
-          results.users.forEach(user => {
-            database.create("users", user, true);
-          });
+        results.users.forEach(user => {
+          database.create("users", user, true);
         });
       }
     } catch (e) {
       console.warn("spotlight canceled");
     } finally {
       delete this.oldPromise;
-      this.users = database
-        .objects("users")
-        .filtered("username CONTAINS[c] $0", keyword)
+      this.users = await database
+        .objects("users", `WHERE username is not null`) //.filtered("username CONTAINS[c] $0", keyword)
         .slice();
       this._getFixedMentions(keyword);
       this.setState({ mentions: this.users });
@@ -401,9 +397,9 @@ export default class MessageBox extends React.PureComponent {
 
   async _getRooms(keyword = "") {
     this.roomsCache = this.roomsCache || [];
-    this.rooms = database.objects("subscriptions").filtered("t != $0", "d");
+    this.rooms = await database.objects("subscriptions", `WHERE t != "d"`);
     if (keyword) {
-      this.rooms = this.rooms.filtered("name CONTAINS[c] $0", keyword);
+      // this.rooms = this.rooms.filtered("name CONTAINS[c] $0", keyword);
     }
 
     const rooms = [];
@@ -451,13 +447,14 @@ export default class MessageBox extends React.PureComponent {
 
   _getEmojis(keyword) {
     if (keyword) {
-      this.customEmojis = database
-        .objects("customEmojis")
-        .filtered("name CONTAINS[c] $0", keyword)
-        .slice(0, 4);
-      this.emojis = emojis
-        .filter(emoji => emoji.indexOf(keyword) !== -1)
-        .slice(0, 4);
+      this.customEmojis = database.objects("customEmojis");
+      // this.customEmojis = database
+      //   .objects("customEmojis")
+      //   .filtered("name CONTAINS[c] $0", keyword)
+      //   .slice(0, 4);
+      // this.emojis = emojis
+      //   .filter(emoji => emoji.indexOf(keyword) !== -1)
+      //   .slice(0, 4);
       const mergedEmojis = [...this.customEmojis, ...this.emojis];
       this.setState({ mentions: mergedEmojis });
     }
@@ -687,6 +684,7 @@ export default class MessageBox extends React.PureComponent {
       //   requiresSameParentToManageScrollView
       //   addBottomView
       // />,
+      <InputToolbar />,
       this.renderFilesActions(),
       <UploadModal
         key="upload-modal"
