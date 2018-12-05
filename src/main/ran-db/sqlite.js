@@ -321,7 +321,7 @@ class DB {
       tx => {
         tx.executeSql(
           // "SELECT * FROM roles",
-          `SELECT * FROM subscriptions WHERE t = "d" AND name LIKE "%te%";`,
+          `SELECT * FROM subscriptions WHERE (archived = 0 OR archived is null) and open = 1 ;`,
           [],
           (_, { rows }) => console.log("objectstest" + JSON.stringify(rows))
         );

@@ -69,22 +69,27 @@ export default class Sort extends Component {
 
   sortByName = () => {
     this.setSortPreference({ sortBy: "alphabetical" });
+    this.close();
   };
 
   sortByActivity = () => {
     this.setSortPreference({ sortBy: "activity" });
+    this.close();
   };
 
   toggleGroupByType = () => {
     this.setSortPreference({ groupByType: !this.props.groupByType });
+    this.close();
   };
 
   toggleGroupByFavorites = () => {
     this.setSortPreference({ showFavorites: !this.props.showFavorites });
+    this.close();
   };
 
   toggleUnread = () => {
     this.setSortPreference({ showUnread: !this.props.showUnread });
+    this.close();
   };
 
   close = () => {
@@ -105,7 +110,13 @@ export default class Sort extends Component {
       inputRange: [0, 1],
       outputRange: [0, 0.3]
     });
-    const { sortBy, groupByType, showFavorites, showUnread } = this.props;
+    const {
+      sortBy,
+      groupByType,
+      showFavorites,
+      showUnread,
+      translate
+    } = this.props;
     return [
       <TouchableWithoutFeedback key="sort-backdrop" onPress={this.close}>
         <Animated.View
@@ -126,7 +137,9 @@ export default class Sort extends Component {
               style={styles.sortIcon}
               source={{ uri: "sort_alphabetically" }}
             />
-            <Text style={styles.sortItemText}>{'I18n.t("Alphabetical")'}</Text>
+            <Text style={styles.sortItemText}>
+              {translate("ran.sortDropdown.Alphabetical")}
+            </Text>
             {sortBy === "alphabetical" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
             ) : null}
@@ -139,7 +152,9 @@ export default class Sort extends Component {
         >
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "sort_activity" }} />
-            <Text style={styles.sortItemText}>{'I18n.t("Activity")'}</Text>
+            <Text style={styles.sortItemText}>
+              {translate("ran.sortDropdown.Activity")}
+            </Text>
             {sortBy === "activity" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
             ) : null}
@@ -153,7 +168,9 @@ export default class Sort extends Component {
         >
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
-            <Text style={styles.sortItemText}>{'I18n.t("Group_by_type")'}</Text>
+            <Text style={styles.sortItemText}>
+              {translate("ran.sortDropdown.Group_by_type")}
+            </Text>
             {groupByType ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
             ) : null}
@@ -170,7 +187,7 @@ export default class Sort extends Component {
               source={{ uri: "group_favorites" }}
             />
             <Text style={styles.sortItemText}>
-              {'I18n.t("Group_by_favorites")'}
+              {translate("ran.sortDropdown.Group_by_favorites")}
             </Text>
             {showFavorites ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -184,7 +201,9 @@ export default class Sort extends Component {
         >
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_unread" }} />
-            <Text style={styles.sortItemText}>{'I18n.t("Unread_on_top")'}</Text>
+            <Text style={styles.sortItemText}>
+              {translate("ran.sortDropdown.Unread_on_top")}
+            </Text>
             {showUnread ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
             ) : null}
@@ -201,12 +220,12 @@ export default class Sort extends Component {
       >
         <View style={styles.sortItemContainer}>
           <Text style={styles.sortToggleText}>
-            {/* {I18n.t("Sorting_by", {
-              key: I18n.t(
-                this.props.sortBy === "alphabetical" ? "name" : "activity"
-              )
-						})} */}
-            "Sorting_by"
+            {translate("ran.common.Sorting_by")}
+            {translate(
+              this.props.sortBy === "alphabetical"
+                ? "ran.common.name"
+                : "ran.common.activity"
+            )}
           </Text>
           <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
         </View>

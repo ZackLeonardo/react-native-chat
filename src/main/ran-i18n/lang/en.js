@@ -1,6 +1,8 @@
 module.exports = {
   ran: {
     common: {
+      name: "name",
+      Name: "Name",
       Username: "Username",
       Email: "Email",
       Sign_Up: "Sign Up",
@@ -10,7 +12,10 @@ module.exports = {
       Search: "Search",
       Settings: "Settings",
       setting: "setting",
-      Cancel: "Cancel"
+      Cancel: "Cancel",
+      activity: "activity",
+      Activity: "Activity",
+      Sorting_by: "Sorting by "
     },
     onboardingView: {
       Welcome_to_RocketChat: "Welcome to WESTWORD",
@@ -82,6 +87,13 @@ module.exports = {
     },
     newMessageView: {
       Create_Channel: "Create Channel"
+    },
+    sortDropdown: {
+      Alphabetical: "Alphabetical",
+      Activity: "Activity",
+      Group_by_type: "Group by type",
+      Group_by_favorites: "Group by favorites",
+      Unread_on_top: "Unread on top"
     },
     rooms: {
       unTop: "Not Top",
