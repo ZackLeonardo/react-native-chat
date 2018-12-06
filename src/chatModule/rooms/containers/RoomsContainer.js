@@ -14,9 +14,9 @@ class RoomsContainer extends Component {
     const { translate } = this.props;
     const chatListProps = {
       hasSearchBar: true,
-      unTopI18n: translate("ran.rooms.unTop"),
-      topI18n: translate("ran.rooms.top"),
-      deleteI18n: translate("ran.rooms.delete"),
+      unTopI18n: translate("ran.chat.unTop"),
+      topI18n: translate("ran.chat.top"),
+      deleteI18n: translate("ran.chat.delete"),
       ...this.props
     };
     return (

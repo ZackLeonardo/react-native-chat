@@ -200,13 +200,13 @@ export default class RoomItem extends React.Component {
       return "";
     }
     if (!lastMessageObject) {
-      return this.props.translate("ran.roomItem.No_Message");
+      return this.props.translate("ran.chat.No_Message");
     }
 
     let prefix = "";
 
     if (lastMessageObject.u.username === this.props.username) {
-      prefix = this.props.translate("ran.roomItem.You_colon");
+      prefix = this.props.translate("ran.chat.You_colon");
     } else if (type !== "d") {
       prefix = `${lastMessageObject.u.username}: `;
     }
@@ -264,23 +264,23 @@ export default class RoomItem extends React.Component {
     let accessibilityLabel = name;
     if (unread === 1) {
       accessibilityLabel += `, ${unread} ${this.props.translate(
-        "ran.common.alert"
+        "ran.chat.alert"
       )}`;
     } else if (unread > 1) {
       accessibilityLabel += `, ${unread} ${this.props.translate(
-        "ran.common.alerts"
+        "ran.chat.alerts"
       )}`;
     }
 
     if (userMentions > 0) {
       accessibilityLabel += `, ${this.props.translate(
-        "ran.roomItem.you_were_mentioned"
+        "ran.chat.you_were_mentioned"
       )}`;
     }
 
     if (date) {
       accessibilityLabel += `, ${this.props.translate(
-        "ran.roomItem.last_message"
+        "ran.chat.last_message"
       )} ${date}`;
     }
 

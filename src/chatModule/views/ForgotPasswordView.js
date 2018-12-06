@@ -58,10 +58,8 @@ export default class ForgotPasswordView extends LoggedView {
       this.props.navigation.pop();
       setTimeout(() => {
         showErrorAlert(
-          translate(
-            "ran.forgotPasswordView.Forgot_password_If_this_email_is_registered"
-          ),
-          translate("ran.common.Alert")
+          translate("ran.chat.Forgot_password_If_this_email_is_registered"),
+          translate("ran.chat.Alert")
         );
       });
     }
@@ -102,8 +100,8 @@ export default class ForgotPasswordView extends LoggedView {
                 inputStyle={
                   this.state.invalidEmail ? { borderColor: "red" } : {}
                 }
-                label={translate("ran.common.Email")}
-                placeholder={translate("ran.common.Email")}
+                label={translate("ran.chat.Email")}
+                placeholder={translate("ran.chat.Email")}
                 keyboardType="email-address"
                 returnKeyType="next"
                 onChangeText={email => this.validate(email)}
@@ -113,7 +111,7 @@ export default class ForgotPasswordView extends LoggedView {
 
               <View style={styles.alignItemsFlexStart}>
                 <Button
-                  title={translate("ran.forgotPasswordView.Reset_password")}
+                  title={translate("ran.chat.Reset_password")}
                   type="primary"
                   onPress={this.resetPassword}
                   testID="forgot-password-view-submit"

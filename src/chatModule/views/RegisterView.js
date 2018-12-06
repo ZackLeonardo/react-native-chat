@@ -86,7 +86,7 @@ export default class RegisterView extends LoggedView {
     if (!this.valid()) {
       showToast(
         this.props.screenProps.translate(
-          "ran.registerView.Some_field_is_invalid_or_empty"
+          "ran.chat.Some_field_is_invalid_or_empty"
         )
       );
       return;
@@ -104,9 +104,7 @@ export default class RegisterView extends LoggedView {
   usernameSubmit = () => {
     const { username } = this.state;
     if (!username) {
-      showToast(
-        this.props.screenProps.translate("ran.registerView.Username_is_empty")
-      );
+      showToast(this.props.screenProps.translate("ran.chat.Username_is_empty"));
       return;
     }
 
@@ -116,15 +114,13 @@ export default class RegisterView extends LoggedView {
 
   termsService = () => {
     this.props.navigation.navigate("TermsServiceView", {
-      title: this.props.screenProps.translate(
-        "ran.registerView.Terms_of_Service"
-      )
+      title: this.props.screenProps.translate("ran.chat.Terms_of_Service")
     });
   };
 
   privacyPolicy = () => {
     this.props.navigation.navigate("PrivacyPolicyView", {
-      title: this.props.screenProps.translate("ran.registerView.Privacy_Policy")
+      title: this.props.screenProps.translate("ran.chat.Privacy_Policy")
     });
   };
 
@@ -140,12 +136,10 @@ export default class RegisterView extends LoggedView {
             this.name = e;
           }}
           label={
-            this.props.Accounts_NamePlaceholder ||
-            translate("ran.registerView.Name")
+            this.props.Accounts_NamePlaceholder || translate("ran.chat.Name")
           }
           placeholder={
-            this.props.Accounts_NamePlaceholder ||
-            translate("ran.registerView.Name")
+            this.props.Accounts_NamePlaceholder || translate("ran.chat.Name")
           }
           returnKeyType="next"
           iconLeft="account"
@@ -161,11 +155,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_EmailOrUsernamePlaceholder ||
-            translate("ran.common.Email")
+            translate("ran.chat.Email")
           }
           placeholder={
             this.props.Accounts_EmailOrUsernamePlaceholder ||
-            translate("ran.common.Email")
+            translate("ran.chat.Email")
           }
           returnKeyType="next"
           keyboardType="email-address"
@@ -183,11 +177,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_PasswordPlaceholder ||
-            translate("ran.registerView.Password")
+            translate("ran.chat.Password")
           }
           placeholder={
             this.props.Accounts_PasswordPlaceholder ||
-            translate("ran.registerView.Password")
+            translate("ran.chat.Password")
           }
           returnKeyType="next"
           iconLeft="key-variant"
@@ -211,11 +205,11 @@ export default class RegisterView extends LoggedView {
           }
           label={
             this.props.Accounts_RepeatPasswordPlaceholder ||
-            translate("ran.registerView.Repeat_Password")
+            translate("ran.chat.Repeat_Password")
           }
           placeholder={
             this.props.Accounts_RepeatPasswordPlaceholder ||
-            translate("ran.registerView.Repeat_Password")
+            translate("ran.chat.Repeat_Password")
           }
           returnKeyType="done"
           iconLeft="key-variant"
@@ -227,17 +221,17 @@ export default class RegisterView extends LoggedView {
 
         <View style={styles.alignItemsFlexStart}>
           <Text style={styles.loginTermsText}>
-            {translate("ran.registerView.By_proceeding_you_are_agreeing")}
+            {translate("ran.chat.By_proceeding_you_are_agreeing")}
             <Text style={styles.link} onPress={this.termsService}>
-              {translate("ran.registerView.Terms_of_Service")}
+              {translate("ran.chat.Terms_of_Service")}
             </Text>
-            {translate("ran.registerView.and")}
+            {translate("ran.chat.and")}
             <Text style={styles.link} onPress={this.privacyPolicy}>
-              {translate("ran.registerView.Privacy_Policy")}
+              {translate("ran.chat.Privacy_Policy")}
             </Text>
           </Text>
           <Button
-            title={translate("ran.registerView.Register")}
+            title={translate("ran.chat.Register")}
             type="primary"
             onPress={this.submit}
             testID="register-view-submit"
@@ -260,11 +254,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_UsernamePlaceholder ||
-            translate("ran.common.Username")
+            translate("ran.chat.Username")
           }
           placeholder={
             this.props.Accounts_UsernamePlaceholder ||
-            translate("ran.common.Username")
+            translate("ran.chat.Username")
           }
           returnKeyType="done"
           iconLeft="at"
@@ -277,7 +271,7 @@ export default class RegisterView extends LoggedView {
 
         <View style={styles.alignItemsFlexStart}>
           <Button
-            title={translate("ran.registerView.Register")}
+            title={translate("ran.chat.Register")}
             type="primary"
             onPress={this.usernameSubmit}
             testID="register-view-submit-username"
@@ -296,7 +290,7 @@ export default class RegisterView extends LoggedView {
         >
           <SafeAreaView style={styles.container} testID="register-view">
             <Text style={[styles.loginText, styles.loginTitle]}>
-              {this.props.screenProps.translate("ran.common.Sign_Up")}
+              {this.props.screenProps.translate("ran.chat.Sign_Up")}
             </Text>
             {this._renderRegister()}
             {this._renderUsername()}

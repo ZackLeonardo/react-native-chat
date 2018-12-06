@@ -151,9 +151,7 @@ export default class NewMessageView extends LoggedView {
             source={require("../Icons/plus.imageset/plus.png")}
           />
           <Text style={styles.createChannelText}>
-            {this.props.screenProps.translate(
-              "ran.newMessageView.Create_Channel"
-            )}
+            {this.props.screenProps.translate("ran.chat.Create_Channel")}
           </Text>
         </View>
       </Touch>

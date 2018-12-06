@@ -117,7 +117,7 @@ export default class SettingsView extends LoggedView {
       this.setState({ saving: false });
       setTimeout(() => {
         showToast(
-          this.props.screenProps.translate("ran.settingsView.Preferences_saved")
+          this.props.screenProps.translate("ran.chat.Preferences_saved")
         );
 
         // if (params.language) {
@@ -134,11 +134,9 @@ export default class SettingsView extends LoggedView {
         }
         showErrorAlert(
           this.props.screenProps.translate(
-            "ran.settingsView.There_was_an_error_while_action"
+            "ran.chat.There_was_an_error_while_action"
           ),
-          this.props.screenProps.translate(
-            "ran.settingsView.saving_preferences"
-          )
+          this.props.screenProps.translate("ran.chat.saving_preferences")
         );
         log("saveUserPreferences", e);
       }, 300);
@@ -171,11 +169,9 @@ export default class SettingsView extends LoggedView {
                 inputRef={e => {
                   this.name = e;
                 }}
-                label={this.props.screenProps.translate(
-                  "ran.settingsView.Language"
-                )}
+                label={this.props.screenProps.translate("ran.chat.Language")}
                 placeholder={this.props.screenProps.translate(
-                  "ran.settingsView.Language"
+                  "ran.chat.Language"
                 )}
                 value={this.getLabel(language)}
                 testID="settings-view-language"
@@ -184,7 +180,7 @@ export default class SettingsView extends LoggedView {
             <View style={sharedStyles.alignItemsFlexStart}>
               <Button
                 title={this.props.screenProps.translate(
-                  "ran.settingsView.Save_Changes"
+                  "ran.chat.Save_Changes"
                 )}
                 type="primary"
                 onPress={this.submit}

@@ -670,7 +670,18 @@ export default class MessageBox extends React.PureComponent {
     ];
   }
 
+  onInputTextChanged = text => {
+    this.refs.inputToolbarRef.refs.composerRef.setText(text);
+  };
+
   render() {
+    const inputToolbarProps = {
+      placeholder: this.props.translate("ran.chat.input"),
+      sendButtonLabel: this.props.translate("ran.chat.send"),
+      onTextChanged: this.onInputTextChanged,
+      onContentSizeChange: this.onContentSizeChange,
+      onSend: this.onSend
+    };
     return [
       // <KeyboardAccessoryView
       //   key="input"
@@ -684,7 +695,7 @@ export default class MessageBox extends React.PureComponent {
       //   requiresSameParentToManageScrollView
       //   addBottomView
       // />,
-      <InputToolbar />,
+      <InputToolbar ref="inputToolbarRef" {...inputToolbarProps} />,
       this.renderFilesActions(),
       <UploadModal
         key="upload-modal"

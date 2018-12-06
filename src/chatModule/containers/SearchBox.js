@@ -44,7 +44,7 @@ const SearchBox = ({ onChangeText, testID, translate }) => (
         autoCorrect={false}
         blurOnSubmit
         clearButtonMode="while-editing"
-        placeholder={translate("ran.common.Search")}
+        placeholder={translate("ran.chat.Search")}
         returnKeyType="search"
         style={styles.input}
         testID={testID}

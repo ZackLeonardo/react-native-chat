@@ -224,7 +224,7 @@ export default class LoginSignupView extends LoggedView {
     return (
       <View style={styles.servicesContainer}>
         <Text style={styles.servicesTitle}>
-          {translate("ran.loginSignupView.Or_continue_using_social_accounts")}
+          {translate("ran.chat.Or_continue_using_social_accounts")}
         </Text>
         <View style={sharedStyles.loginOAuthButtons} key="services">
           {this.props.Accounts_OAuth_Facebook &&
@@ -307,23 +307,23 @@ export default class LoginSignupView extends LoggedView {
                 { color: "#81848A" }
               ]}
             >
-              {translate("ran.loginSignupView.Welcome_title_pt_1")}
+              {translate("ran.chat.Welcome_title_pt_1")}
             </Text>
             <Text style={[sharedStyles.loginText, styles.header]}>
-              {translate("ran.loginSignupView.Welcome_title_pt_2")}
+              {translate("ran.chat.Welcome_title_pt_2")}
             </Text>
             <Image
               style={styles.planetImage}
               source={require("../Icons/new_server.imageset/new_server.png")}
             />
             <Button
-              title={translate("ran.loginSignupView.I_have_an_account")}
+              title={translate("ran.chat.I_have_an_account")}
               type="primary"
               onPress={() => this.login()}
               testID="welcome-view-login"
             />
             <Button
-              title={translate("ran.loginSignupView.Create_account")}
+              title={translate("ran.chat.Create_account")}
               type="secondary"
               onPress={() => this.register()}
               testID="welcome-view-register"

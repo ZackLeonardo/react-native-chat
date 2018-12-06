@@ -138,7 +138,7 @@ export default class Sort extends Component {
               source={{ uri: "sort_alphabetically" }}
             />
             <Text style={styles.sortItemText}>
-              {translate("ran.sortDropdown.Alphabetical")}
+              {translate("ran.chat.Alphabetical")}
             </Text>
             {sortBy === "alphabetical" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -153,7 +153,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "sort_activity" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.sortDropdown.Activity")}
+              {translate("ran.chat.Activity")}
             </Text>
             {sortBy === "activity" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -169,7 +169,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.sortDropdown.Group_by_type")}
+              {translate("ran.chat.Group_by_type")}
             </Text>
             {groupByType ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -187,7 +187,7 @@ export default class Sort extends Component {
               source={{ uri: "group_favorites" }}
             />
             <Text style={styles.sortItemText}>
-              {translate("ran.sortDropdown.Group_by_favorites")}
+              {translate("ran.chat.Group_by_favorites")}
             </Text>
             {showFavorites ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -202,7 +202,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_unread" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.sortDropdown.Unread_on_top")}
+              {translate("ran.chat.Unread_on_top")}
             </Text>
             {showUnread ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -220,11 +220,11 @@ export default class Sort extends Component {
       >
         <View style={styles.sortItemContainer}>
           <Text style={styles.sortToggleText}>
-            {translate("ran.common.Sorting_by")}
+            {translate("ran.chat.Sorting_by")}
             {translate(
               this.props.sortBy === "alphabetical"
-                ? "ran.common.name"
-                : "ran.common.activity"
+                ? "ran.chat.name"
+                : "ran.chat.activity"
             )}
           </Text>
           <Image style={styles.sortIcon} source={{ uri: "group_type" }} />

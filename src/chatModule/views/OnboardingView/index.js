@@ -126,15 +126,15 @@ export default class OnboardingView extends LoggedView {
           source={require("../../static/images/logo.png")}
         />
         <Text style={styles.title}>
-          {translate("ran.onboardingView.Welcome_to_RocketChat")}
+          {translate("ran.chat.Welcome_to_RocketChat")}
         </Text>
         <Text style={styles.subtitle}>
-          {translate("ran.onboardingView.Open_Source_Communication")}
+          {translate("ran.chat.Open_Source_Communication")}
         </Text>
         <View style={styles.buttonsContainer}>
           <Button
             type="secondary"
-            title={translate("ran.onboardingView.Connect_to_a_server")}
+            title={translate("ran.chat.Connect_to_a_server")}
             icon={
               <Image
                 source={{ uri: "connect_server" }}
@@ -146,7 +146,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="secondary"
-            title={translate("ran.onboardingView.Join_the_community")}
+            title={translate("ran.chat.Join_the_community")}
             subtitle="open.rocket.chat"
             icon={
               <Image
@@ -159,7 +159,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="primary"
-            title={translate("ran.onboardingView.Create_a_new_workspace")}
+            title={translate("ran.chat.Create_a_new_workspace")}
             icon={
               <Image
                 source={{ uri: "plus_onboarding" }}

@@ -5,17 +5,17 @@
  * @zack
  */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   StyleSheet,
   View,
   ViewPropTypes,
   Text,
-  TouchableOpacity,
-} from 'react-native';
-import PropTypes from 'prop-types';
+  TouchableOpacity
+} from "react-native";
+import PropTypes from "prop-types";
 
-class Send extends Component{
+class Send extends Component {
   render() {
     return (
       <TouchableOpacity
@@ -23,9 +23,11 @@ class Send extends Component{
         onPress={() => {
           this.props.onSend();
         }}
-        accessibilityTraits='button'
+        accessibilityTraits="button"
       >
-        <Text style={[styles.textStyle, this.props.textStyle]}>{this.props.label}</Text>
+        <Text style={[styles.textStyle, this.props.textStyle]}>
+          {this.props.sendButtonLabel}
+        </Text>
       </TouchableOpacity>
     );
   }
@@ -35,33 +37,33 @@ const styles = StyleSheet.create({
   containerStyle: {
     width: 61,
     height: 44,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end"
   },
   textStyle: {
-    color: '#0084ff',
-    fontWeight: '600',
+    color: "#0084ff",
+    fontWeight: "600",
     fontSize: 17,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     marginBottom: 12,
     marginLeft: 10,
-    marginRight: 10,
-  },
+    marginRight: 10
+  }
 });
 
 Send.defaultProps = {
-  text: '',
+  text: "",
   onSend: () => {},
-  label: '发送',
+  sendButtonLabel: "",
   containerStyle: {},
-  textStyle: {},
+  textStyle: {}
 };
 
 Send.propTypes = {
   text: PropTypes.string,
   onSend: PropTypes.func,
-  label: PropTypes.string,
+  sendButtonLabel: PropTypes.string,
   containerStyle: ViewPropTypes.style,
-  textStyle: Text.propTypes.style,
+  textStyle: Text.propTypes.style
 };
 
 module.exports = Send;

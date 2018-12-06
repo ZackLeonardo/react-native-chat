@@ -99,8 +99,8 @@ export default class NewServerView extends LoggedView {
   componentWillReceiveProps(nextProps) {
     if (nextProps.failure && nextProps.failure !== this.props.failure) {
       Alert.alert(
-        this.props.screenProps.translate("ran.newServerView.Oops"),
-        this.props.screenProps.translate("ran.newServerView.The_URL_is_invalid")
+        this.props.screenProps.translate("ran.chat.Oops"),
+        this.props.screenProps.translate("ran.chat.The_URL_is_invalid")
       );
     }
   }
@@ -176,7 +176,7 @@ export default class NewServerView extends LoggedView {
           <SafeAreaView style={sharedStyles.container} testID="new-server-view">
             <Image style={styles.image} source={{ uri: "new_server" }} />
             <Text style={styles.title}>
-              {translate("ran.newServerView.Sign_in_your_server")}
+              {translate("ran.chat.Sign_in_your_server")}
             </Text>
             <TextInput
               inputRef={e => (this.input = e)}
@@ -191,7 +191,7 @@ export default class NewServerView extends LoggedView {
               clearButtonMode="while-editing"
             />
             <Button
-              title={translate("ran.newServerView.Connect")}
+              title={translate("ran.chat.Connect")}
               type="primary"
               onPress={this.submit}
               disabled={text.length === 0}

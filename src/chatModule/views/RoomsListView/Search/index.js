@@ -34,7 +34,7 @@ export default class RoomsListSearchView extends React.Component {
           style={styles.inputSearch}
           onChangeText={text => this.onSearchChangeText(text)}
           returnKeyType="search"
-          placeholder={this.props.screenProps.translate("ran.common.Search")}
+          placeholder={this.props.screenProps.translate("ran.chat.Search")}
           placeholderTextColor="#eee"
           clearButtonMode="while-editing"
           blurOnSubmit

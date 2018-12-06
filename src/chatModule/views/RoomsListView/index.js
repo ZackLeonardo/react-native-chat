@@ -98,7 +98,7 @@ export default class RoomsListView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.roomsListView.New_Message"),
+                title: screenProps.translate("ran.chat.New_Message"),
                 onPressItem: navigation.state.params.onPressItem
               });
             }}
@@ -553,11 +553,11 @@ export default class RoomsListView extends LoggedView {
       <Touch onPress={this.toggleSort} style={styles.dropdownContainerHeader}>
         <View style={styles.sortItemContainer}>
           <Text style={styles.sortToggleText}>
-            {translate("ran.roomsListView.Sorting_by") +
+            {translate("ran.chat.Sorting_by") +
               translate(
                 this.props.sortBy === "alphabetical"
-                  ? "ran.roomsListView.name"
-                  : "ran.roomsListView.activity"
+                  ? "ran.chat.name"
+                  : "ran.chat.activity"
               )}
           </Text>
           <Image style={styles.sortIcon} source={{ uri: "group_type" }} />

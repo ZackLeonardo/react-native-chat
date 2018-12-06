@@ -28,7 +28,6 @@ import ReactionPicker from "./ReactionPicker";
 import UploadProgress from "./UploadProgress";
 import styles from "./styles";
 import log from "../../utils/log";
-// import I18n from "../../i18n";
 import debounce from "../../utils/debounce";
 import { iconsMap } from "../../Icons";
 
@@ -94,7 +93,7 @@ export default class RoomView extends LoggedView {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.roomsListView.New_Message"),
+                title: screenProps.translate("ran.chat.New_Message"),
                 onPressItem: navigation.state.params.onPressItem
               });
             }}
@@ -105,7 +104,7 @@ export default class RoomView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.roomsListView.New_Message"),
+                title: screenProps.translate("ran.chat.New_Message"),
                 onPressItem: navigation.state.params.onPressItem
               });
             }}
@@ -171,7 +170,7 @@ export default class RoomView extends LoggedView {
       if (event.id === "more") {
         this.props.navigator.push({
           screen: "RoomActionsView",
-          title: 'I18n.t("Actions")',
+          title: this.props.screenProps.translate("ran.chat.Actions"),
           backButtonTitle: "",
           passProps: {
             rid: this.state.room.rid
@@ -308,11 +307,12 @@ export default class RoomView extends LoggedView {
   );
 
   renderFooter = () => {
+    const { translate } = this.props.screenProps;
     if (!this.state.joined) {
       return (
         <View style={styles.joinRoomContainer} key="room-view-join">
           <Text style={styles.previewMode}>
-            {'I18n.t("You_are_in_preview_mode")'}
+            {translate("ran.chat.You_are_in_preview_mode")}
           </Text>
           <RectButton
             onPress={this.joinRoom}
@@ -320,7 +320,9 @@ export default class RoomView extends LoggedView {
             activeOpacity={0.5}
             underlayColor="#fff"
           >
-            <Text style={styles.joinRoomText}>{'I18n.t("Join")'}</Text>
+            <Text style={styles.joinRoomText}>
+              {translate("ran.chat.Join")}
+            </Text>
           </RectButton>
         </View>
       );
@@ -328,14 +330,14 @@ export default class RoomView extends LoggedView {
     if (this.state.room.archived || this.isReadOnly()) {
       return (
         <View style={styles.readOnly}>
-          <Text>{'I18n.t("This_room_is_read_only")'}</Text>
+          <Text>{translate("ran.chat.This_room_is_read_only")}</Text>
         </View>
       );
     }
     if (this.isBlocked()) {
       return (
         <View style={styles.blockedOrBlocker}>
-          <Text>{'I18n.t("This_room_is_blocked")'}</Text>
+          <Text>{translate("ran.chat.This_room_is_blocked")}</Text>
         </View>
       );
     }
@@ -344,6 +346,7 @@ export default class RoomView extends LoggedView {
         key="room-view-messagebox"
         onSubmit={this.sendMessage}
         rid={this.rid}
+        translate={translate}
       />
     );
   };

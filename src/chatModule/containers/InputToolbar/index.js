@@ -1,3 +1,3 @@
-import InputToolbar from './InputToolbar';
+import InputToolbar from "./InputToolbar";
 
 export default InputToolbar;
