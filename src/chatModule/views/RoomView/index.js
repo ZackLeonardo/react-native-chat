@@ -211,6 +211,8 @@ export default class RoomView extends LoggedView {
   };
 
   onReactionPress = (shortname, messageId) => {
+    console.log("onReactionPress");
+
     try {
       if (!messageId) {
         RocketChat.setReaction(shortname, this.props.actionMessage._id);

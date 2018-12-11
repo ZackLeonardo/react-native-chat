@@ -6,9 +6,13 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  Alert
+  Alert,
+  Keyboard,
+  Platform,
+  Animated
 } from "react-native";
 import Icon from "@expo/vector-icons/MaterialIcons";
+import IconPlus from "@expo/vector-icons/Entypo";
 import { connect } from "react-redux";
 import { emojify } from "react-emojione";
 // import { KeyboardAccessoryView } from "react-native-keyboard-input";
@@ -27,24 +31,21 @@ import { emojis } from "../../emojis";
 import Recording from "./Recording";
 import FilesActions from "./FilesActions";
 import UploadModal from "./UploadModal";
-import "./EmojiKeyboard";
+import EmojiKeyboard from "./EmojiKeyboard";
 import log from "../../utils/log";
-// import I18n from "../../i18n";
 import ReplyPreview from "./ReplyPreview";
 
 const MENTIONS_TRACKING_TYPE_USERS = "@";
 const MENTIONS_TRACKING_TYPE_EMOJIS = ":";
+const ANIMATEDPERIOD = 200;
+const MIN_COMPOSER_HEIGHT = Platform.select({
+  ios: 33,
+  android: 41
+});
+const MAX_COMPOSER_HEIGHT = 96;
 
 const onlyUnique = function onlyUnique(value, index, self) {
   return self.indexOf(({ _id }) => value._id === _id) === index;
-};
-
-const imagePickerConfig = {
-  cropping: true,
-  compressImageQuality: 0.8,
-  cropperAvoidEmptySpaceAroundImage: false,
-  cropperChooseText: 'I18n.t("Choose")',
-  cropperCancelText: 'I18n.t("Cancel")'
 };
 
 @connect(
@@ -91,14 +92,18 @@ export default class MessageBox extends React.PureComponent {
       recording: false,
       file: {
         isVisible: false
-      }
+      },
+      inputToolbarFloatUp: new Animated.Value(0)
     };
     this.users = [];
     this.rooms = [];
     this.emojis = [];
     this.customEmojis = [];
     this._onEmojiSelected = this._onEmojiSelected.bind(this);
+
+    this.typingDisabled = false;
   }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.message !== nextProps.message && nextProps.message.msg) {
       this.setState({ text: nextProps.message.msg });
@@ -113,32 +118,92 @@ export default class MessageBox extends React.PureComponent {
     }
   }
 
-  onChangeText(text) {
+  componentWillMount = () => {
+    this.keyboardWillShowListener = Keyboard.addListener(
+      "keyboardWillShow",
+      this.keyboardWillShow
+    );
+    this.keyboardWillHideListener = Keyboard.addListener(
+      "keyboardWillHide",
+      this.keyboardWillHide
+    );
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this.keyboardDidHide
+    );
+  };
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardWillShowListener.remove();
+    this.keyboardDidHideListener.remove();
+    this.keyboardWillHideListener.remove();
+  }
+
+  keyboardWillShow = e => {
+    console.log("keyboardWillShow " + e.endCoordinates.height);
+    let keyboardHeight = e.endCoordinates.height;
+    if (keyboardHeight > 216) {
+      this.closeEmoji();
+      this.typingDisabled = true;
+    }
+
+    Animated.timing(this.state.inputToolbarFloatUp, {
+      toValue: keyboardHeight,
+      duration: ANIMATEDPERIOD
+    }).start();
+  };
+
+  keyboardDidShow = e => {
+    if (Platform.OS === "android") {
+      this.keyboardWillShow(e);
+    }
+    this.typingDisabled = false;
+  };
+
+  keyboardWillHide = e => {
+    console.log("_keyboardWillHide " + e.endCoordinates.height);
+    this.typingDisabled = true;
+    Animated.timing(this.state.inputToolbarFloatUp, {
+      toValue: 0,
+      duration: ANIMATEDPERIOD
+    }).start();
+  };
+
+  keyboardDidHide = e => {
+    if (Platform.OS === "android") {
+      this.keyboardWillHide(e);
+    }
+    this.typingDisabled = false;
+  };
+
+  onChangeText = text => {
     this.setState({ text });
+    this.component.refs.composerRef.setText(text);
     this.props.typing(text.length > 0);
 
-    requestAnimationFrame(() => {
-      const { start, end } = this.component._lastNativeSelection;
+    // requestAnimationFrame(() => {
+    //   const { start, end } = this.component._lastNativeSelection;
 
-      const cursor = Math.max(start, end);
+    //   const cursor = Math.max(start, end);
 
-      const lastNativeText = this.component._lastNativeText;
+    //   const lastNativeText = this.component._lastNativeText;
 
-      const regexp = /(#|@|:)([a-z0-9._-]+)$/im;
+    //   const regexp = /(#|@|:)([a-z0-9._-]+)$/im;
 
-      const result = lastNativeText.substr(0, cursor).match(regexp);
-      if (!result) {
-        return this.stopTrackingMention();
-      }
-      const [, lastChar, name] = result;
+    //   const result = lastNativeText.substr(0, cursor).match(regexp);
+    //   if (!result) {
+    //     return this.stopTrackingMention();
+    //   }
+    //   const [, lastChar, name] = result;
 
-      this.identifyMentionKeyword(name, lastChar);
-    });
-  }
-
-  onKeyboardResigned() {
-    this.closeEmoji();
-  }
+    //   this.identifyMentionKeyword(name, lastChar);
+    // });
+  };
 
   get leftButtons() {
     const { editing } = this.props;
@@ -147,7 +212,7 @@ export default class MessageBox extends React.PureComponent {
         <Icon
           style={styles.actionButtons}
           name="close"
-          accessibilityLabel={'I18n.t("Cancel_editing")'}
+          accessibilityLabel={this.props.translate("ran.chat.Cancel_editing")}
           accessibilityTraits="button"
           onPress={() => this.editCancel()}
           testID="messagebox-cancel-editing"
@@ -158,16 +223,22 @@ export default class MessageBox extends React.PureComponent {
       <Icon
         style={styles.actionButtons}
         onPress={() => this.openEmoji()}
-        accessibilityLabel={'I18n.t("Open_emoji_selector")'}
+        accessibilityLabel={this.props.translate(
+          "ran.chat.Open_emoji_selector"
+        )}
         accessibilityTraits="button"
         name="mood"
         testID="messagebox-open-emoji"
       />
     ) : (
       <Icon
-        onPress={() => this.closeEmoji()}
+        onPress={() => {
+          this.component.refs.composerRef.refs.composerInput.focus();
+        }}
         style={styles.actionButtons}
-        accessibilityLabel={'I18n.t("Close_emoji_selector")'}
+        accessibilityLabel={this.props.translate(
+          "ran.chat.Close_emoji_selector"
+        )}
         accessibilityTraits="button"
         name="keyboard"
         testID="messagebox-close-emoji"
@@ -183,7 +254,7 @@ export default class MessageBox extends React.PureComponent {
           style={[styles.actionButtons, { color: "#1D74F5" }]}
           name="send"
           key="sendIcon"
-          accessibilityLabel={I18n.t("Send message")}
+          accessibilityLabel={this.props.translate("ran.chat.Send_message")}
           accessibilityTraits="button"
           onPress={() => this.submit(this.state.text)}
           testID="messagebox-send-message"
@@ -199,18 +270,18 @@ export default class MessageBox extends React.PureComponent {
         ]}
         name="mic"
         key="micIcon"
-        accessibilityLabel={'I18n.t("Send audio message")'}
+        accessibilityLabel={this.props.translate("ran.chat.Send_audio_message")}
         accessibilityTraits="button"
         onPress={() => this.recordAudioMessage()}
         testID="messagebox-send-audio"
       />
     );
     icons.push(
-      <Icon
+      <IconPlus
         style={[styles.actionButtons, { color: "#2F343D", fontSize: 16 }]}
         name="plus"
         key="fileIcon"
-        accessibilityLabel={I18n.t("Message actions")}
+        accessibilityLabel={this.props.translate("ran.chat.Message_actions")}
         accessibilityTraits="button"
         onPress={this.toggleFilesActions}
         testID="messagebox-actions"
@@ -277,8 +348,9 @@ export default class MessageBox extends React.PureComponent {
     this.setState({ text: "" });
   }
 
-  async openEmoji() {
-    await this.setState({
+  openEmoji() {
+    Keyboard.dismiss();
+    this.setState({
       showEmojiKeyboard: true
     });
   }
@@ -297,7 +369,7 @@ export default class MessageBox extends React.PureComponent {
         await RocketChat.sendFileMessage(this.props.rid, fileInfo);
       } catch (e) {
         if (e && e.error === "error-file-too-large") {
-          return Alert.alert("I18n.t(e.error)");
+          return Alert.alert(this.props.translate("ran.chat.error"));
         }
         log("finishAudioMessage", e);
       }
@@ -387,9 +459,8 @@ export default class MessageBox extends React.PureComponent {
       console.warn("spotlight canceled");
     } finally {
       delete this.oldPromise;
-      this.users = await database
-        .objects("users", `WHERE username is not null`) //.filtered("username CONTAINS[c] $0", keyword)
-        .slice();
+      let users = await database.objects("users", `WHERE username is not null`); //.filtered("username CONTAINS[c] $0", keyword)
+      this.users = users.slice();
       this._getFixedMentions(keyword);
       this.setState({ mentions: this.users });
     }
@@ -534,8 +605,8 @@ export default class MessageBox extends React.PureComponent {
       <Text style={styles.fixedMentionAvatar}>{item.username}</Text>
       <Text>
         {item.username === "here"
-          ? 'I18n.t("Notify_active_in_this_room")'
-          : 'I18n.t("Notify_all_in_this_room")'}
+          ? this.props.translate("ran.chat.Notify_active_in_this_room")
+          : this.props.translate("ran.chat.Notify_all_in_this_room")}
       </Text>
     </TouchableOpacity>
   );
@@ -632,6 +703,7 @@ export default class MessageBox extends React.PureComponent {
         hideActions={this.toggleFilesActions}
         takePhoto={this.takePhoto}
         chooseFromLibrary={this.chooseFromLibrary}
+        {...this.props}
       />
     );
   };
@@ -655,7 +727,7 @@ export default class MessageBox extends React.PureComponent {
             returnKeyType="default"
             keyboardType="twitter"
             blurOnSubmit={false}
-            placeholder={'I18n.t("New_Message")'}
+            placeholder={this.props.translate("ran.chat.New_Message")}
             onChangeText={text => this.onChangeText(text)}
             value={this.state.text}
             underlineColorAndroid="transparent"
@@ -670,17 +742,70 @@ export default class MessageBox extends React.PureComponent {
     ];
   }
 
-  onInputTextChanged = text => {
-    this.refs.inputToolbarRef.refs.composerRef.setText(text);
+  onEmojiSelected = emoji => {
+    this.setState({ text: this.state.text + emoji });
+    this.component.refs.composerRef.setText(this.state.text + emoji);
   };
 
+  onContentSizeChange = size => {
+    let composerHeight = Math.max(
+      MIN_COMPOSER_HEIGHT,
+      Math.min(MAX_COMPOSER_HEIGHT, size.height)
+    );
+
+    this.component.refs.composerRef.setComposerHeight(composerHeight);
+  };
+
+  // onSend(text = this._text.trim(), shouldResetInputToolbar = true) {
+  //   if (text.length < 1) {
+  //     return;
+  //   }
+  //   message = {
+  //     id: this.props.roomId + "-" + this.props.myId + "-" + uuid1(),
+  //     text: text,
+  //     userId: this.props.myId,
+  //     roomId: this.props.roomId,
+  //     createdAtClient: new Date(),
+  //     status: IMAGESERVERINFO.C2S_ING,
+  //   };
+
+  //   if (shouldResetInputToolbar === true) {
+  //     this.setIsTypingDisabled(true);
+  //     this.resetInputToolbar();
+  //   }
+
+  //   if (this.props.onSend) {
+  //     this.props.onSend(message);
+  //   } else {
+  //     // this.showSendMessage(message);
+  //     // console.log('Meteor status:' + Meteor.status().connected);
+  //     // if (Meteor.status().connected) {
+  //     //   this.meteorMessagesAddOne(message);
+  //     // } else {
+  //     //   message.status = 'errorConnect';
+  //     //   this.updateSendMessage(message);
+  //     // }
+  //   }
+
+  //   if (shouldResetInputToolbar === true) {
+  //     setTimeout(() => {
+  //       this.setIsTypingDisabled(false);
+  //     }, 100);
+  //   }
+  // }
+
   render() {
+    console.log("MessageBox");
+
     const inputToolbarProps = {
       placeholder: this.props.translate("ran.chat.input"),
-      sendButtonLabel: this.props.translate("ran.chat.send"),
-      onTextChanged: this.onInputTextChanged,
+      // sendButtonLabel: this.props.translate("ran.chat.send"),
+      leftButtons: this.leftButtons,
+      rightButtons: this.rightButtons,
+      onTextChanged: this.onChangeText,
       onContentSizeChange: this.onContentSizeChange,
-      onSend: this.onSend
+      onSend: this.onSend,
+      containerStyle: { marginBottom: this.state.inputToolbarFloatUp }
     };
     return [
       // <KeyboardAccessoryView
@@ -695,7 +820,15 @@ export default class MessageBox extends React.PureComponent {
       //   requiresSameParentToManageScrollView
       //   addBottomView
       // />,
-      <InputToolbar ref="inputToolbarRef" {...inputToolbarProps} />,
+
+      this.state.recording ? (
+        <Recording onFinish={this.finishAudioMessage} />
+      ) : (
+        <InputToolbar
+          ref={component => (this.component = component)}
+          {...inputToolbarProps}
+        />
+      ),
       this.renderFilesActions(),
       <UploadModal
         key="upload-modal"
@@ -703,7 +836,13 @@ export default class MessageBox extends React.PureComponent {
         file={this.state.file}
         close={() => this.setState({ file: {} })}
         submit={this.sendImageMessage}
-      />
+      />,
+      this.state.showEmojiKeyboard ? (
+        <EmojiKeyboard
+          key="emoji-keyboard"
+          onEmojiSelected={this.onEmojiSelected}
+        />
+      ) : null
     ];
   }
 }

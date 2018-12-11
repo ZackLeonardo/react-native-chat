@@ -1,6 +1,6 @@
 /**
  * InputToolbar
- * the Component which show Actions area
+ * the Component which show LeftButtons area
  *
  * @zack
  */
@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 
 import Icon from "@expo/vector-icons/FontAwesome";
 
-class Actions extends Component {
+class LeftButtons extends Component {
   constructor(props) {
     super(props);
     this.onActionsPress = this.onActionsPress.bind(this);
@@ -51,16 +51,16 @@ class Actions extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={[styles.container, this.props.containerStyle]}
-        onPress={this.props.onPressActionButton || this.onActionsPress}
+        style={styles.container}
+        onPress={this.props.onDefaultActionButtonPressed || this.onActionsPress}
       >
-        {this.renderIcon()}
+        {this.renderButtons()}
       </TouchableOpacity>
     );
   }
 
   // <Icon name="plus-circle" size={22} color={'red'}/>
-  renderIcon() {
+  renderButtons() {
     if (this.props.icon) {
       return this.props.icon();
     }
@@ -94,28 +94,25 @@ const styles = StyleSheet.create({
   }
 });
 
-Actions.contextTypes = {
+LeftButtons.contextTypes = {
   actionSheet: PropTypes.func
 };
 
-Actions.defaultProps = {
+LeftButtons.defaultProps = {
   onSend: () => {},
   options: {},
   optionTintColor: "#007AFF",
-  icon: null,
-  containerStyle: {},
   iconTextStyle: {},
-  onPressActionButton: null
+  onDefaultActionButtonPressed: null
 };
 
-Actions.propTypes = {
+LeftButtons.propTypes = {
   onSend: PropTypes.func,
   options: PropTypes.object,
   optionTintColor: PropTypes.string,
   icon: PropTypes.func,
-  onPressActionButton: PropTypes.func,
-  containerStyle: ViewPropTypes.style,
+  onDefaultActionButtonPressed: PropTypes.func,
   iconTextStyle: Text.propTypes.style
 };
 
-module.exports = Actions;
+module.exports = LeftButtons;

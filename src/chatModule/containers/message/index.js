@@ -191,9 +191,11 @@ export default class MessageContainer extends React.Component {
       role
     } = item;
     const isEditing = message._id === item._id && editing;
-    let attachmentsNew = attachments.slice(1, attachments.length - 1);
-    let urlsNew = urls.slice(1, urls.length - 1);
-    let reactionsNew = reactions.slice(1, urls.length - 1);
+    let attachmentsNew = attachments
+      ? attachments.slice(1, attachments.length - 1)
+      : "";
+    let urlsNew = urls ? urls.slice(1, urls.length - 1) : "";
+    let reactionsNew = reactions ? reactions.slice(1, urls.length - 1) : "";
 
     return (
       <Message

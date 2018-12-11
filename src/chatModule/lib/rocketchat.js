@@ -824,10 +824,11 @@ const RocketChat = {
     }
     return call("pinMessage", message);
   },
-  getRoom(rid) {
-    const [result] = database
-      .objects("subscriptions")
-      .filtered("rid = $0", rid);
+  async getRoom(rid) {
+    const [result] = await database.objects(
+      "subscriptions",
+      `WHERE rid="${rid}";`
+    );
     if (!result) {
       return Promise.reject(new Error("Room not found"));
     }

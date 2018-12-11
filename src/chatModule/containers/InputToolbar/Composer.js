@@ -33,6 +33,7 @@ class Composer extends Component {
   render() {
     return (
       <TextInput
+        ref="composerInput"
         placeholder={this.props.placeholder}
         placeholderTextColor={this.props.placeholderTextColor}
         multiline={this.props.multiline}

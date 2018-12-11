@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ActionSheet from "react-native-actionsheet";
 
-// import I18n from "../../i18n";
-
 export default class FilesActions extends Component {
   static propTypes = {
     hideActions: PropTypes.func.isRequired,
@@ -15,15 +13,15 @@ export default class FilesActions extends Component {
     super(props);
 
     // Cancel
-    this.options = ['I18n.t("Cancel")'];
+    this.options = [this.props.translate("ran.chat.Cancel")];
     this.CANCEL_INDEX = 0;
 
     // Photo
-    this.options.push('I18n.t("Take_a_photo")');
+    this.options.push(this.props.translate("ran.chat.Take_a_photo"));
     this.PHOTO_INDEX = 1;
 
     // Library
-    this.options.push('I18n.t("Choose_from_library")');
+    this.options.push(this.props.translate("ran.chat.Choose_from_library"));
     this.LIBRARY_INDEX = 2;
 
     setTimeout(() => {

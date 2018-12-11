@@ -17,6 +17,7 @@ module.exports = {
       activity: "activity",
       Activity: "Activity",
       Sorting_by: "Sorting by ",
+      error: "error",
       // onboardingView
       Welcome_to_RocketChat: "Welcome to WESTWORD",
       Open_Source_Communication: "Open Source Communication",
@@ -89,6 +90,18 @@ module.exports = {
       //messageBox
       input: "input",
       send: "send",
+      Send_message: "Send message",
+      Choose: "Choose",
+      Cancel_editing: "Cancel editing",
+      Open_emoji_selector: "Open emoji selector",
+      Close_emoji_selector: "Close emoji selector",
+      Send_audio_message: "Send audio message",
+      Message_actions: "Message actions",
+      Notify_active_in_this_room: "Notify active users in this room",
+      Notify_all_in_this_room: "Notify all in this room",
+      //filesActions
+      Take_a_photo: "Take a photo",
+      Choose_from_library: "Choose from library",
       // rooms
       unTop: "Not Top",
       top: "Top",

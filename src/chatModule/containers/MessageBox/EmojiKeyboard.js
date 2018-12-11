@@ -14,6 +14,8 @@ export default class EmojiKeyboard extends React.PureComponent {
       state.settings.Site_Url || state.server ? state.server.server : "";
   }
   onEmojiSelected = emoji => {
+    console.log(emoji);
+    this.props.onEmojiSelected(emoji);
     // KeyboardRegistry.onItemSelected('EmojiKeyboard', { emoji });
   };
   render() {

@@ -1,27 +1,21 @@
 /**
  * InputToolbar
- * the Component which show Send area
+ * the Component which show RightButtons area
  *
  * @zack
  */
 
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  View,
-  ViewPropTypes,
-  Text,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 
-class Send extends Component {
+class RightButtons extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={[styles.containerStyle, this.props.containerStyle]}
+        style={styles.containerStyle}
         onPress={() => {
-          this.props.onSend();
+          this.props.onDefaultSendPressed();
         }}
         accessibilityTraits="button"
       >
@@ -50,20 +44,18 @@ const styles = StyleSheet.create({
   }
 });
 
-Send.defaultProps = {
+RightButtons.defaultProps = {
   text: "",
-  onSend: () => {},
+  onDefaultSendPressed: () => {},
   sendButtonLabel: "",
-  containerStyle: {},
   textStyle: {}
 };
 
-Send.propTypes = {
+RightButtons.propTypes = {
   text: PropTypes.string,
-  onSend: PropTypes.func,
+  onDefaultSendPressed: PropTypes.func,
   sendButtonLabel: PropTypes.string,
-  containerStyle: ViewPropTypes.style,
   textStyle: Text.propTypes.style
 };
 
-module.exports = Send;
+module.exports = RightButtons;

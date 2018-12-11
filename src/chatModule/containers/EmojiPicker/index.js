@@ -32,28 +32,56 @@ export default class EmojiPicker extends Component {
       frequentlyUsed: [],
       customEmojis: []
     };
-    this.frequentlyUsed = database
-      .objects("frequentlyUsedEmoji")
-      .sorted("count", true);
-    this.customEmojis = database.objects("customEmojis");
+
+    this.frequentlyUsed = null;
+    this.frequentlyUsedToken = null;
+    this.customEmojis = null;
+    this.customEmojisToken = null;
+
     this.updateFrequentlyUsed = this.updateFrequentlyUsed.bind(this);
     this.updateCustomEmojis = this.updateCustomEmojis.bind(this);
   }
-  //
-  // shouldComponentUpdate(nextProps) {
-  // 	return false;
-  // }
 
-  componentDidMount() {
-    requestAnimationFrame(() => this.setState({ show: true }));
-    this.frequentlyUsed.addListener(this.updateFrequentlyUsed);
-    this.customEmojis.addListener(this.updateCustomEmojis);
+  getFrequentlyUsed = async () => {
+    this.frequentlyUsed = await database.objects(
+      "frequentlyUsedEmoji",
+      `WHERE order by count ASC`
+    );
     this.updateFrequentlyUsed();
+  };
+  getCustomEmojis = async () => {
+    this.frequentlyUsed = await database.objects("customEmojis");
     this.updateCustomEmojis();
+  };
+
+  async componentDidMount() {
+    requestAnimationFrame(() => this.setState({ show: true }));
+
+    this.getFrequentlyUsed();
+    if (!this.frequentlyUsedToken) {
+      this.frequentlyUsedToken = PubSub.subscribe(
+        "frequentlyUsedEmoji",
+        this.getFrequentlyUsed()
+      );
+    }
+    this.getCustomEmojis();
+    if (!this.customEmojisToken) {
+      this.customEmojisToken = PubSub.subscribe(
+        "customEmojis",
+        this.getCustomEmojis()
+      );
+    }
   }
+
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
+    }
+  };
+
   componentWillUnmount() {
-    this.frequentlyUsed.removeAllListeners();
-    this.customEmojis.removeAllListeners();
+    this.removeListener(this.frequentlyUsedToken);
+    this.removeListener(this.customEmojisToken);
   }
 
   onEmojiSelected(emoji) {
@@ -79,31 +107,35 @@ export default class EmojiPicker extends Component {
   }
 
   _addFrequentlyUsed = protectedFunction(emoji => {
-    database.write(() => {
-      database.create("frequentlyUsedEmoji", emoji, true);
-    });
+    database.create("frequentlyUsedEmoji", emoji, true);
   });
   _getFrequentlyUsedCount = content => {
-    const emojiRow = this.frequentlyUsed.filtered("content == $0", content);
+    const emojiRow = this.frequentlyUsed.filter(
+      item => item.content === content
+    ); //this.frequentlyUsed.filtered("content == $0", content);
     return emojiRow.length ? emojiRow[0].count + 1 : 1;
   };
   updateFrequentlyUsed() {
-    const frequentlyUsed = map(this.frequentlyUsed.slice(), item => {
-      if (item.isCustom) {
-        return item;
-      }
-      return emojify(`${item.content}`, { output: "unicode" });
-    });
-    this.setState({ frequentlyUsed });
+    if (this.frequentlyUsed) {
+      const frequentlyUsed = map(this.frequentlyUsed.slice(), item => {
+        if (item.isCustom) {
+          return item;
+        }
+        return emojify(`${item.content}`, { output: "unicode" });
+      });
+      this.setState({ frequentlyUsed });
+    }
   }
 
   updateCustomEmojis() {
-    const customEmojis = map(this.customEmojis.slice(), item => ({
-      content: item.name,
-      extension: item.extension,
-      isCustom: true
-    }));
-    this.setState({ customEmojis });
+    if (this.customEmojis) {
+      const customEmojis = map(this.customEmojis.slice(), item => ({
+        content: item.name,
+        extension: item.extension,
+        isCustom: true
+      }));
+      this.setState({ customEmojis });
+    }
   }
 
   renderCategory(category, i) {
