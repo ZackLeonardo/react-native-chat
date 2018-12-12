@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import equal from "deep-equal";
+import PubSub from "pubsub-js";
 import { RectButton } from "react-native-gesture-handler";
 import Icon from "@expo/vector-icons/Ionicons"; //ios-star-outline
 
@@ -74,6 +75,7 @@ export default class RoomView extends LoggedView {
     super("RoomView", props);
     this.rid = this.props.navigation.state.params.rid;
     this.rooms = null;
+    this.rooms;
     this.state = {
       loaded: false,
       joined: false,
@@ -125,6 +127,9 @@ export default class RoomView extends LoggedView {
     this.setState({ joined: this.rooms.length > 0, loaded: true });
 
     this.updateRoom();
+    if (!this.roomsToken) {
+      this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom());
+    }
     // this.rooms.addListener(this.updateRoom);
     // this.props.navigator.setDrawerEnabled({
     //   side: "left",
@@ -159,8 +164,15 @@ export default class RoomView extends LoggedView {
     }
   }
 
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
+    }
+  };
+
   componentWillUnmount() {
     // this.rooms.removeAllListeners();
+    this.removeListener(this.roomsToken);
     this.onEndReached.stop();
     this.props.close();
   }

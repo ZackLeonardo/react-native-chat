@@ -68,6 +68,9 @@ export default async function(rid, msg) {
     // });
 
     const ret = await _sendMessageCall.call(this, message);
+    let test = buildMessage({ ...message, ...ret });
+    console.log(test);
+
     // TODO: maybe I have created a bug in the future here <3
     database.create("messages", buildMessage({ ...message, ...ret }), true);
   } catch (e) {

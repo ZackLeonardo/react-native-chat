@@ -40,7 +40,7 @@ export class List extends React.Component {
           "messages",
           `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
         );
-        if (this.state.data.length !== data.slice().length) {
+        if (!shallowequal(this.state.data, data.slice())) {
           //!_.isEqualWith(this.unread, newUnread)  //!shallowequal(this.state.data, data.slice())
           console.log("messages updating");
           this.setState({ data: data.slice() });

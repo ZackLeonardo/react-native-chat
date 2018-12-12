@@ -183,7 +183,7 @@ export default class MessageBox extends React.PureComponent {
 
   onChangeText = text => {
     this.setState({ text });
-    this.component.refs.composerRef.setText(text);
+    // this.component.refs.composerRef.setText(text);
     this.props.typing(text.length > 0);
 
     // requestAnimationFrame(() => {
@@ -744,7 +744,7 @@ export default class MessageBox extends React.PureComponent {
 
   onEmojiSelected = emoji => {
     this.setState({ text: this.state.text + emoji });
-    this.component.refs.composerRef.setText(this.state.text + emoji);
+    // this.component.refs.composerRef.setText(this.state.text + emoji);
   };
 
   onContentSizeChange = size => {
@@ -800,6 +800,7 @@ export default class MessageBox extends React.PureComponent {
     const inputToolbarProps = {
       placeholder: this.props.translate("ran.chat.input"),
       // sendButtonLabel: this.props.translate("ran.chat.send"),
+      text: this.state.text,
       leftButtons: this.leftButtons,
       rightButtons: this.rightButtons,
       onTextChanged: this.onChangeText,
