@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text, Easing, Image } from "react-native";
-import Video from "react-native-video";
+import { View, StyleSheet, Text, Easing } from "react-native";
+import * as Expo from "expo";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import Slider from "react-native-slider";
 import moment from "moment";
 import { BorderlessButton } from "react-native-gesture-handler";
@@ -43,7 +44,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const formatTime = seconds => moment.utc(seconds * 1000).format("mm:ss");
+const formatTime = seconds => moment.utc(seconds).format("mm:ss");
+const LOOPING_TYPE_ALL = 0;
+const LOOPING_TYPE_ONE = 1;
 
 export default class Audio extends React.PureComponent {
   static propTypes = {
@@ -55,13 +58,21 @@ export default class Audio extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.onLoad = this.onLoad.bind(this);
-    this.onProgress = this.onProgress.bind(this);
-    this.onEnd = this.onEnd.bind(this);
+
     const { baseUrl, file, user } = props;
+    this.playbackInstance = null;
     this.state = {
-      currentTime: 0,
-      duration: 0,
+      isPlaying: false,
+      isBuffering: false,
+      shouldPlay: false,
+      playing: false,
+      rate: 1.0,
+      volume: 1.0,
+      muted: false,
+      playbackInstancePosition: 0,
+      playbackInstanceDuration: 0,
+      shouldCorrectPitch: true,
+      loopingType: LOOPING_TYPE_ALL,
       paused: true,
       uri: `${baseUrl}${file.audio_url}?rc_uid=${user.id}&rc_token=${
         user.token
@@ -69,33 +80,83 @@ export default class Audio extends React.PureComponent {
     };
   }
 
-  onLoad(data) {
-    this.setState({ duration: data.duration > 0 ? data.duration : 0 });
+  async componentDidMount() {
+    const source = { uri: this.state.uri };
+    const initialStatus = {
+      shouldPlay: this.state.playing,
+      rate: this.state.rate,
+      shouldCorrectPitch: this.state.shouldCorrectPitch,
+      volume: this.state.volume,
+      isMuted: this.state.muted,
+      isLooping: this.state.loopingType === LOOPING_TYPE_ONE
+      // // UNCOMMENT THIS TO TEST THE OLD androidImplementation:
+      // androidImplementation: 'MediaPlayer',
+    };
+    const { sound, status } = await Expo.Audio.Sound.createAsync(
+      source,
+      initialStatus,
+      this._onPlaybackStatusUpdate
+    );
+    this.playbackInstance = sound;
   }
 
-  onProgress(data) {
-    if (data.currentTime <= this.state.duration) {
-      this.setState({ currentTime: data.currentTime });
+  _onPlaybackStatusUpdate = status => {
+    if (status.isLoaded) {
+      this.setState({
+        playbackInstancePosition: status.positionMillis,
+        playbackInstanceDuration: status.durationMillis,
+        shouldPlay: status.shouldPlay,
+        isPlaying: status.isPlaying,
+        isBuffering: status.isBuffering,
+        rate: status.rate,
+        muted: status.isMuted,
+        volume: status.volume,
+        loopingType: status.isLooping ? LOOPING_TYPE_ONE : LOOPING_TYPE_ALL,
+        shouldCorrectPitch: status.shouldCorrectPitch
+      });
+      if (status.didJustFinish && !status.isLooping) {
+        this.setState({
+          paused: !this.state.paused
+        });
+      }
+    } else {
+      if (status.error) {
+        console.log(`FATAL PLAYER ERROR: ${status.error}`);
+      }
     }
-  }
+  };
 
-  onEnd() {
-    this.setState({ paused: true, currentTime: 0 });
-    requestAnimationFrame(() => {
-      this.player.seek(0);
+  getDuration = () => {
+    return this.state.playbackInstancePosition
+      ? formatTime(this.state.playbackInstancePosition)
+      : formatTime(this.state.playbackInstanceDuration);
+  };
+
+  togglePlayPause = () => {
+    console.log(this.state);
+
+    if (this.playbackInstance != null) {
+      if (this.state.isPlaying) {
+        this.playbackInstance.pauseAsync();
+      } else {
+        if (
+          this.state.playbackInstancePosition !==
+          this.state.playbackInstanceDuration
+        ) {
+          this.playbackInstance.playAsync();
+        } else {
+          this.playbackInstance.replayAsync();
+        }
+      }
+    }
+
+    this.setState({
+      paused: !this.state.paused
     });
-  }
-
-  getDuration() {
-    return formatTime(this.state.duration);
-  }
-
-  togglePlayPause() {
-    this.setState({ paused: !this.state.paused });
-  }
+  };
 
   render() {
-    const { uri, paused } = this.state;
+    const { paused } = this.state;
     const { user, baseUrl, customEmojis, file } = this.props;
     const { description } = file;
 
@@ -105,41 +166,32 @@ export default class Audio extends React.PureComponent {
 
     return [
       <View key="audio" style={styles.audioContainer}>
-        <Video
-          ref={ref => {
-            this.player = ref;
-          }}
-          source={{ uri }}
-          onLoad={this.onLoad}
-          onProgress={this.onProgress}
-          onEnd={this.onEnd}
-          paused={paused}
-          repeat={false}
-        />
         <BorderlessButton
           style={styles.playPauseButton}
-          onPress={() => this.togglePlayPause()}
+          onPress={this.togglePlayPause}
         >
           {paused ? (
-            <Image source={{ uri: "play" }} style={styles.playPauseImage} />
+            <Icon name={"play"} style={styles.playPauseImage} size={30} />
           ) : (
-            <Image source={{ uri: "pause" }} style={styles.playPauseImage} />
+            <Icon name={"pause"} style={styles.playPauseImage} size={30} />
           )}
         </BorderlessButton>
         <Slider
           style={styles.slider}
-          value={this.state.currentTime}
-          maximumValue={this.state.duration}
+          value={this.state.playbackInstancePosition}
+          maximumValue={this.state.playbackInstanceDuration}
           minimumValue={0}
           animateTransitions
           animationConfig={{
-            duration: 250,
+            duration: 50,
             easing: Easing.linear,
             delay: 0
           }}
           thumbTintColor="#1d74f5"
           minimumTrackTintColor="#1d74f5"
-          onValueChange={value => this.setState({ currentTime: value })}
+          onValueChange={value =>
+            this.setState({ playbackInstancePosition: value })
+          }
           thumbStyle={styles.thumbStyle}
         />
         <Text style={styles.duration}>{this.getDuration()}</Text>

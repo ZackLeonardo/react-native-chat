@@ -159,10 +159,6 @@ export default class MessageContainer extends React.Component {
     this.props.replyBroadcast(this.parseMessage());
   };
 
-  prepareObject = str => {
-    return JSON.parse(str);
-  };
-
   render() {
     const {
       item,
@@ -191,11 +187,9 @@ export default class MessageContainer extends React.Component {
       role
     } = item;
     const isEditing = message._id === item._id && editing;
-    let attachmentsNew = attachments
-      ? attachments.slice(1, attachments.length - 1)
-      : "";
-    let urlsNew = urls ? urls.slice(1, urls.length - 1) : "";
-    let reactionsNew = reactions ? reactions.slice(1, urls.length - 1) : "";
+    let attachmentsNew = attachments ? JSON.parse(attachments) : [];
+    let urlsNew = urls ? JSON.parse(urls) : [];
+    let reactionsNew = reactions ? JSON.parse(reactions) : [];
 
     return (
       <Message
@@ -204,17 +198,9 @@ export default class MessageContainer extends React.Component {
         ts={ts}
         type={t}
         status={status}
-        attachments={
-          attachmentsNew.length > 0
-            ? attachmentsNew.split(",").map(item => this.prepareObject(item))
-            : []
-        }
-        urls={urlsNew.length > 0 ? urlsNew.split(",") : []}
-        reactions={
-          reactionsNew.length > 0
-            ? reactionsNew.split(",").map(item => this.prepareObject(item))
-            : []
-        }
+        attachments={attachmentsNew}
+        urls={urlsNew}
+        reactions={reactionsNew}
         alias={alias}
         editing={isEditing}
         header={this.isHeader()}
