@@ -756,44 +756,6 @@ export default class MessageBox extends React.PureComponent {
     this.component.refs.composerRef.setComposerHeight(composerHeight);
   };
 
-  // onSend(text = this._text.trim(), shouldResetInputToolbar = true) {
-  //   if (text.length < 1) {
-  //     return;
-  //   }
-  //   message = {
-  //     id: this.props.roomId + "-" + this.props.myId + "-" + uuid1(),
-  //     text: text,
-  //     userId: this.props.myId,
-  //     roomId: this.props.roomId,
-  //     createdAtClient: new Date(),
-  //     status: IMAGESERVERINFO.C2S_ING,
-  //   };
-
-  //   if (shouldResetInputToolbar === true) {
-  //     this.setIsTypingDisabled(true);
-  //     this.resetInputToolbar();
-  //   }
-
-  //   if (this.props.onSend) {
-  //     this.props.onSend(message);
-  //   } else {
-  //     // this.showSendMessage(message);
-  //     // console.log('Meteor status:' + Meteor.status().connected);
-  //     // if (Meteor.status().connected) {
-  //     //   this.meteorMessagesAddOne(message);
-  //     // } else {
-  //     //   message.status = 'errorConnect';
-  //     //   this.updateSendMessage(message);
-  //     // }
-  //   }
-
-  //   if (shouldResetInputToolbar === true) {
-  //     setTimeout(() => {
-  //       this.setIsTypingDisabled(false);
-  //     }, 100);
-  //   }
-  // }
-
   render() {
     console.log("MessageBox");
 
@@ -805,7 +767,6 @@ export default class MessageBox extends React.PureComponent {
       rightButtons: this.rightButtons,
       onTextChanged: this.onChangeText,
       onContentSizeChange: this.onContentSizeChange,
-      onSend: this.onSend,
       containerStyle: { marginBottom: this.state.inputToolbarFloatUp }
     };
     return [

@@ -44,7 +44,18 @@ const styles = StyleSheet.create({
   }
 });
 
-const formatTime = seconds => moment.utc(seconds).format("mm:ss");
+// const formatTime = miniseconds => moment.utc(miniseconds).format("mm:ss");
+const formatTime = function(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  seconds %= 60;
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+  return `${minutes}:${seconds}`;
+};
 const LOOPING_TYPE_ALL = 0;
 const LOOPING_TYPE_ONE = 1;
 
@@ -116,6 +127,7 @@ export default class Audio extends React.PureComponent {
       });
       if (status.didJustFinish && !status.isLooping) {
         this.setState({
+          playbackInstancePosition: 0,
           paused: !this.state.paused
         });
       }
@@ -128,8 +140,8 @@ export default class Audio extends React.PureComponent {
 
   getDuration = () => {
     return this.state.playbackInstancePosition
-      ? formatTime(this.state.playbackInstancePosition)
-      : formatTime(this.state.playbackInstanceDuration);
+      ? formatTime(Math.round(this.state.playbackInstancePosition / 1000))
+      : formatTime(Math.round(this.state.playbackInstanceDuration / 1000));
   };
 
   togglePlayPause = () => {
@@ -140,8 +152,8 @@ export default class Audio extends React.PureComponent {
         this.playbackInstance.pauseAsync();
       } else {
         if (
-          this.state.playbackInstancePosition !==
-          this.state.playbackInstanceDuration
+          this.state.playbackInstancePosition <
+          this.state.playbackInstanceDuration - 100
         ) {
           this.playbackInstance.playAsync();
         } else {
@@ -178,12 +190,12 @@ export default class Audio extends React.PureComponent {
         </BorderlessButton>
         <Slider
           style={styles.slider}
-          value={this.state.playbackInstancePosition}
-          maximumValue={this.state.playbackInstanceDuration}
+          value={Math.round(this.state.playbackInstancePosition / 1000)}
+          maximumValue={Math.round(this.state.playbackInstanceDuration / 1000)}
           minimumValue={0}
           animateTransitions
           animationConfig={{
-            duration: 50,
+            duration: 250,
             easing: Easing.linear,
             delay: 0
           }}

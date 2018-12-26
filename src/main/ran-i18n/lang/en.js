@@ -99,6 +99,14 @@ module.exports = {
       Message_actions: "Message actions",
       Notify_active_in_this_room: "Notify active users in this room",
       Notify_all_in_this_room: "Notify all in this room",
+      //recording
+      recording: "recording",
+      Finish_recording: "Finish recording",
+      Cancel_recording: "Cancel recording",
+      Microphone_Permission: "Microphone Permission",
+      Microphone_Permission_Message:
+        "Rocket Chat needs access to your microphone so you can send audio message.",
+      Not_haveRecordingPermissions: "not haveRecordingPermissions",
       //filesActions
       Take_a_photo: "Take a photo",
       Choose_from_library: "Choose from library",

@@ -1,7 +1,8 @@
-// import RNFetchBlob from "rn-fetch-blob";
+import { Base64 } from "js-base64";
 
 import { store as reduxStore } from "../../../src";
 import database from "../../../main/ran-db/sqlite";
+import Expo, { FileSystem } from "expo";
 
 const promises = {};
 
@@ -28,14 +29,17 @@ export async function cancelUpload(path) {
 }
 
 export async function sendFileMessage(rid, fileInfo) {
-  console.log("hhhh");
-
   try {
-    // const data = await RNFetchBlob.wrap(fileInfo.path);
     if (!fileInfo.size) {
-      // const fileStat = await RNFetchBlob.fs.stat(fileInfo.path);
+      const fileStat = await FileSystem.getInfoAsync(
+        "file://" + fileInfo.path,
+        {
+          md5: false,
+          size: true
+        }
+      );
       fileInfo.size = fileStat.size;
-      fileInfo.name = fileStat.filename;
+      fileInfo.name = fileInfo.path.split("/").pop(); //.split(".")[0]
     }
 
     const { FileUpload_MaxFileSize } = reduxStore.getState().settings;
@@ -47,30 +51,30 @@ export async function sendFileMessage(rid, fileInfo) {
 
     fileInfo.rid = rid;
 
-    database.write(() => {
-      database.create("uploads", fileInfo, true);
-    });
+    await database.create("uploads", fileInfo, true);
 
     const result = await _ufsCreate.call(this, fileInfo);
 
-    promises[fileInfo.path] = RNFetchBlob.fetch(
-      "POST",
-      result.url,
-      {
-        "Content-Type": "octet-stream"
-      },
-      data
-    );
-    // Workaround for https://github.com/joltup/rn-fetch-blob/issues/96
-    setTimeout(() => {
-      promises[fileInfo.path].uploadProgress((loaded, total) => {
-        database.write(() => {
-          fileInfo.progress = Math.floor((loaded / total) * 100);
-          database.create("uploads", fileInfo, true);
-        });
-      });
+    let formData = new FormData();
+    formData.append("audio", {
+      uri: "file://" + fileInfo.path,
+      name: fileInfo.name,
+      type: "audio/aac"
     });
-    await promises[fileInfo.path];
+
+    let options = {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data"
+      }
+    };
+
+    await fetch(result.url, options);
+
+    fileInfo.progress = 100;
+    await database.create("uploads", fileInfo, true);
 
     const completeResult = await _ufsComplete.call(
       this,
@@ -88,16 +92,14 @@ export async function sendFileMessage(rid, fileInfo) {
       url: completeResult.path
     });
 
-    database.write(() => {
-      const upload = database
-        .objects("uploads")
-        .filtered("path = $0", fileInfo.path);
-      database.delete(upload);
-    });
+    const upload = await database.objects(
+      "uploads",
+      `WHERE path = ${fileInfo.path}`
+    );
+    database.delete(upload);
   } catch (e) {
-    database.write(() => {
-      fileInfo.error = true;
-      database.create("uploads", fileInfo, true);
-    });
+    console.log(e);
+    fileInfo.error = true;
+    database.create("uploads", fileInfo, true);
   }
 }

@@ -24,7 +24,7 @@ export default StyleSheet.create({
     backgroundColor: "#fff"
   },
   textBoxInput: {
-    textAlignVertical: "center",
+    textAlign: "center",
     maxHeight: 120,
     flexGrow: 1,
     width: 1,
