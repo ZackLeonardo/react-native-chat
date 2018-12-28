@@ -31,14 +31,13 @@ export async function cancelUpload(path) {
 export async function sendFileMessage(rid, fileInfo) {
   try {
     if (!fileInfo.size) {
-      const fileStat = await FileSystem.getInfoAsync(
-        "file://" + fileInfo.path,
-        {
-          md5: false,
-          size: true
-        }
-      );
+      const fileStat = await FileSystem.getInfoAsync(fileInfo.path, {
+        md5: false,
+        size: true
+      });
       fileInfo.size = fileStat.size;
+    }
+    if (!fileInfo.name) {
       fileInfo.name = fileInfo.path.split("/").pop(); //.split(".")[0]
     }
 
@@ -56,10 +55,10 @@ export async function sendFileMessage(rid, fileInfo) {
     const result = await _ufsCreate.call(this, fileInfo);
 
     let formData = new FormData();
-    formData.append("audio", {
-      uri: "file://" + fileInfo.path,
+    formData.append("file", {
+      uri: fileInfo.path,
       name: fileInfo.name,
-      type: "audio/aac"
+      type: fileInfo.type
     });
 
     let options = {
@@ -72,6 +71,7 @@ export async function sendFileMessage(rid, fileInfo) {
     };
 
     await fetch(result.url, options);
+    // console.log(uploadResponse.json());
 
     fileInfo.progress = 100;
     await database.create("uploads", fileInfo, true);

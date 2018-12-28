@@ -90,6 +90,7 @@ module.exports = {
       //messageBox
       input: "input",
       send: "send",
+      Send: "Send",
       Send_message: "Send message",
       Choose: "Choose",
       Cancel_editing: "Cancel editing",
@@ -110,6 +111,9 @@ module.exports = {
       //filesActions
       Take_a_photo: "Take a photo",
       Choose_from_library: "Choose from library",
+      //filesActions
+      Upload_file: "Upload file?",
+
       // rooms
       unTop: "Not Top",
       top: "Top",

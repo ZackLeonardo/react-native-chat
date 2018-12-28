@@ -11,7 +11,9 @@ import PropTypes from "prop-types";
 import Modal from "react-native-modal";
 import { responsive } from "react-native-responsive-ui";
 import equal from "deep-equal";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../../../main/ran-i18n";
 import TextInput from "../TextInput";
 import Button from "../Button";
 // import I18n from '../../i18n';
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
 });
 
 @responsive
-export default class UploadModal extends Component {
+class UploadModal extends Component {
   static propTypes = {
     isVisible: PropTypes.bool,
     file: PropTypes.object,
@@ -73,7 +75,7 @@ export default class UploadModal extends Component {
     if (!equal(props.file, state.file) && props.file && props.file.path) {
       return {
         file: props.file,
-        name: props.file.filename || "Filename",
+        name: props.file.filename,
         description: ""
       };
     }
@@ -106,7 +108,9 @@ export default class UploadModal extends Component {
       >
         <View style={[styles.container, { width: width - 32 }]}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>Upload file?</Text>
+            <Text style={styles.title}>
+              {this.props.translate("ran.chat.Upload_file")}
+            </Text>
           </View>
 
           <ScrollView style={styles.scrollView}>
@@ -127,14 +131,14 @@ export default class UploadModal extends Component {
           </ScrollView>
           <View style={styles.buttonContainer}>
             <Button
-              title={'I18n.t("Cancel")'}
+              title={this.props.translate("ran.chat.Cancel")}
               type="secondary"
               backgroundColor={cancelButtonColor}
               margin={styles.buttonMargin}
               onPress={close}
             />
             <Button
-              title={'I18n.t("Send")'}
+              title={this.props.translate("ran.chat.Send")}
               type="primary"
               margin={styles.buttonMargin}
               onPress={this._submit}
@@ -145,3 +149,5 @@ export default class UploadModal extends Component {
     );
   }
 }
+
+export default hoistStatics(compose(translate))(UploadModal);

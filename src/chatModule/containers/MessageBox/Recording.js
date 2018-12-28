@@ -237,13 +237,13 @@ class Recording extends React.PureComponent {
       return this.props.onFinish && this.props.onFinish(didSucceed);
     }
 
-    const path = filePath.startsWith("file://")
-      ? filePath.split("file://")[1]
-      : filePath;
+    // const path = filePath.startsWith("file://")
+    //   ? filePath.split("file://")[1]
+    //   : filePath;
     const fileInfo = {
       type: "audio/aac",
       store: "Uploads",
-      path
+      path: filePath
     };
     return this.props.onFinish && this.props.onFinish(fileInfo);
   };

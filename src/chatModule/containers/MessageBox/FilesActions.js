@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ActionSheet from "react-native-actionsheet";
+import { compose, hoistStatics } from "recompose";
 
-export default class FilesActions extends Component {
+import { translate } from "../../../main/ran-i18n";
+
+class FilesActions extends Component {
   static propTypes = {
     hideActions: PropTypes.func.isRequired,
     takePhoto: PropTypes.func.isRequired,
@@ -57,3 +60,5 @@ export default class FilesActions extends Component {
     );
   }
 }
+
+export default hoistStatics(compose(translate))(FilesActions);

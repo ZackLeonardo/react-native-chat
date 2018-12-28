@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { emojify } from "react-emojione";
 // import { KeyboardAccessoryView } from "react-native-keyboard-input";
 import InputToolbar from "../InputToolbar";
-// import ImagePicker from "react-native-image-crop-picker";
+import { ImagePicker, Permissions } from "expo";
 
 import { userTyping } from "../../actions/room";
 import RocketChat from "../../lib/rocketchat";
@@ -307,10 +307,10 @@ export default class MessageBox extends React.PureComponent {
   sendImageMessage = async file => {
     this.setState({ file: { isVisible: false } });
     const fileInfo = {
-      name: file.name,
+      name: file.name ? file.name : `${file.path.split("/").pop()}`,
       description: file.description,
       size: file.size,
-      type: file.mime,
+      type: file.mime ? file.mime : `image/${file.path.split(".").pop()}`,
       store: "Uploads",
       path: file.path
     };
@@ -330,17 +330,29 @@ export default class MessageBox extends React.PureComponent {
     }
   };
 
+  cameraRollPermission = async () => {
+    const response = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    return response.status === "granted";
+  };
+
   chooseFromLibrary = async () => {
     try {
       // const image = await ImagePicker.openPicker(imagePickerConfig);
-      this.showUploadModal(image);
+      const cameraRollPermission = await this.cameraRollPermission();
+      if (cameraRollPermission) {
+        const image = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3]
+        });
+        this.showUploadModal(image.uri);
+      }
     } catch (e) {
       log("chooseFromLibrary", e);
     }
   };
 
   showUploadModal = file => {
-    this.setState({ file: { ...file, isVisible: true } });
+    this.setState({ file: { path: file, isVisible: true } });
   };
 
   editCancel() {
@@ -703,7 +715,6 @@ export default class MessageBox extends React.PureComponent {
         hideActions={this.toggleFilesActions}
         takePhoto={this.takePhoto}
         chooseFromLibrary={this.chooseFromLibrary}
-        {...this.props}
       />
     );
   };
