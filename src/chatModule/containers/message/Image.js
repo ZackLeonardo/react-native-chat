@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Image as FastImage } from "react-native";
-// import FastImage from 'react-native-fast-image';
-import { RectButton } from "react-native-gesture-handler";
+import { ScrollView, Image, Dimensions } from "react-native";
+import Lightbox from "react-native-lightbox";
+import { CacheManager } from "react-native-expo-image-cache";
 
-import PhotoModal from "./PhotoModal";
 import Markdown from "./Markdown";
 import styles from "./styles";
 
@@ -16,12 +15,30 @@ export default class extends React.PureComponent {
     customEmojis: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
   };
 
-  state = { modalVisible: false };
+  state = { uri: null };
+  remoteUri = null;
 
-  onPressButton() {
-    this.setState({
-      modalVisible: true
-    });
+  componentWillMount() {
+    const { baseUrl, file, user } = this.props;
+    const img = `${baseUrl}${file.image_url}?rc_uid=${user.id}&rc_token=${
+      user.token
+    }`;
+    this.remoteUri = encodeURI(img);
+    CacheManager.get(this.remoteUri)
+      .getPath()
+      .then(path => {
+        if (path) {
+          this.setState({ uri: path });
+        } else {
+          this.setState({ uri: this.remoteUri });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    if (this.remoteUri) {
+      CacheManager.get(this.remoteUri).cancel();
+    }
   }
 
   getDescription() {
@@ -38,44 +55,31 @@ export default class extends React.PureComponent {
     }
   }
 
-  isPressed = state => {
-    this.setState({ isPressed: state });
-  };
-
   render() {
-    const { isPressed } = this.state;
-    const { baseUrl, file, user } = this.props;
-    const img = `${baseUrl}${file.image_url}?rc_uid=${user.id}&rc_token=${
-      user.token
-    }`;
+    const { width, height } = Dimensions.get("window");
 
-    if (!baseUrl) {
+    if (!this.state.uri) {
       return null;
     }
 
     return [
-      <RectButton
+      <ScrollView
         key="image"
-        onPress={() => this.onPressButton()}
-        onActiveStateChange={this.isPressed}
         style={styles.imageContainer}
         underlayColor="#fff"
       >
-        <FastImage
-          style={[styles.image, isPressed && { opacity: 0.5 }]}
-          source={{ uri: encodeURI(img) }}
-          resizeMode={FastImage.resizeMode.cover}
-        />
+        <Lightbox
+          activeProps={{
+            style: [styles.image, { width, height, resizeMode: "contain" }]
+          }}
+        >
+          <Image
+            style={[styles.image, { resizeMode: "cover" }]}
+            source={{ uri: this.state.uri }}
+          />
+        </Lightbox>
         {this.getDescription()}
-      </RectButton>,
-      <PhotoModal
-        key="modal"
-        title={file.title}
-        description={file.description}
-        image={img}
-        isVisible={this.state.modalVisible}
-        onClose={() => this.setState({ modalVisible: false })}
-      />
+      </ScrollView>
     ];
   }
 }
