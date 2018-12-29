@@ -360,8 +360,7 @@ export default class RoomsListView extends LoggedView {
       if (this.props.showUnread) {
         this.getUnread(this.data);
         if (!this.unreadToken) {
-          this.unreadToken = PubSub.subscribe(
-            "subscriptions",
+          this.unreadToken = PubSub.subscribe("subscriptions", () =>
             this.getUnread(this.data)
           );
         }
@@ -372,8 +371,7 @@ export default class RoomsListView extends LoggedView {
       if (this.props.showFavorites) {
         this.getFavorites(this.data);
         if (!this.favoritesToken) {
-          this.favoritesToken = PubSub.subscribe(
-            "subscriptions",
+          this.favoritesToken = PubSub.subscribe("subscriptions", () =>
             this.getFavorites(this.data)
           );
         }
@@ -409,16 +407,14 @@ export default class RoomsListView extends LoggedView {
         if (this.props.showUnread) {
           this.getChatsUnread(this.data);
           if (!this.chatsToken) {
-            this.chatsToken = PubSub.subscribe(
-              "subscriptions",
+            this.chatsToken = PubSub.subscribe("subscriptions", () =>
               this.getChatsUnread(this.data)
             );
           }
         } else {
           this.getChatsDefault(this.data);
           if (!this.defaultToken) {
-            this.defaultToken = PubSub.subscribe(
-              "subscriptions",
+            this.defaultToken = PubSub.subscribe("subscriptions", () =>
               this.getChatsDefault(this.data)
             );
           }
