@@ -34,6 +34,8 @@ import UploadModal from "./UploadModal";
 import EmojiKeyboard from "./EmojiKeyboard";
 import log from "../../utils/log";
 import ReplyPreview from "./ReplyPreview";
+import ActionModal from "../../../base/components/ActionModal";
+import MediaPicker from "../../../base/components/MediaPicker";
 
 const MENTIONS_TRACKING_TYPE_USERS = "@";
 const MENTIONS_TRACKING_TYPE_EMOJIS = ":";
@@ -340,19 +342,23 @@ export default class MessageBox extends React.PureComponent {
       // const image = await ImagePicker.openPicker(imagePickerConfig);
       const cameraRollPermission = await this.cameraRollPermission();
       if (cameraRollPermission) {
-        const image = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true,
-          aspect: [4, 3]
-        });
-        this.showUploadModal(image.uri);
+        // const image = await ImagePicker.launchImageLibraryAsync({
+        //   allowsEditing: true,
+        //   aspect: [4, 3],
+        //   base64: true,
+        //   exif: true
+        // });
+        // this.showUploadModal(image.uri);
+        this.showUploadModal("chooseFromLibrary");
       }
     } catch (e) {
       log("chooseFromLibrary", e);
     }
   };
 
-  showUploadModal = file => {
-    this.setState({ file: { path: file, isVisible: true } });
+  showUploadModal = filesAction => {
+    this.setState({ file: { action: filesAction, isVisible: true } });
+    this.openModal();
   };
 
   editCancel() {
@@ -767,6 +773,14 @@ export default class MessageBox extends React.PureComponent {
     this.component.refs.composerRef.setComposerHeight(composerHeight);
   };
 
+  openModal = () => {
+    this.actionModalRef.openModal();
+  };
+
+  closeModal = () => {
+    this.actionModalRef.closeModal();
+  };
+
   render() {
     console.log("MessageBox");
 
@@ -803,13 +817,14 @@ export default class MessageBox extends React.PureComponent {
         />
       ),
       this.renderFilesActions(),
-      <UploadModal
-        key="upload-modal"
-        isVisible={this.state.file && this.state.file.isVisible}
-        file={this.state.file}
-        close={() => this.setState({ file: {} })}
-        submit={this.sendImageMessage}
-      />,
+      <ActionModal ref={ref => (this.actionModalRef = ref)}>
+        {this.state.file.action === "chooseFromLibrary" ? (
+          <MediaPicker closeModal={this.closeModal} {...this.props} />
+        ) : null}
+        {this.state.file.action === "takePhoto" ? (
+          <MediaPicker closeModal={this.closeModal} {...this.props} />
+        ) : null}
+      </ActionModal>,
       this.state.showEmojiKeyboard ? (
         <EmojiKeyboard
           key="emoji-keyboard"
@@ -819,3 +834,11 @@ export default class MessageBox extends React.PureComponent {
     ];
   }
 }
+
+// {/* <UploadModal
+//         key="upload-modal"
+//         isVisible={this.state.file && this.state.file.isVisible}
+//         file={this.state.file}
+//         close={() => this.setState({ file: {} })}
+//         submit={this.sendImageMessage}
+//       /> */}

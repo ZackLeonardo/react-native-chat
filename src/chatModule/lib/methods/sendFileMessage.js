@@ -54,23 +54,37 @@ export async function sendFileMessage(rid, fileInfo) {
 
     const result = await _ufsCreate.call(this, fileInfo);
 
+    const imageData = await fetch(fileInfo.path);
+    const blob = await imageData._bodyText; //.blob();
+
     let formData = new FormData();
     formData.append("file", {
       uri: fileInfo.path,
       name: fileInfo.name,
-      type: fileInfo.type
+      type: "image/jpeg" //fileInfo.type
     });
+    // formData.append("file", {
+    //   uri: fileInfo.path,
+    //   name: fileInfo.name,
+    //   type: "image" //fileInfo.type
+    // });
 
     let options = {
       method: "POST",
-      body: formData,
+      body: blob,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data"
       }
     };
 
-    await fetch(result.url, options);
+    const request = new XMLHttpRequest();
+    request.open("POST", result.url);
+    request.responseType = "json";
+
+    await request.send(formData);
+
+    // await fetch(result.url, options);
     // console.log(uploadResponse.json());
 
     fileInfo.progress = 100;

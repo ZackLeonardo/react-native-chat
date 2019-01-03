@@ -60,8 +60,8 @@ export default class Avatar extends Component {
       var showThisName = this.props.name
         ? this.props.name
         : this.props.defaultName
-          ? this.props.defaultName
-          : "";
+        ? this.props.defaultName
+        : "";
       return (
         <Text
           style={[styles.textStyle, this.props.textStyle]}

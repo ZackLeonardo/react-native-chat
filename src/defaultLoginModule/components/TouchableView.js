@@ -41,7 +41,7 @@ TouchableView.propTypes = {
   isRippleDisabled: PropTypes.bool,
   rippleColor: PropTypes.string,
   children: PropTypes.any,
-  style: View.propTypes.style
+  style: ViewPropTypes.style
 };
 
 export default TouchableView;

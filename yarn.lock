@@ -6083,6 +6083,11 @@ react-native-fit-image@^1.5.2:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-flexi-radio-button@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/react-native-flexi-radio-button/-/react-native-flexi-radio-button-0.2.2.tgz#a0180393c531ba3477722c6e42a31ceb1c11623b"
+  integrity sha1-oBgDk8UxujR3cixuQqMc6xwRYjs=
+
 react-native-gesture-handler@1.0.9, react-native-gesture-handler@^1.0.9:
   version "1.0.9"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-1.0.9.tgz#ddec4d19d51cb6fb54df6eca792ebd76aaef083f"
@@ -7526,7 +7531,7 @@ underscore@1.8.x:
   resolved "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
   integrity sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI=
 
-underscore@^1.8.3:
+underscore@^1.8.3, underscore@^1.9.1:
   version "1.9.1"
   resolved "https://registry.npmjs.org/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
   integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==

@@ -111,8 +111,12 @@ module.exports = {
       //filesActions
       Take_a_photo: "Take a photo",
       Choose_from_library: "Choose from library",
-      //filesActions
       Upload_file: "Upload file?",
+      //base/MediaPicker
+      Gallery: "Gallery",
+      Original: "Original",
+      Edit: "Edit",
+      Preview: "Preview",
 
       // rooms
       unTop: "Not Top",
