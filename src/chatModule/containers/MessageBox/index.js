@@ -92,9 +92,7 @@ export default class MessageBox extends React.PureComponent {
       showEmojiKeyboard: false,
       showFilesAction: false,
       recording: false,
-      file: {
-        isVisible: false
-      },
+      filesaction: "",
       inputToolbarFloatUp: new Animated.Value(0)
     };
     this.users = [];
@@ -307,14 +305,15 @@ export default class MessageBox extends React.PureComponent {
   };
 
   sendImageMessage = async file => {
-    this.setState({ file: { isVisible: false } });
+    this.setState({ filesaction: "" });
     const fileInfo = {
       name: file.name ? file.name : `${file.path.split("/").pop()}`,
       description: file.description,
       size: file.size,
-      type: file.mime ? file.mime : `image/${file.path.split(".").pop()}`,
+      type: file.type ? file.type : `image/${file.path.split(".").pop()}`,
       store: "Uploads",
-      path: file.path
+      path: file.path,
+      base64: file.base64
     };
     try {
       await RocketChat.sendFileMessage(this.props.rid, fileInfo);
@@ -357,7 +356,7 @@ export default class MessageBox extends React.PureComponent {
   };
 
   showUploadModal = filesAction => {
-    this.setState({ file: { action: filesAction, isVisible: true } });
+    this.setState({ filesaction: filesAction });
     this.openModal();
   };
 
@@ -818,11 +817,14 @@ export default class MessageBox extends React.PureComponent {
       ),
       this.renderFilesActions(),
       <ActionModal ref={ref => (this.actionModalRef = ref)}>
-        {this.state.file.action === "chooseFromLibrary" ? (
-          <MediaPicker closeModal={this.closeModal} {...this.props} />
+        {this.state.filesaction === "chooseFromLibrary" ? (
+          <MediaPicker
+            closeModal={this.closeModal}
+            onSend={this.sendImageMessage}
+          />
         ) : null}
-        {this.state.file.action === "takePhoto" ? (
-          <MediaPicker closeModal={this.closeModal} {...this.props} />
+        {this.state.filesaction === "takePhoto" ? (
+          <MediaPicker closeModal={this.closeModal} />
         ) : null}
       </ActionModal>,
       this.state.showEmojiKeyboard ? (
@@ -834,11 +836,3 @@ export default class MessageBox extends React.PureComponent {
     ];
   }
 }
-
-// {/* <UploadModal
-//         key="upload-modal"
-//         isVisible={this.state.file && this.state.file.isVisible}
-//         file={this.state.file}
-//         close={() => this.setState({ file: {} })}
-//         submit={this.sendImageMessage}
-//       /> */}
