@@ -22,6 +22,30 @@ import { SelectionButtonStyles } from "../../styles/SelectionButtonStyles";
 
 const DEFAULTMEDIAGROUP = "Camera Roll"; //默认打开的相册
 
+const sendSelectedFiles = (selectedDataSource, compressRate, nextFunc) => {
+  for (let datasource of selectedDataSource.values()) {
+    let uri = datasource.photo;
+    let name = datasource.caption;
+
+    if (compressRate >= 0 && compressRate <= 1) {
+      //未选择原图,从ImageManipulator中获取图片，并compress
+      compress(uri, compressRate, function(err, response) {
+        if (response) {
+          //正常
+          let file = {};
+          file.name = name;
+          file.path = response.uri;
+          file.type = "image/jpeg";
+          nextFunc(file);
+        } else {
+          //load compress 错误
+          console.log("compress error");
+        }
+      });
+    }
+  }
+};
+
 class MediaFullScreenBrowserScreen extends Component {
   state = {
     displayHeader: true
@@ -145,51 +169,21 @@ class MediaFullScreenBrowserScreen extends Component {
   // 发送
   sendButtonPressed = () => {
     let selectedDataSource = this.props.navigation.state.params.dataSourceTmp;
-    for (let datasource of selectedDataSource.values()) {
-      console.log(
-        "sendButtonPressed in fullScreenLayout: " + JSON.stringify(datasource)
-      );
 
-      if (datasource) {
-        let uri = datasource.photo;
-        let name = datasource.caption;
-        let destPath = FileSystem.cacheDirectory + name;
-
-        loadAndCompress(
-          uri,
-          destPath,
-          name,
-          0,
-          function(err, response) {
-            // 将图片加载到app cache中，并compress
-            if (response) {
-              //正常
-              console.log(response);
-
-              // var message = {
-              //   id:
-              //     this.props.screenProps.roomId +
-              //     "-" +
-              //     this.props.screenProps.myId +
-              //     "-" +
-              //     uuid1(),
-              //   // text: 'text',
-              //   image: response.uri,
-              //   imageName: name,
-              //   userId: this.props.screenProps.myId,
-              //   roomId: this.props.screenProps.roomId,
-              //   createdAtClient: new Date(),
-              //   status: MESSAGESTATUS.C2IMGS_ING
-              // };
-              // this.props.screenProps.closeModal();
-              // this.props.screenProps.onSend(message);
-            } else {
-              //load compress 错误
-              console.log("load and compress error");
-            }
-          }.bind(this)
-        );
-      }
+    if (
+      this.mediaFullScreenBrowserRef.bottomToolBarRef.state.selectedIndex === 0
+    ) {
+      //选择发送原图
+      sendSelectedFiles(selectedDataSource, 1, file => {
+        this.props.screenProps.closeModal();
+        this.props.screenProps.onSend(file);
+      });
+    } else {
+      //未选择发送原图
+      sendSelectedFiles(selectedDataSource, 0, file => {
+        this.props.screenProps.closeModal();
+        this.props.screenProps.onSend(file);
+      });
     }
   };
 
@@ -211,6 +205,7 @@ class MediaFullScreenBrowserScreen extends Component {
     let selectedMediaList = Array.from(params.selectedDataSource.values());
     return (
       <MediaFullScreenBrowser
+        ref={ref => (this.mediaFullScreenBrowserRef = ref)}
         mediaList={selectedMediaList}
         scrolledToItem={this._scrolledToItem.bind(this)}
         selectedNum={
@@ -303,58 +298,21 @@ class MediaGridBrowserScreen extends Component {
 
   // 发送
   sendButtonPressed = selectedDataSource => {
-    for (let datasource of selectedDataSource.values()) {
-      console.log(
-        "sendButtonPressed in gridLayout: " + JSON.stringify(datasource)
-      );
-
-      let uri = datasource.photo;
-      let name = datasource.caption;
-
-      if (
-        this.mediaGridBrowserContainerRef.mediaGridBrowserRef.bottomToolBarRef
-          .state.selectedIndex === 0
-      ) {
-        //选择发送原图
-        var message = {
-          id:
-            this.props.screenProps.roomId +
-            "-" +
-            this.props.screenProps.myId +
-            "-" +
-            uuid1(),
-          // text: 'text',
-          image: uri,
-          imageName: name,
-          userId: this.props.screenProps.myId,
-          roomId: this.props.screenProps.roomId,
-          createdAtClient: new Date(),
-          status: MESSAGESTATUS.C2IMGS_ING
-        };
+    if (
+      this.mediaGridBrowserContainerRef.mediaGridBrowserRef.bottomToolBarRef
+        .state.selectedIndex === 0
+    ) {
+      //选择发送原图
+      sendSelectedFiles(selectedDataSource, 1, file => {
         this.props.screenProps.closeModal();
-        this.props.screenProps.onSend(message);
-      } else {
-        //未选择原图
-        compress(
-          uri,
-          0,
-          function(err, response) {
-            // 将图片加载到app cache中，并compress
-            if (response) {
-              //正常
-              let file = {};
-              file.name = name;
-              file.path = response.uri;
-              file.type = "image/jpeg";
-              this.props.screenProps.closeModal();
-              this.props.screenProps.onSend(file);
-            } else {
-              //load compress 错误
-              console.log("load and compress error");
-            }
-          }.bind(this)
-        );
-      }
+        this.props.screenProps.onSend(file);
+      });
+    } else {
+      //未选择发送原图
+      sendSelectedFiles(selectedDataSource, 0, file => {
+        this.props.screenProps.closeModal();
+        this.props.screenProps.onSend(file);
+      });
     }
   };
 

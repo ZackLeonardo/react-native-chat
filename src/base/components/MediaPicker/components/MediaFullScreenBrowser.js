@@ -76,6 +76,7 @@ export default class MediaFullScreenBrowser extends React.Component {
       >
         {fullScreenLayout}
         <BottomToolBar
+          ref={ref => (this.bottomToolBarRef = ref)}
           height={PADDINGTOP}
           displayed={displayBottomBar}
           leftButtonText={leftButtonText}
