@@ -1,5 +1,3 @@
-import { Base64 } from "js-base64";
-
 import { store as reduxStore } from "../../../src";
 import database from "../../../main/ran-db/sqlite";
 import Expo, { FileSystem } from "expo";
@@ -54,38 +52,25 @@ export async function sendFileMessage(rid, fileInfo) {
 
     const result = await _ufsCreate.call(this, fileInfo);
 
-    const imageData = await fetch(fileInfo.path);
-    const blob = await imageData._bodyText; //.blob();
-
-    let formData = new FormData();
-    formData.append("file", {
-      uri: fileInfo.path,
-      name: fileInfo.name,
-      type: "image/jpeg" //fileInfo.type
-    });
-    // formData.append("file", {
-    //   uri: fileInfo.path,
-    //   name: fileInfo.name,
-    //   type: "image" //fileInfo.type
-    // });
-
-    let options = {
-      method: "POST",
-      body: blob,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data"
-      }
-    };
-
-    const request = new XMLHttpRequest();
-    request.open("POST", result.url);
-    request.responseType = "json";
-
-    await request.send(formData);
-
-    // await fetch(result.url, options);
-    // console.log(uploadResponse.json());
+    let options = null;
+    await fetch(fileInfo.path)
+      .then(response => {
+        return response.blob();
+      })
+      .then(blob => {
+        options = {
+          method: "POST",
+          cache: "no-cache",
+          headers: {
+            Accept: "*/*",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Content-Length": fileInfo.size,
+            "Content-Type": fileInfo.type
+          },
+          body: blob
+        };
+      });
+    await fetch(result.url, options);
 
     fileInfo.progress = 100;
     await database.create("uploads", fileInfo, true);

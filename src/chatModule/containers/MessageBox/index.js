@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { emojify } from "react-emojione";
 // import { KeyboardAccessoryView } from "react-native-keyboard-input";
 import InputToolbar from "../InputToolbar";
-import { ImagePicker, Permissions } from "expo";
+import { Permissions } from "expo";
 
 import { userTyping } from "../../actions/room";
 import RocketChat from "../../lib/rocketchat";
@@ -27,10 +27,8 @@ import styles from "./styles";
 import database from "../../../main/ran-db/sqlite";
 import Avatar from "../Avatar";
 import CustomEmoji from "../EmojiPicker/CustomEmoji";
-import { emojis } from "../../emojis";
 import Recording from "./Recording";
 import FilesActions from "./FilesActions";
-import UploadModal from "./UploadModal";
 import EmojiKeyboard from "./EmojiKeyboard";
 import log from "../../utils/log";
 import ReplyPreview from "./ReplyPreview";
@@ -310,10 +308,10 @@ export default class MessageBox extends React.PureComponent {
       name: file.name ? file.name : `${file.path.split("/").pop()}`,
       description: file.description,
       size: file.size,
-      type: file.type ? file.type : `image/${file.path.split(".").pop()}`,
+      type: file.type ? file.type : "image/jpeg", //`image/${file.path.split(".").pop()}`,
       store: "Uploads",
       path: file.path,
-      base64: file.base64
+      data: file.base64
     };
     try {
       await RocketChat.sendFileMessage(this.props.rid, fileInfo);

@@ -17,7 +17,7 @@ import MediaGridBrowserContainer from "./containers/MediaGridBrowserContainer";
 import MediaFullScreenBrowser from "./components/MediaFullScreenBrowser";
 import BackButton from "./components/BackButton";
 import PhoneMediaList from "./components/PhoneMediaList";
-import { loadAndCompress } from "../../utils/ImageManipulatorUtil";
+import { compress } from "../../utils/ImageManipulatorUtil";
 import { SelectionButtonStyles } from "../../styles/SelectionButtonStyles";
 
 const DEFAULTMEDIAGROUP = "Camera Roll"; //默认打开的相册
@@ -310,7 +310,6 @@ class MediaGridBrowserScreen extends Component {
 
       let uri = datasource.photo;
       let name = datasource.caption;
-      let destPath = FileSystem.cacheDirectory + name;
 
       if (
         this.mediaGridBrowserContainerRef.mediaGridBrowserRef.bottomToolBarRef
@@ -336,32 +335,19 @@ class MediaGridBrowserScreen extends Component {
         this.props.screenProps.onSend(message);
       } else {
         //未选择原图
-        loadAndCompress(
+        compress(
           uri,
-          destPath,
-          name,
           0,
           function(err, response) {
             // 将图片加载到app cache中，并compress
             if (response) {
               //正常
-              var message = {
-                id:
-                  this.props.screenProps.roomId +
-                  "-" +
-                  this.props.screenProps.myId +
-                  "-" +
-                  uuid1(),
-                // text: 'text',
-                image: response.uri,
-                imageName: name,
-                userId: this.props.screenProps.myId,
-                roomId: this.props.screenProps.roomId,
-                createdAtClient: new Date(),
-                status: MESSAGESTATUS.C2IMGS_ING
-              };
+              let file = {};
+              file.name = name;
+              file.path = response.uri;
+              file.type = "image/jpeg";
               this.props.screenProps.closeModal();
-              this.props.screenProps.onSend(message);
+              this.props.screenProps.onSend(file);
             } else {
               //load compress 错误
               console.log("load and compress error");
