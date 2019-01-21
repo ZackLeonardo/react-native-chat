@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, CameraRoll } from "react-native";
+import { CameraRoll } from "react-native";
 import PropTypes from "prop-types";
 
 import MediaGridBrowser from "../components/MediaGridBrowser";

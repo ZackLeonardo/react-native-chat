@@ -27,8 +27,17 @@ const sendSelectedFiles = (selectedDataSource, compressRate, nextFunc) => {
     let uri = datasource.photo;
     let name = datasource.caption;
 
-    if (compressRate >= 0 && compressRate <= 1) {
-      //未选择原图,从ImageManipulator中获取图片，并compress
+    let fileType = uri
+      .split("ext=")
+      .pop()
+      .toLowerCase();
+
+    if (!datasource.isVideo) {
+      //图片
+      if (compressRate < 0 || compressRate > 1) {
+        compressRate = 0;
+      }
+      //从uri中获取图片，并compress
       compress(uri, compressRate, function(err, response) {
         if (response) {
           //正常
@@ -42,6 +51,16 @@ const sendSelectedFiles = (selectedDataSource, compressRate, nextFunc) => {
           console.log("compress error");
         }
       });
+    } else {
+      //视频
+      // let destPath = FileSystem.cacheDirectory + name;
+      // FileSystem.copyAsync({ from: uri, to: destPath }).then(() => {
+      //   let file = {};
+      //   file.name = name;
+      //   file.path = destPath;
+      //   file.type = `video/${fileType}`;
+      //   nextFunc(file);
+      // });
     }
   }
 };
