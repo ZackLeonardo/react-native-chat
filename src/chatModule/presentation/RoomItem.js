@@ -141,7 +141,7 @@ export default class RoomItem extends React.Component {
     _updatedAt: PropTypes.string,
     lastMessage: PropTypes.string,
     showLastMessage: PropTypes.bool,
-    favorite: PropTypes.string,
+    favorite: PropTypes.number,
     alert: PropTypes.number,
     unread: PropTypes.number,
     userMentions: PropTypes.number,

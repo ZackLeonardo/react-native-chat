@@ -14,6 +14,7 @@ import equal from "deep-equal";
 import PubSub from "pubsub-js";
 import { RectButton } from "react-native-gesture-handler";
 import Icon from "@expo/vector-icons/Ionicons"; //ios-star-outline
+import { NavigationActions } from "react-navigation";
 
 import LoggedView from "../View";
 import { List } from "./ListView";
@@ -30,7 +31,6 @@ import UploadProgress from "./UploadProgress";
 import styles from "./styles";
 import log from "../../utils/log";
 import debounce from "../../utils/debounce";
-import { iconsMap } from "../../Icons";
 
 @connect(
   state => ({
@@ -93,14 +93,20 @@ export default class RoomView extends LoggedView {
       headerRight: (
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
+            disabled={navigation.state.params.toggleFavoriteDisabled}
             onPress={() => {
-              navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.chat.New_Message"),
-                onPressItem: navigation.state.params.onPressItem
-              });
+              navigation.state.params.toggleFavorite();
             }}
           >
-            <Icon name="ios-star" size={22} color="#4674F1" />
+            <Icon
+              name={
+                navigation.state.params.favorite
+                  ? "ios-star"
+                  : "ios-star-outline"
+              }
+              size={22}
+              color="#4674F1"
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginHorizontal: 15 }}
@@ -118,6 +124,14 @@ export default class RoomView extends LoggedView {
     };
   };
 
+  componentWillMount() {
+    this.props.navigation.setParams({
+      toggleFavorite: this._toggleFavorite,
+      toggleFavoriteDisabled: false,
+      favorite: this.state.room.f
+    });
+  }
+
   async componentDidMount() {
     this.rooms = await database.objects(
       "subscriptions",
@@ -130,11 +144,6 @@ export default class RoomView extends LoggedView {
     if (!this.roomsToken) {
       this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom());
     }
-    // this.rooms.addListener(this.updateRoom);
-    // this.props.navigator.setDrawerEnabled({
-    //   side: "left",
-    //   enabled: false
-    // });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -147,6 +156,9 @@ export default class RoomView extends LoggedView {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.room.f !== this.state.room.f) {
+      this.props.navigation.setParams({
+        favorite: this.state.room.f
+      });
       // this.props.navigator.setButtons({
       //   rightButtons: [
       //     {
@@ -163,6 +175,43 @@ export default class RoomView extends LoggedView {
       // });
     }
   }
+
+  setNavigationActions = actions => {
+    const setParamsAction = NavigationActions.setParams({
+      ...actions
+    });
+    this.props.navigation.dispatch(setParamsAction);
+  };
+
+  _toggleFavorite = () => {
+    this.props.navigation.setParams({
+      toggleFavoriteDisabled: true
+    });
+    try {
+      RocketChat.toggleFavorite(this.state.room.rid, this.state.room.f).then(
+        ret => {
+          if (ret) {
+            // success: ret = 1
+            this.setNavigationActions({
+              params: {
+                favorite: !this.props.navigation.state.params.favorite
+              },
+              key: this.props.navigation.state.key
+            });
+          } else {
+          }
+          this.props.navigation.setParams({
+            toggleFavoriteDisabled: false
+          });
+        }
+      );
+    } catch (e) {
+      log("toggleFavorite", e);
+      this.props.navigation.setParams({
+        toggleFavoriteDisabled: false
+      });
+    }
+  };
 
   removeListener = token => {
     if (token) {
@@ -241,6 +290,9 @@ export default class RoomView extends LoggedView {
       const { room: prevRoom } = this.state;
       const room = JSON.parse(JSON.stringify(this.rooms[0]));
       this.setState({ room });
+      // this.props.navigation.setParams({
+      //   favoriteIcon: this.state.room.f ? "ios-star" : "ios-star-outline"
+      // });
 
       if (!prevRoom.rid) {
         // this.props.navigator.setTitle({ title: room.name });
