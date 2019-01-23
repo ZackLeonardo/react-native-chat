@@ -10,6 +10,7 @@ import {
   Image
 } from "react-native";
 import { connect } from "react-redux";
+import Icon from "@expo/vector-icons/Ionicons";
 
 import database from "../../main/ran-db/sqlite";
 import RocketChat from "../lib/rocketchat";
@@ -56,7 +57,15 @@ const styles = StyleSheet.create({
 export default class NewMessageView extends LoggedView {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam("title")
+      title: navigation.getParam("title"),
+      headerBackImage: (
+        <Icon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      )
     };
   };
 

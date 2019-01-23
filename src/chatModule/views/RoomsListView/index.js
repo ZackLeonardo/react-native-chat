@@ -103,9 +103,7 @@ export default class RoomsListView extends LoggedView {
               });
             }}
           >
-            <Image
-              source={require("../../Icons/new_channel.imageset/new_channel.png")}
-            />
+            <Icon name="md-add" size={22} color="#4674F1" />
           </TouchableOpacity>
         </View>
       ),
@@ -202,34 +200,6 @@ export default class RoomsListView extends LoggedView {
       clearTimeout(this.timeout);
     }
   }
-
-  // onNavigatorEvent(event) {
-  //   const { navigation } = this.props;
-  //   if (event.type === "NavBarButtonPress") {
-  //     if (event.id === "newMessage") {
-  //       this.props.navigation.navigate("NewMessageView", {
-  //         title: this.props.translate("ran.roomsListView.New_Message"),
-  //         onPressItem: this._onPressItem
-  //       });
-  //     } else if (event.id === "settings") {
-  //       navigation.toggleDrawer({
-  //         side: "left"
-  //       });
-  //     } else if (event.id === "search") {
-  //       this.initSearchingAndroid();
-  //     } else if (event.id === "cancelSearch" || event.id === "back") {
-  //       this.cancelSearchingAndroid();
-  //     }
-  //   } else if (
-  //     event.type === "ScreenChangedEvent" &&
-  //     event.id === "didAppear"
-  //   ) {
-  //     navigation.setDrawerEnabled({
-  //       side: "left",
-  //       enabled: true
-  //     });
-  //   }
-  // }
 
   getUnread = async condition => {
     let unread = await database.objects(
@@ -433,18 +403,6 @@ export default class RoomsListView extends LoggedView {
       PubSub.unsubscribe(token);
     }
   };
-
-  // initDefaultHeader = () => {
-  //   const { navigation } = this.props;
-  //   navigation.setButtons({ leftButtons, rightButtons });
-  //   navigation.setStyle({
-  //     navBarCustomView: "RoomsListHeaderView",
-  //     navBarComponentAlignment: "fill",
-  //     navBarBackgroundColor: isAndroid() ? "#2F343D" : undefined,
-  //     navBarTextColor: isAndroid() ? "#FFF" : undefined,
-  //     navBarButtonColor: isAndroid() ? "#FFF" : undefined
-  //   });
-  // };
 
   initSearchingAndroid = () => {
     const { navigation } = this.props;

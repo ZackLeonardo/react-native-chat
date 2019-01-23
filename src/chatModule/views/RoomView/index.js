@@ -75,6 +75,7 @@ export default class RoomView extends LoggedView {
     super("RoomView", props);
     this.rid = this.props.navigation.state.params.rid;
     this.rooms = null;
+    this.roomsToken = null;
     this.rooms;
     this.state = {
       loaded: false,
@@ -83,13 +84,21 @@ export default class RoomView extends LoggedView {
       end: false
     };
     this.onReactionPress = this.onReactionPress.bind(this);
-    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   static navigationOptions = props => {
     const { navigation, screenProps } = props;
     return {
       title: navigation.getParam("title"),
+      headerBackTitle: null,
+      headerBackImage: (
+        <Icon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      ),
       headerRight: (
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
@@ -111,9 +120,9 @@ export default class RoomView extends LoggedView {
           <TouchableOpacity
             style={{ marginHorizontal: 15 }}
             onPress={() => {
-              navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.chat.New_Message"),
-                onPressItem: navigation.state.params.onPressItem
+              navigation.navigate("RoomActionsView", {
+                title: screenProps.translate("ran.chat.Actions"),
+                rid: navigation.state.params.rid
               });
             }}
           >
@@ -159,20 +168,6 @@ export default class RoomView extends LoggedView {
       this.props.navigation.setParams({
         favorite: this.state.room.f
       });
-      // this.props.navigator.setButtons({
-      //   rightButtons: [
-      //     {
-      //       id: "more",
-      //       testID: "room-view-header-actions",
-      //       icon: iconsMap.more
-      //     },
-      //     {
-      //       id: "star",
-      //       testID: "room-view-header-star",
-      //       icon: this.state.room.f ? iconsMap.star : iconsMap.starOutline
-      //     }
-      //   ]
-      // });
     }
   }
 
@@ -194,7 +189,7 @@ export default class RoomView extends LoggedView {
             // success: ret = 1
             this.setNavigationActions({
               params: {
-                favorite: !this.props.navigation.state.params.favorite
+                favorite: !this.state.room.f
               },
               key: this.props.navigation.state.key
             });
@@ -220,7 +215,6 @@ export default class RoomView extends LoggedView {
   };
 
   componentWillUnmount() {
-    // this.rooms.removeAllListeners();
     this.removeListener(this.roomsToken);
     this.onEndReached.stop();
     this.props.close();
