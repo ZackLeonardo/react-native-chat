@@ -187,14 +187,32 @@ export default class MessageContainer extends React.Component {
       role
     } = item;
     const isEditing = message._id === item._id && editing;
-    let attachmentsNew = attachments ? JSON.parse(attachments) : [];
-    let urlsNew = urls ? JSON.parse(urls) : [];
-    let reactionsNew = reactions ? JSON.parse(reactions) : [];
+    let attachmentsNew = attachments
+      ? typeof attachments !== "object"
+        ? JSON.parse(attachments)
+        : attachments
+      : [];
+    let urlsNew = urls
+      ? typeof urls !== "object"
+        ? JSON.parse(urls)
+        : urls
+      : [];
+    let reactionsNew = reactions
+      ? typeof reactions !== "object"
+        ? JSON.parse(reactions)
+        : reactions
+      : [];
+    let uNew = u ? (typeof u !== "object" ? JSON.parse(u) : u) : [];
+    let editedByNew = editedBy
+      ? typeof editedBy !== "object"
+        ? JSON.parse(editedBy)
+        : editedBy
+      : [];
 
     return (
       <Message
         msg={msg}
-        author={JSON.parse(u)}
+        author={uNew}
         ts={ts}
         type={t}
         status={status}
@@ -206,7 +224,7 @@ export default class MessageContainer extends React.Component {
         header={this.isHeader()}
         avatar={avatar}
         user={user}
-        edited={JSON.parse(editedBy) && !!JSON.parse(editedBy).username}
+        edited={editedByNew && !!editedByNew.username}
         timeFormat={this.timeFormat}
         style={style}
         archived={archived}

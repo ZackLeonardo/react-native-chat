@@ -22,6 +22,8 @@ import NewMessageView from "./views/NewMessageView";
 import SettingsView from "./views/SettingsView";
 import RoomView from "./views/RoomView";
 import CreateChannelView from "./views/CreateChannelView";
+import RoomActionsView from "./views/RoomActionsView";
+import RoomFilesView from "./views/RoomFilesView";
 
 import Sidebar from "./containers/Sidebar";
 
@@ -160,6 +162,12 @@ const StackNavigator = createStackNavigator(
     },
     RoomView: {
       screen: gestureHandlerRootHOC(RoomView)
+    },
+    RoomActionsView: {
+      screen: RoomActionsView
+    },
+    RoomFilesView: {
+      screen: gestureHandlerRootHOC(RoomFilesView)
     }
   },
   {
@@ -208,8 +216,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import OnboardingView from "./OnboardingView";
 // import PinnedMessagesView from './PinnedMessagesView';
 // import ProfileView from './ProfileView';
-// import RoomActionsView from './RoomActionsView';
-// import RoomFilesView from './RoomFilesView';
 // import RoomInfoEditView from './RoomInfoEditView';
 // import RoomInfoView from './RoomInfoView';
 // import RoomMembersView from './RoomMembersView';
@@ -239,8 +245,7 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // Navigation.registerComponent('PrivacyPolicyView', () => PrivacyPolicyView, store, Provider);
 // Navigation.registerComponent('ProfileView', () => ProfileView, store, Provider);
 // Navigation.registerComponent('RegisterView', () => RegisterView, store, Provider);
-// Navigation.registerComponent('RoomActionsView', () => RoomActionsView, store, Provider);
-// Navigation.registerComponent('RoomFilesView', () => gestureHandlerRootHOC(RoomFilesView), store, Provider);
+
 // Navigation.registerComponent('RoomInfoEditView', () => RoomInfoEditView, store, Provider);
 // Navigation.registerComponent('RoomInfoView', () => RoomInfoView, store, Provider);
 // Navigation.registerComponent('RoomMembersView', () => RoomMembersView, store, Provider);
