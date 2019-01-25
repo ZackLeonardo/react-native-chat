@@ -73,9 +73,12 @@ export default class RoomActionsView extends LoggedView {
 
   async componentDidMount() {
     await this.updateRoom();
+    this.sections = await this.getSections();
     if (!this.roomsToken) {
       this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom);
     }
+
+    this.canViewMembers = await this.getCanViewMembers();
 
     const [members, member] = await Promise.all([
       this.updateRoomMembers(),
@@ -106,7 +109,7 @@ export default class RoomActionsView extends LoggedView {
     }
   };
 
-  get canAddUser() {
+  getCanAddUser = async () => {
     // Invite user
     const { rid, t } = this.room;
     const { allMembers } = this.state;
@@ -114,7 +117,7 @@ export default class RoomActionsView extends LoggedView {
     const userInRoom = !!allMembers.find(
       m => m.username === this.props.username
     );
-    const permissions = RocketChat.hasPermission(
+    const permissions = await RocketChat.hasPermission(
       [
         "add-user-to-joined-room",
         "add-user-to-any-c-room",
@@ -133,12 +136,12 @@ export default class RoomActionsView extends LoggedView {
       return true;
     }
     return false;
-  }
-  get canViewMembers() {
+  };
+  getCanViewMembers = async () => {
     const { rid, t, broadcast } = this.state.room;
     if (broadcast) {
       const viewBroadcastMemberListPermission = "view-broadcast-member-list";
-      const permissions = RocketChat.hasPermission(
+      const permissions = await RocketChat.hasPermission(
         [viewBroadcastMemberListPermission],
         rid
       );
@@ -147,8 +150,8 @@ export default class RoomActionsView extends LoggedView {
       }
     }
     return t === "c" || t === "p";
-  }
-  get sections() {
+  };
+  getSections = async () => {
     const { rid, t, blocker, notifications } = this.room;
     const { onlineMembers } = this.state;
 
@@ -235,7 +238,7 @@ export default class RoomActionsView extends LoggedView {
           {
             icon: `ios-notifications${notifications ? "" : "-off"}`,
             name: this.props.screenProps.translate(
-              `ran.chat.${notifications ? "Disable" : "Enable"}_notifications`
+              `ran.chat.${notifications ? "Enable" : "Disable"}_notifications`
             ),
             event: () => this.toggleNotifications(),
             testID: "room-actions-notifications"
@@ -278,7 +281,8 @@ export default class RoomActionsView extends LoggedView {
         });
       }
 
-      if (this.canAddUser) {
+      const canAddUser = await this.getCanViewMembers();
+      if (canAddUser) {
         actions.push({
           icon: "ios-person-add",
           name: this.props.screenProps.translate("ran.chat.Add_user"),
@@ -305,12 +309,12 @@ export default class RoomActionsView extends LoggedView {
       });
     }
     return sections;
-  }
+  };
 
   updateRoomMembers = async () => {
     const { t } = this.state.room;
 
-    if (!this.canViewMembers) {
+    if (this.canViewMembers) {
       return {};
     }
 
@@ -402,7 +406,7 @@ export default class RoomActionsView extends LoggedView {
       RocketChat.saveNotificationSettings(
         room.rid,
         "mobilePushNotifications",
-        room.notifications ? "nothing" : "default"
+        room.notifications ? "default" : "nothing"
       );
     } catch (e) {
       log("toggleNotifications", e);
@@ -543,7 +547,7 @@ export default class RoomActionsView extends LoggedView {
         <SectionList
           style={styles.container}
           stickySectionHeadersEnabled={false}
-          sections={this.room ? this.sections : []}
+          sections={this.room ? (this.sections ? this.sections : []) : []}
           extraData={this.state.room}
           SectionSeparatorComponent={this.renderSectionSeparator}
           ItemSeparatorComponent={renderSeparator}

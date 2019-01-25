@@ -123,7 +123,7 @@ export default class RoomInfoView extends LoggedView {
           log("RoomInfoView.componentDidMount", e);
         }
       } else {
-        const permissions = RocketChat.hasPermission(
+        const permissions = await RocketChat.hasPermission(
           [PERMISSION_EDIT_ROOM],
           this.state.room.rid
         );

@@ -932,17 +932,24 @@ const RocketChat = {
     users = users.map(u => u.name);
     return call("addUsersToRoom", { rid, users });
   },
-  hasPermission(permissions, rid) {
+  async hasPermission(permissions, rid) {
     // get the room from realm
-    const room = database.objects("subscriptions").filtered("rid = $0", rid)[0];
+    // const room = database.objects("subscriptions").filtered("rid = $0", rid)[0];
+    const rooms = await database.objects(
+      "subscriptions",
+      `WHERE rid ="${rid}"`
+    );
     // get permissions from realm
-    const permissionsFiltered = database
-      .objects("permissions")
-      .filter(permission => permissions.includes(permission._id));
+    const permissionsGot = await database.objects("permissions");
+    const permissionsFiltered = permissionsGot.filter(permission =>
+      permissions.includes(permission._id)
+    );
     // get room roles
-    const { roles } = room;
+    const { roles } = rooms[0];
     // transform room roles to array
-    const roomRoles = Array.from(Object.keys(roles), i => roles[i].value);
+    const roomRoles = roles
+      ? Array.from(Object.keys(roles), i => roles[i].value)
+      : [];
     // get user roles on the server from redux
     const userRoles =
       (reduxStore.getState().login.user &&

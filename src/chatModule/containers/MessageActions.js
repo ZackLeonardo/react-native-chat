@@ -132,13 +132,16 @@ export default class MessageActions extends React.Component {
     });
   }
 
-  setPermissions() {
+  async setPermissions() {
     const permissions = [
       "edit-message",
       "delete-message",
       "force-delete-message"
     ];
-    const result = RocketChat.hasPermission(permissions, this.props.room.rid);
+    const result = await RocketChat.hasPermission(
+      permissions,
+      this.props.room.rid
+    );
     this.hasEditPermission = result[permissions[0]];
     this.hasDeletePermission = result[permissions[1]];
     this.hasForceDeletePermission = result[permissions[2]];
