@@ -2,18 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FlatList, View, Text, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
+import ActionSheet from "react-native-actionsheet";
 import Icon from "@expo/vector-icons/Ionicons";
 
 import LoggedView from "../View";
-import { openRoomFiles, closeRoomFiles } from "../../actions/roomFiles";
+import {
+  openStarredMessages,
+  closeStarredMessages
+} from "../../actions/starredMessages";
 import styles from "./styles";
 import Message from "../../containers/message";
+import { toggleStarRequest } from "../../actions/messages";
 import RCActivityIndicator from "../../containers/ActivityIndicator";
+
+const STAR_INDEX = 0;
+const CANCEL_INDEX = 1;
 
 @connect(
   state => ({
-    messages: state.roomFiles.messages,
-    ready: state.roomFiles.ready,
+    messages: state.starredMessages.messages,
+    ready: state.starredMessages.ready,
     user: {
       id: state.login.user && state.login.user.id,
       username: state.login.user && state.login.user.username,
@@ -21,24 +29,28 @@ import RCActivityIndicator from "../../containers/ActivityIndicator";
     }
   }),
   dispatch => ({
-    openRoomFiles: (rid, limit) => dispatch(openRoomFiles(rid, limit)),
-    closeRoomFiles: () => dispatch(closeRoomFiles())
+    openStarredMessages: (rid, limit) =>
+      dispatch(openStarredMessages(rid, limit)),
+    closeStarredMessages: () => dispatch(closeStarredMessages()),
+    toggleStarRequest: message => dispatch(toggleStarRequest(message))
   })
 )
 /** @extends React.Component */
-export default class RoomFilesView extends LoggedView {
+export default class StarredMessagesView extends LoggedView {
   static propTypes = {
     rid: PropTypes.string,
     messages: PropTypes.array,
     ready: PropTypes.bool,
     user: PropTypes.object,
-    openRoomFiles: PropTypes.func,
-    closeRoomFiles: PropTypes.func
+    openStarredMessages: PropTypes.func,
+    closeStarredMessages: PropTypes.func,
+    toggleStarRequest: PropTypes.func
   };
 
   constructor(props) {
-    super("RoomFilesView", props);
+    super("StarredMessagesView", props);
     this.state = {
+      message: {},
       loading: true,
       loadingMore: false
     };
@@ -72,11 +84,28 @@ export default class RoomFilesView extends LoggedView {
   }
 
   componentWillUnmount() {
-    this.props.closeRoomFiles();
+    this.props.closeStarredMessages();
   }
 
+  onLongPress = message => {
+    this.setState({ message });
+    if (this.actionSheet && this.actionSheet.show) {
+      this.actionSheet.show();
+    }
+  };
+
+  handleActionPress = actionIndex => {
+    switch (actionIndex) {
+      case STAR_INDEX:
+        this.props.toggleStarRequest(this.state.message);
+        break;
+      default:
+        break;
+    }
+  };
+
   load = () => {
-    this.props.openRoomFiles(
+    this.props.openStarredMessages(
       this.props.navigation.state.params.rid,
       this.limit
     );
@@ -96,8 +125,10 @@ export default class RoomFilesView extends LoggedView {
   };
 
   renderEmpty = () => (
-    <View style={styles.listEmptyContainer} testID="room-files-view">
-      <Text>{this.props.screenProps.translate("ran.chat.No_files")}</Text>
+    <View style={styles.listEmptyContainer} testID="starred-messages-view">
+      <Text>
+        {this.props.screenProps.translate("ran.chat.No_starred_messages")}
+      </Text>
     </View>
   );
 
@@ -108,18 +139,26 @@ export default class RoomFilesView extends LoggedView {
       reactions={item.reactions}
       user={this.props.user}
       customTimeFormat="MMMM Do YYYY, h:mm:ss a"
+      onLongPress={this.onLongPress}
     />
   );
 
   render() {
+    const { loading, loadingMore } = this.state;
     const { messages, ready } = this.props;
+    const { translate } = this.props.screenProps;
+
+    const options = [
+      translate("ran.chat.Unstar"),
+      translate("ran.chat.Cancel")
+    ];
+
     if (ready && messages.length === 0) {
       return this.renderEmpty();
     }
 
-    const { loading, loadingMore } = this.state;
     return (
-      <SafeAreaView style={styles.list} testID="room-files-view">
+      <SafeAreaView style={styles.list} testID="starred-messages-view">
         <FlatList
           data={messages}
           renderItem={this.renderItem}
@@ -128,6 +167,13 @@ export default class RoomFilesView extends LoggedView {
           onEndReached={this.moreData}
           ListHeaderComponent={loading ? <RCActivityIndicator /> : null}
           ListFooterComponent={loadingMore ? <RCActivityIndicator /> : null}
+        />
+        <ActionSheet
+          ref={o => (this.actionSheet = o)}
+          title={translate("ran.chat.Actions")}
+          options={options}
+          cancelButtonIndex={CANCEL_INDEX}
+          onPress={this.handleActionPress}
         />
       </SafeAreaView>
     );

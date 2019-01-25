@@ -5,15 +5,18 @@ import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 
 import LoggedView from "../View";
-import { openRoomFiles, closeRoomFiles } from "../../actions/roomFiles";
+import {
+  openMentionedMessages,
+  closeMentionedMessages
+} from "../../actions/mentionedMessages";
 import styles from "./styles";
 import Message from "../../containers/message";
 import RCActivityIndicator from "../../containers/ActivityIndicator";
 
 @connect(
   state => ({
-    messages: state.roomFiles.messages,
-    ready: state.roomFiles.ready,
+    messages: state.mentionedMessages.messages,
+    ready: state.mentionedMessages.ready,
     user: {
       id: state.login.user && state.login.user.id,
       username: state.login.user && state.login.user.username,
@@ -21,23 +24,24 @@ import RCActivityIndicator from "../../containers/ActivityIndicator";
     }
   }),
   dispatch => ({
-    openRoomFiles: (rid, limit) => dispatch(openRoomFiles(rid, limit)),
-    closeRoomFiles: () => dispatch(closeRoomFiles())
+    openMentionedMessages: (rid, limit) =>
+      dispatch(openMentionedMessages(rid, limit)),
+    closeMentionedMessages: () => dispatch(closeMentionedMessages())
   })
 )
 /** @extends React.Component */
-export default class RoomFilesView extends LoggedView {
+export default class MentionedMessagesView extends LoggedView {
   static propTypes = {
     rid: PropTypes.string,
     messages: PropTypes.array,
     ready: PropTypes.bool,
     user: PropTypes.object,
-    openRoomFiles: PropTypes.func,
-    closeRoomFiles: PropTypes.func
+    openMentionedMessages: PropTypes.func,
+    closeMentionedMessages: PropTypes.func
   };
 
   constructor(props) {
-    super("RoomFilesView", props);
+    super("MentionedMessagesView", props);
     this.state = {
       loading: true,
       loadingMore: false
@@ -72,11 +76,11 @@ export default class RoomFilesView extends LoggedView {
   }
 
   componentWillUnmount() {
-    this.props.closeRoomFiles();
+    this.props.closeMentionedMessages();
   }
 
   load = () => {
-    this.props.openRoomFiles(
+    this.props.openMentionedMessages(
       this.props.navigation.state.params.rid,
       this.limit
     );
@@ -96,8 +100,10 @@ export default class RoomFilesView extends LoggedView {
   };
 
   renderEmpty = () => (
-    <View style={styles.listEmptyContainer} testID="room-files-view">
-      <Text>{this.props.screenProps.translate("ran.chat.No_files")}</Text>
+    <View style={styles.listEmptyContainer} testID="mentioned-messages-view">
+      <Text>
+        {this.props.screenProps.translate("ran.chat.No_mentioned_messages")}
+      </Text>
     </View>
   );
 
@@ -112,14 +118,15 @@ export default class RoomFilesView extends LoggedView {
   );
 
   render() {
+    const { loading, loadingMore } = this.state;
     const { messages, ready } = this.props;
+
     if (ready && messages.length === 0) {
       return this.renderEmpty();
     }
 
-    const { loading, loadingMore } = this.state;
     return (
-      <SafeAreaView style={styles.list} testID="room-files-view">
+      <SafeAreaView style={styles.list} testID="mentioned-messages-view">
         <FlatList
           data={messages}
           renderItem={this.renderItem}

@@ -5,15 +5,18 @@ import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 
 import LoggedView from "../View";
-import { openRoomFiles, closeRoomFiles } from "../../actions/roomFiles";
+import {
+  openSnippetedMessages,
+  closeSnippetedMessages
+} from "../../actions/snippetedMessages";
 import styles from "./styles";
 import Message from "../../containers/message";
 import RCActivityIndicator from "../../containers/ActivityIndicator";
 
 @connect(
   state => ({
-    messages: state.roomFiles.messages,
-    ready: state.roomFiles.ready,
+    messages: state.snippetedMessages.messages,
+    ready: state.snippetedMessages.ready,
     user: {
       id: state.login.user && state.login.user.id,
       username: state.login.user && state.login.user.username,
@@ -21,23 +24,24 @@ import RCActivityIndicator from "../../containers/ActivityIndicator";
     }
   }),
   dispatch => ({
-    openRoomFiles: (rid, limit) => dispatch(openRoomFiles(rid, limit)),
-    closeRoomFiles: () => dispatch(closeRoomFiles())
+    openSnippetedMessages: (rid, limit) =>
+      dispatch(openSnippetedMessages(rid, limit)),
+    closeSnippetedMessages: () => dispatch(closeSnippetedMessages())
   })
 )
 /** @extends React.Component */
-export default class RoomFilesView extends LoggedView {
+export default class SnippetedMessagesView extends LoggedView {
   static propTypes = {
     rid: PropTypes.string,
     messages: PropTypes.array,
     ready: PropTypes.bool,
     user: PropTypes.object,
-    openRoomFiles: PropTypes.func,
-    closeRoomFiles: PropTypes.func
+    openSnippetedMessages: PropTypes.func,
+    closeSnippetedMessages: PropTypes.func
   };
 
   constructor(props) {
-    super("RoomFilesView", props);
+    super("SnippetedMessagesView", props);
     this.state = {
       loading: true,
       loadingMore: false
@@ -72,15 +76,15 @@ export default class RoomFilesView extends LoggedView {
   }
 
   componentWillUnmount() {
-    this.props.closeRoomFiles();
+    this.props.closeSnippetedMessages();
   }
 
-  load = () => {
-    this.props.openRoomFiles(
+  load() {
+    this.props.openSnippetedMessages(
       this.props.navigation.state.params.rid,
       this.limit
     );
-  };
+  }
 
   moreData = () => {
     const { loadingMore } = this.state;
@@ -96,8 +100,10 @@ export default class RoomFilesView extends LoggedView {
   };
 
   renderEmpty = () => (
-    <View style={styles.listEmptyContainer} testID="room-files-view">
-      <Text>{this.props.screenProps.translate("ran.chat.No_files")}</Text>
+    <View style={styles.listEmptyContainer} testID="snippeted-messages-view">
+      <Text>
+        {this.props.screenProps.translate("ran.chat.No_snippeted_messages")}
+      </Text>
     </View>
   );
 
@@ -112,14 +118,15 @@ export default class RoomFilesView extends LoggedView {
   );
 
   render() {
+    const { loading, loadingMore } = this.state;
     const { messages, ready } = this.props;
+
     if (ready && messages.length === 0) {
       return this.renderEmpty();
     }
 
-    const { loading, loadingMore } = this.state;
     return (
-      <SafeAreaView style={styles.list} testID="room-files-view">
+      <SafeAreaView style={styles.list} testID="snippeted-messages-view">
         <FlatList
           data={messages}
           renderItem={this.renderItem}

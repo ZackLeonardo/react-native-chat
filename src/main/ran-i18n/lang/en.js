@@ -87,6 +87,22 @@ module.exports = {
       Join: "Join",
       This_room_is_read_only: "This room is read only",
       This_room_is_blocked: "This room is blocked",
+      //message
+      Message_removed: "Message removed",
+      Has_joined_the_channel: "Has joined the channel",
+      Message_pinned: "Message pinned",
+      Room_name_changed: "Room name changed",
+      Has_left_the_channel: "Has left the channel",
+      User_removed_by: "Removed user: ", //'User {{userRemoved}} removed by {{userBy}}',
+      User_added_by: "Added user: ", //'User {{userAdded}} added by {{userBy}}',
+      User_muted_by: "Muted user: ", //'User {{userMuted}} muted by {{userBy}}',
+      User_unmuted_by: "Unmuted user: ", //'User {{userUnmuted}} unmuted by {{userBy}}',
+      Room_changed_description: "Room description changed to: ", //'Room description changed to: {{description}} by {{userBy}}',
+      Room_changed_announcement: "Room announcement changed to: ", //'Room announcement changed to: {{announcement}} by {{userBy}}',
+      Room_changed_topic: "Room topic changed to: ", // 'Room topic changed to: {{topic}} by {{userBy}}',
+      Room_changed_privacy: "Room type changed to: ", // 'Room type changed to: {{type}} by {{userBy}}',
+      Reply: "Reply",
+      Message_accessibility: "Message from ",
       //messageBox
       input: "input",
       send: "send",
@@ -145,6 +161,20 @@ module.exports = {
       Details: "Details",
       //roomFilesView
       No_files: "No files",
+      //mentionedMessagesView
+      No_mentioned_messages: "No mentioned messages",
+      //starredMessagesView
+      Unstar: "Unstar",
+      No_starred_messages: "No starred messages",
+      //searchMessagesView
+      Search_Messages: "Search Messages",
+      You_can_search_using_RegExp_eg:
+        "You can search using RegExp. e.g. `/^text$/i`",
+      //pinnedMessagesView
+      Unpin: "Unpin",
+      No_pinned_messages: "No pinned messages",
+      //snippedMessagesView
+      No_snippeted_messages: "No snippeted messages",
 
       // rooms
       unTop: "Not Top",

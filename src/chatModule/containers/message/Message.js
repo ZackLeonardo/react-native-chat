@@ -9,7 +9,9 @@ import {
   RectButton,
   LongPressGestureHandler
 } from "react-native-gesture-handler";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../../../main/ran-i18n";
 import Image from "./Image";
 import User from "./User";
 import Avatar from "../Avatar";
@@ -21,7 +23,6 @@ import Reply from "./Reply";
 import ReactionsModal from "./ReactionsModal";
 import Emoji from "./Emoji";
 import styles from "./styles";
-// import I18n from "../../i18n";
 import messagesStatus from "../../constants/messagesStatus";
 
 const SYSTEM_MESSAGES = [
@@ -42,49 +43,7 @@ const SYSTEM_MESSAGES = [
   "room_changed_privacy"
 ];
 
-const getInfoMessage = ({ type, role, msg, user }) => {
-  const { username } = user;
-  if (type === "rm") {
-    return 'I18n.t("Message_removed")';
-  } else if (type === "uj") {
-    return 'I18n.t("Has_joined_the_channel")';
-  } else if (type === "r") {
-    return 'I18n.t("Room_name_changed", { name: msg, userBy: username })';
-  } else if (type === "message_pinned") {
-    return 'I18n.t("Message_pinned")';
-  } else if (type === "ul") {
-    return 'I18n.t("Has_left_the_channel")';
-  } else if (type === "ru") {
-    return 'I18n.t("User_removed_by", { userRemoved: msg, userBy: username })';
-  } else if (type === "au") {
-    return 'I18n.t("User_added_by", { userAdded: msg, userBy: username })';
-  } else if (type === "user-muted") {
-    return 'I18n.t("User_muted_by", { userMuted: msg, userBy: username })';
-  } else if (type === "user-unmuted") {
-    return 'I18n.t("User_unmuted_by", { userUnmuted: msg, userBy: username })';
-  } else if (type === "subscription-role-added") {
-    return `${msg} was set ${role} by ${username}`;
-  } else if (type === "subscription-role-removed") {
-    return `${msg} is no longer ${role} by ${username}`;
-  } else if (type === "room_changed_description") {
-    return `I18n.t("Room_changed_description", {
-      description: msg,
-      userBy: username
-    })`;
-  } else if (type === "room_changed_announcement") {
-    return `I18n.t("Room_changed_announcement", {
-      announcement: msg,
-      userBy: username
-    })`;
-  } else if (type === "room_changed_topic") {
-    return 'I18n.t("Room_changed_topic", { topic: msg, userBy: username })';
-  } else if (type === "room_changed_privacy") {
-    return 'I18n.t("Room_changed_privacy", { type: msg, userBy: username })';
-  }
-  return "";
-};
-
-export default class Message extends PureComponent {
+class Message extends PureComponent {
   static propTypes = {
     baseUrl: PropTypes.string.isRequired,
     customEmojis: PropTypes.object.isRequired,
@@ -111,7 +70,7 @@ export default class Message extends PureComponent {
     header: PropTypes.bool,
     avatar: PropTypes.string,
     alias: PropTypes.string,
-    ts: PropTypes.string,
+    ts: PropTypes.oneOfType([PropTypes.string, PropTypes.date]),
     edited: PropTypes.bool,
     attachments: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     urls: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
@@ -195,6 +154,53 @@ export default class Message extends PureComponent {
   };
 
   renderContent() {
+    const getInfoMessage = ({ type, role, msg, user }) => {
+      const { username } = user;
+      const { translate } = this.props;
+      if (type === "rm") {
+        return translate("ran.chat.Message_removed");
+      } else if (type === "uj") {
+        return translate("ran.chat.Has_joined_the_channel");
+      } else if (type === "r") {
+        return translate("ran.chat.Room_name_changed"); //('Room_name_changed', { name: msg, userBy: username });
+      } else if (type === "message_pinned") {
+        return translate("ran.chat.Message_pinned");
+      } else if (type === "ul") {
+        return translate("ran.chat.Has_left_the_channel");
+      } else if (type === "ru") {
+        return translate("ran.chat.User_removed_by") + msg; //'("User_removed_by", { userRemoved: msg, userBy: username })';
+      } else if (type === "au") {
+        return translate("ran.chat.User_added_by") + msg; //'("User_added_by", { userAdded: msg, userBy: username })';
+      } else if (type === "user-muted") {
+        return translate("ran.chat.User_muted_by") + msg; //'("User_muted_by", { userMuted: msg, userBy: username })';
+      } else if (type === "user-unmuted") {
+        return translate("ran.chat.User_unmuted_by") + msg; //'("User_unmuted_by", { userUnmuted: msg, userBy: username })';
+      } else if (type === "subscription-role-added") {
+        return `${msg} was set ${role} by ${username}`;
+      } else if (type === "subscription-role-removed") {
+        return `${msg} is no longer ${role} by ${username}`;
+      } else if (type === "room_changed_description") {
+        return translate("ran.chat.Room_changed_description") + msg;
+        //`("", {
+        //   description: msg,
+        //   userBy: username
+        // })`;
+      } else if (type === "room_changed_announcement") {
+        return translate("ran.chat.Room_changed_announcement") + msg;
+        // `("Room_changed_announcement", {
+        //   announcement: msg,
+        //   userBy: username
+        // })`;
+      } else if (type === "room_changed_topic") {
+        return translate("ran.chat.Room_changed_topic") + msg;
+        //'("Room_changed_topic", { topic: msg, userBy: username })';
+      } else if (type === "room_changed_privacy") {
+        return translate("ran.chat.Room_changed_privacy") + msg;
+        //'("Room_changed_privacy", { type: msg, userBy: username })';
+      }
+      return "";
+    };
+
     if (this.isInfoMessage()) {
       return (
         <Text style={styles.textInfo}>{getInfoMessage({ ...this.props })}</Text>
@@ -381,7 +387,9 @@ export default class Message extends PureComponent {
             source={{ uri: "reply" }}
             style={styles.broadcastButtonIcon}
           />
-          <Text style={styles.broadcastButtonText}>{'I18n.t("Reply")'}</Text>
+          <Text style={styles.broadcastButtonText}>
+            {this.props.translate("ran.chat.Reply")}
+          </Text>
         </RectButton>
       );
     }
@@ -406,12 +414,18 @@ export default class Message extends PureComponent {
       customEmojis,
       baseUrl
     } = this.props;
-    const accessibilityLabel = `I18n.t("Message_accessibility", {
-      user: author.username,
-      time: moment(ts).format(timeFormat),
-      message: msg
-    })`;
-
+    const accessibilityLabel =
+      this.props.translate("ran.chat.Message_accessibility") +
+      author.username +
+      ": " +
+      msg +
+      "  " +
+      moment(ts).format(timeFormat);
+    // `("Message_accessibility", {
+    //   user: author.username,
+    //   time: moment(ts).format(timeFormat),
+    //   message: msg
+    // })`
     return (
       <LongPressGestureHandler
         onHandlerStateChange={({ nativeEvent }) =>
@@ -463,3 +477,5 @@ export default class Message extends PureComponent {
     );
   }
 }
+
+export default hoistStatics(compose(translate))(Message);

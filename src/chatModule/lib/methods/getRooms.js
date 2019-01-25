@@ -46,8 +46,6 @@ const getRoomDpp = async function() {
 };
 
 export default async function() {
-  const db = database;
-
   return new Promise(async (resolve, reject) => {
     try {
       // eslint-disable-next-line
@@ -62,7 +60,7 @@ export default async function() {
 
       InteractionManager.runAfterInteractions(() => {
         subscriptions.forEach(subscription =>
-          db.create("subscriptions", subscription, true)
+          database.create("subscriptions", subscription, true)
         );
         data.forEach(({ sub, room }) => sub[0] && merge(sub[0], room));
         resolve(data);

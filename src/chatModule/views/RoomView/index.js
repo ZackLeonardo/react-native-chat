@@ -76,7 +76,6 @@ export default class RoomView extends LoggedView {
     this.rid = this.props.navigation.state.params.rid;
     this.rooms = null;
     this.roomsToken = null;
-    this.rooms;
     this.state = {
       loaded: false,
       joined: false,
@@ -136,22 +135,16 @@ export default class RoomView extends LoggedView {
   componentWillMount() {
     this.props.navigation.setParams({
       toggleFavorite: this._toggleFavorite,
-      toggleFavoriteDisabled: false,
-      favorite: this.state.room.f
+      toggleFavoriteDisabled: false
+      // favorite: this.state.room.f
     });
   }
 
   async componentDidMount() {
-    this.rooms = await database.objects(
-      "subscriptions",
-      `WHERE rid="${this.rid}"`
-    );
-
-    this.setState({ joined: this.rooms.length > 0, loaded: true });
-
     this.updateRoom();
+
     if (!this.roomsToken) {
-      this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom());
+      this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom);
     }
   }
 
@@ -280,13 +273,18 @@ export default class RoomView extends LoggedView {
   };
 
   updateRoom = async () => {
+    this.rooms = await database.objects(
+      "subscriptions",
+      `WHERE rid="${this.rid}"`
+    );
     if (this.rooms.length > 0) {
       const { room: prevRoom } = this.state;
       const room = JSON.parse(JSON.stringify(this.rooms[0]));
-      this.setState({ room });
-      // this.props.navigation.setParams({
-      //   favoriteIcon: this.state.room.f ? "ios-star" : "ios-star-outline"
-      // });
+      this.setState({
+        joined: this.rooms.length > 0,
+        loaded: true,
+        room: room
+      });
 
       if (!prevRoom.rid) {
         // this.props.navigator.setTitle({ title: room.name });
@@ -440,6 +438,9 @@ export default class RoomView extends LoggedView {
   };
 
   render() {
+    console.log("render RoomView");
+    console.log(this.state.room);
+
     return (
       <SafeAreaView style={styles.container} testID="room-view">
         {this.renderList()}

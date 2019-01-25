@@ -24,6 +24,11 @@ import RoomView from "./views/RoomView";
 import CreateChannelView from "./views/CreateChannelView";
 import RoomActionsView from "./views/RoomActionsView";
 import RoomFilesView from "./views/RoomFilesView";
+import MentionedMessagesView from "./views/MentionedMessagesView";
+import StarredMessagesView from "./views/StarredMessagesView";
+import SearchMessagesView from "./views/SearchMessagesView";
+import PinnedMessagesView from "./views/PinnedMessagesView";
+import SnippetedMessagesView from "./views/SnippetedMessagesView";
 
 import Sidebar from "./containers/Sidebar";
 
@@ -168,6 +173,21 @@ const StackNavigator = createStackNavigator(
     },
     RoomFilesView: {
       screen: gestureHandlerRootHOC(RoomFilesView)
+    },
+    MentionedMessagesView: {
+      screen: gestureHandlerRootHOC(MentionedMessagesView)
+    },
+    StarredMessagesView: {
+      screen: gestureHandlerRootHOC(StarredMessagesView)
+    },
+    SearchMessagesView: {
+      screen: gestureHandlerRootHOC(SearchMessagesView)
+    },
+    PinnedMessagesView: {
+      screen: gestureHandlerRootHOC(PinnedMessagesView)
+    },
+    SnippetedMessagesView: {
+      screen: gestureHandlerRootHOC(SnippetedMessagesView)
     }
   },
   {
@@ -211,10 +231,8 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import { Provider } from "react-redux";
 // import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
-// import MentionedMessagesView from './MentionedMessagesView';
 // import OAuthView from './OAuthView';
 // import OnboardingView from "./OnboardingView";
-// import PinnedMessagesView from './PinnedMessagesView';
 // import ProfileView from './ProfileView';
 // import RoomInfoEditView from './RoomInfoEditView';
 // import RoomInfoView from './RoomInfoView';
@@ -222,11 +240,8 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import RoomsListHeaderView from './RoomsListView/Header';
 // import RoomsListSearchView from './RoomsListView/Search';
 // import RoomsListView from "./RoomsListView";
-// import SearchMessagesView from './SearchMessagesView';
 // import SelectedUsersView from './SelectedUsersView';
 // import Sidebar from "../containers/Sidebar";
-// import SnippetedMessagesView from './SnippetedMessagesView';
-// import StarredMessagesView from './StarredMessagesView';
 
 // export const registerScreens = store => {
 // Navigation.registerComponent('CreateChannelView', () => CreateChannelView, store, Provider);
@@ -241,7 +256,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 //   store,
 //   Provider
 // );
-// Navigation.registerComponent('PinnedMessagesView', () => gestureHandlerRootHOC(PinnedMessagesView), store, Provider);
 // Navigation.registerComponent('PrivacyPolicyView', () => PrivacyPolicyView, store, Provider);
 // Navigation.registerComponent('ProfileView', () => ProfileView, store, Provider);
 // Navigation.registerComponent('RegisterView', () => RegisterView, store, Provider);
@@ -258,11 +272,8 @@ export const ChatModuleNavigator = createDrawerNavigator(
 //   Provider
 // );
 
-// Navigation.registerComponent('SearchMessagesView', () => gestureHandlerRootHOC(SearchMessagesView), store, Provider);
 // Navigation.registerComponent('SelectedUsersView', () => SelectedUsersView, store, Provider);
 // Navigation.registerComponent('SettingsView', () => SettingsView, store, Provider);
 // Navigation.registerComponent("Sidebar", () => Sidebar, store, Provider);
-// Navigation.registerComponent('SnippetedMessagesView', () => gestureHandlerRootHOC(SnippetedMessagesView), store, Provider);
-// Navigation.registerComponent('StarredMessagesView', () => gestureHandlerRootHOC(StarredMessagesView), store, Provider);
 // Navigation.registerComponent('TermsServiceView', () => TermsServiceView, store, Provider);
 // };

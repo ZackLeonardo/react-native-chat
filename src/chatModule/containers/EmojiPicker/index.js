@@ -61,14 +61,14 @@ export default class EmojiPicker extends Component {
     if (!this.frequentlyUsedToken) {
       this.frequentlyUsedToken = PubSub.subscribe(
         "frequentlyUsedEmoji",
-        this.getFrequentlyUsed()
+        this.getFrequentlyUsed
       );
     }
     this.getCustomEmojis();
     if (!this.customEmojisToken) {
       this.customEmojisToken = PubSub.subscribe(
         "customEmojis",
-        this.getCustomEmojis()
+        this.getCustomEmojis
       );
     }
   }

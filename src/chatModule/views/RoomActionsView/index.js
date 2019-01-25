@@ -72,15 +72,9 @@ export default class RoomActionsView extends LoggedView {
   };
 
   async componentDidMount() {
-    const { rid } = this.props.navigation.state.params;
-    this.rooms = await database.objects(
-      "subscriptions",
-      `WHERE rid == "${rid}"`
-    );
-    [this.room] = this.rooms;
+    await this.updateRoom();
     if (!this.roomsToken) {
-      this.updateRoom();
-      this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom());
+      this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom);
     }
 
     const [members, member] = await Promise.all([
@@ -241,7 +235,7 @@ export default class RoomActionsView extends LoggedView {
           {
             icon: `ios-notifications${notifications ? "" : "-off"}`,
             name: this.props.screenProps.translate(
-              `ran.chat.${notifications ? "Enable" : "Disable"}_notifications`
+              `ran.chat.${notifications ? "Disable" : "Enable"}_notifications`
             ),
             event: () => this.toggleNotifications(),
             testID: "room-actions-notifications"
@@ -361,7 +355,13 @@ export default class RoomActionsView extends LoggedView {
     }
   };
 
-  updateRoom = () => {
+  updateRoom = async () => {
+    const { rid } = this.props.navigation.state.params;
+    this.rooms = await database.objects(
+      "subscriptions",
+      `WHERE rid == "${rid}"`
+    );
+    [this.room] = this.rooms;
     this.setState({ room: this.room });
   };
 
@@ -402,7 +402,7 @@ export default class RoomActionsView extends LoggedView {
       RocketChat.saveNotificationSettings(
         room.rid,
         "mobilePushNotifications",
-        room.notifications ? "default" : "nothing"
+        room.notifications ? "nothing" : "default"
       );
     } catch (e) {
       log("toggleNotifications", e);
@@ -536,12 +536,15 @@ export default class RoomActionsView extends LoggedView {
   };
 
   render() {
+    console.log("render RoomActionsView");
+
     return (
       <SafeAreaView style={styles.container} testID="room-actions-view">
         <SectionList
           style={styles.container}
           stickySectionHeadersEnabled={false}
           sections={this.room ? this.sections : []}
+          extraData={this.state.room}
           SectionSeparatorComponent={this.renderSectionSeparator}
           ItemSeparatorComponent={renderSeparator}
           keyExtractor={item => item.name}
