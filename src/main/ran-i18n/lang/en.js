@@ -159,6 +159,23 @@ module.exports = {
       Yes_action_leave: "Yes, leave it!",
       Actions: "Actions",
       Details: "Details",
+      //roomInfoView
+      Room_Info_Edit: "Room Info Edit",
+      No_announcement_provided: "No announcement provided.",
+      No_description_provided: "No description provided.",
+      No_topic_provided: "No topic provided.",
+      announcement: "announcement",
+      Announcement: "Announcement",
+      description: "description",
+      Description: "Description",
+      topic: "topic",
+      Topic: "Topic",
+      Roles: "Roles",
+      Timezone: "Timezone",
+      Broadcast_Channel: "Broadcast Channel",
+      Broadcast_channel_Description:
+        "Only authorized users can write new messages, but the other users will be able to reply",
+
       //roomFilesView
       No_files: "No files",
       //mentionedMessagesView
