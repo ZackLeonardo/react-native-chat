@@ -531,8 +531,8 @@ const RocketChat = {
       this.ddp.on(
         "open",
         protectedFunction(() => {
-          // RocketChat.getSettings();
-          // RocketChat.getPermissions();
+          RocketChat.getSettings();
+          RocketChat.getPermissions();
           reduxStore.dispatch(connectSuccess());
           resolve();
         })
@@ -947,8 +947,9 @@ const RocketChat = {
     // get room roles
     const { roles } = rooms[0];
     // transform room roles to array
-    const roomRoles = roles
-      ? Array.from(Object.keys(roles), i => roles[i].value)
+    const rolesArray = JSON.parse(roles);
+    const roomRoles = rolesArray
+      ? Array.from(Object.keys(rolesArray), i => rolesArray[i].value)
       : [];
     // get user roles on the server from redux
     const userRoles =
@@ -966,7 +967,8 @@ const RocketChat = {
         p => p._id === permission
       );
       if (permissionFound) {
-        result[permission] = returnAnArray(permissionFound.roles).some(r =>
+        const permissionFoundArray = JSON.parse(permissionFound.roles);
+        result[permission] = returnAnArray(permissionFoundArray).some(r =>
           mergedRoles.includes(r.value)
         );
       }

@@ -29,10 +29,15 @@ export const merge = (subscription, room) => {
       subscription.muted = [];
     }
   }
-  if (subscription.roles && subscription.roles !== "null") {
-    subscriptionRoles = subscription.roles.split(",");
-    if (subscriptionRoles && subscriptionRoles.length) {
-      subscription.roles = subscriptionRoles.map(role =>
+  if (subscription.roles) {
+    if (typeof subscription.roles === "object" && subscription.roles.length) {
+      subscription.roles = subscription.roles.map(role =>
+        role.value ? role : { value: role }
+      );
+    }
+    if (typeof subscription.roles === "string") {
+      const rolesArray = JSON.parse(subscription.roles);
+      subscription.roles = rolesArray.map(role =>
         role.value ? role : { value: role }
       );
     }

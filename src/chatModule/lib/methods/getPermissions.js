@@ -4,8 +4,11 @@ import database from "../../../main/ran-db/sqlite";
 import log from "../../utils/log";
 import defaultPermissions from "../../constants/permissions";
 
-const getLastUpdate = () => {
-  const setting = database.objects("permissions").sorted("_updatedAt", true)[0];
+const getLastUpdate = async () => {
+  const setting = await database.objects(
+    "permissions",
+    `order by _updatedAt ASC`
+  )[0];
   return setting && setting._updatedAt;
 };
 
@@ -16,7 +19,7 @@ export default async function() {
       return;
     }
 
-    const lastUpdate = getLastUpdate();
+    const lastUpdate = await getLastUpdate();
     const result = await (!lastUpdate
       ? this.ddp.call("permissions/get")
       : this.ddp.call("permissions/get", new Date(lastUpdate)));
@@ -30,10 +33,8 @@ export default async function() {
     });
 
     InteractionManager.runAfterInteractions(() =>
-      database.write(() =>
-        permissions.forEach(permission =>
-          database.create("permissions", permission, true)
-        )
+      permissions.forEach(permission =>
+        database.create("permissions", permission, true)
       )
     );
   } catch (e) {

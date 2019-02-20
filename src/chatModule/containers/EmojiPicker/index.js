@@ -45,7 +45,7 @@ export default class EmojiPicker extends Component {
   getFrequentlyUsed = async () => {
     this.frequentlyUsed = await database.objects(
       "frequentlyUsedEmoji",
-      `WHERE order by count ASC`
+      `order by count ASC`
     );
     this.updateFrequentlyUsed();
   };

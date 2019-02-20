@@ -7,19 +7,16 @@ import * as actions from "../../actions";
 import log from "../../utils/log";
 import { settingsUpdatedAt } from "../../constants/settings";
 
-const getLastUpdate = () => {
-  const [setting] = database.objects("settings").sorted("_updatedAt", true);
+const getLastUpdate = async () => {
+  const [setting] = await database.objects(
+    "settings",
+    `ORDER BY _updatedAt ASC`
+  );
   return setting && setting._updatedAt;
 };
 
 function updateServer(param) {
-  database.databases.serversDB.write(() => {
-    database.databases.serversDB.create(
-      "servers",
-      { id: this.ddp.url, ...param },
-      true
-    );
-  });
+  database.create("servers", { id: this.ddp.url, ...param }, true);
 }
 
 export default async function() {
@@ -29,8 +26,8 @@ export default async function() {
       return;
     }
 
-    const lastUpdate = getLastUpdate();
-    const fetchNewSettings = lastUpdate < settingsUpdatedAt;
+    const lastUpdate = await getLastUpdate();
+    const fetchNewSettings = true; //lastUpdate < settingsUpdatedAt;
     const result = await (!lastUpdate || fetchNewSettings
       ? this.ddp.call("public-settings/get")
       : this.ddp.call("public-settings/get", new Date(lastUpdate)));
@@ -39,19 +36,17 @@ export default async function() {
     const filteredSettings = this._prepareSettings(this._filterSettings(data));
 
     InteractionManager.runAfterInteractions(() =>
-      database.write(() =>
-        filteredSettings.forEach(setting => {
-          database.create(
-            "settings",
-            { ...setting, _updatedAt: new Date() },
-            true
-          );
+      filteredSettings.forEach(setting => {
+        database.create(
+          "settings",
+          { ...setting, _updatedAt: new Date() },
+          true
+        );
 
-          if (setting._id === "Site_Name") {
-            updateServer.call(this, { name: setting.valueAsString });
-          }
-        })
-      )
+        if (setting._id === "Site_Name") {
+          updateServer.call(this, { name: setting.valueAsString });
+        }
+      })
     );
     reduxStore.dispatch(
       actions.addSettings(this.parseSettings(filteredSettings))

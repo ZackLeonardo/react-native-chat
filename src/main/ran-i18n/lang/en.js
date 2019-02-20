@@ -192,11 +192,58 @@ module.exports = {
       No_pinned_messages: "No pinned messages",
       //snippedMessagesView
       No_snippeted_messages: "No snippeted messages",
+      //selectUsersView
+      Next: "Next",
+      //createChannelView
+      There_was_an_error_while_creating_channel_action:
+        "There was an error while creating channel!",
+      Channel_Name: "Channel Name",
+      Invite: "Invite",
+      "1_user": "1 user",
+      N_users: "n users",
+      //newMessageView
+      Select_Users: "Select Users",
+      //roomInfoEditView
+      Nothing_to_save: "Nothing to save!",
+      There_was_an_error_while_saving_settings_action:
+        "There was an error while saving settings!",
+      Settings_succesfully_changed: "Settings succesfully changed!",
+      Are_you_sure_question_mark: "Are you sure?",
+      Delete_Room_Warning:
+        "Deleting a room will delete all messages posted within the room. This cannot be undone.",
+      Yes_action_delete_it: "Yes, delete it!",
+      ARCHIVE: "ARCHIVE",
+      archive: "archive",
+      unarchive: "unarchive",
+      UNARCHIVE: "UNARCHIVE",
+      Do_you_really_want_to_key_this_room_question_mark:
+        "Do you really want to {{key}} this room?",
+      Public: "Public",
+      Private: "Private",
+      Everyone_can_access_this_channel: "Everyone can access this channel",
+      Just_invited_people_can_access_this_channel:
+        "Just invited people can access this channel",
+      Colaborative: "Colaborative",
+      All_users_in_the_channel_can_write_new_messages:
+        "All users in the channel can write new messages",
+      Read_Only: "Read Only",
+      Only_authorized_users_can_write_new_messages:
+        "Only authorized users can write new messages",
+      No_Reactions: "No Reactions",
+      Reactions_are_disabled: "Reactions are disabled",
+      Allow_Reactions: "Allow Reactions",
+      Reactions_are_enabled: "Reactions are enabled",
+      Broadcast_Channel: "Broadcast Channel",
+      SAVE: "SAVE",
+      Save: "Save",
+      RESET: "RESET",
+      delete: "delete",
+      Delete: "Delete",
+      DELETE: "DELETE",
 
       // rooms
       unTop: "Not Top",
       top: "Top",
-      delete: "delete",
       // login
       login: "Log In",
       sign: "Sign",
