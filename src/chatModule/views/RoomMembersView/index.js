@@ -1,9 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FlatList, View, Vibration, SafeAreaView } from "react-native";
+import {
+  FlatList,
+  View,
+  Vibration,
+  SafeAreaView,
+  TouchableOpacity,
+  Text
+} from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import PubSub from "pubsub-js";
 import { connect } from "react-redux";
+import Icon from "@expo/vector-icons/Ionicons";
+import { StackActions } from "react-navigation";
 
 import LoggedView from "../View";
 import styles from "./styles";
@@ -20,16 +29,6 @@ import SearchBox from "../../containers/SearchBox";
 }))
 /** @extends React.Component */
 export default class RoomMembersView extends LoggedView {
-  static navigatorButtons = {
-    rightButtons: [
-      {
-        title: "All",
-        id: "toggleOnline",
-        testID: "room-members-view-toggle-status"
-      }
-    ]
-  };
-
   static propTypes = {
     // rid: PropTypes.string,
     // members: PropTypes.array,
@@ -54,10 +53,47 @@ export default class RoomMembersView extends LoggedView {
       userLongPressed: {},
       room: {}
     };
-    // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
+  static navigationOptions = props => {
+    const { navigation, screenProps } = props;
+    return {
+      title: screenProps.translate("ran.chat.Members"),
+      headerBackTitle: null,
+      headerBackImage: (
+        <Icon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      ),
+      headerRight: (
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ marginHorizontal: 15 }}
+            onPress={() => {
+              navigation.state.params.toggleOnline();
+            }}
+          >
+            {/* <Icon name="ios-contacts" size={22} color="#4674F1" /> */}
+            <Text style={{ color: "#4674F1" }}>
+              {navigation.state.params.allUsers
+                ? screenProps.translate("ran.chat.Online")
+                : screenProps.translate("ran.chat.All")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    };
+  };
+
   async componentDidMount() {
+    this.props.navigation.setParams({
+      toggleOnline: this.toggleOnline,
+      allUsers: this.state.allUsers
+    });
+
     await this.updateRoom();
     if (!this.roomsToken) {
       this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom);
@@ -74,32 +110,23 @@ export default class RoomMembersView extends LoggedView {
     this.removeListener(this.roomsToken);
   }
 
-  async onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "toggleOnline") {
-        try {
-          const allUsers = !this.state.allUsers;
-          const membersResult = await RocketChat.getRoomMembers(
-            this.state.rid,
-            allUsers
-          );
-          const members = membersResult.records;
-          this.setState({ allUsers, members });
-          this.props.navigator.setButtons({
-            rightButtons: [
-              {
-                title: this.state.allUsers ? "Online" : "All",
-                id: "toggleOnline",
-                testID: "room-members-view-toggle-status"
-              }
-            ]
-          });
-        } catch (e) {
-          log("RoomMembers.onNavigationButtonPressed", e);
-        }
-      }
+  toggleOnline = async () => {
+    try {
+      const allUsers = !this.state.allUsers;
+      const membersResult = await RocketChat.getRoomMembers(
+        this.state.rid,
+        allUsers
+      );
+      const members = membersResult.records;
+      this.setState({ allUsers, members });
+
+      this.props.navigation.setParams({
+        allUsers: allUsers
+      });
+    } catch (e) {
+      log("RoomMembers.onNavigationButtonPressed", e);
     }
-  }
+  };
 
   onSearchChangeText = text => {
     let membersFiltered = [];
@@ -163,13 +190,15 @@ export default class RoomMembersView extends LoggedView {
   };
 
   goRoom = ({ rid, name }) => {
-    this.props.navigator.popToRoot();
+    this.props.navigation.dispatch(
+      StackActions.pop({
+        n: 3
+      })
+    );
     setTimeout(() => {
-      this.props.navigator.push({
-        screen: "RoomView",
+      this.props.navigation.navigate("RoomView", {
         title: name,
-        backButtonTitle: "",
-        passProps: { rid }
+        rid: rid
       });
     }, 1000);
   };
