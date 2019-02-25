@@ -44,11 +44,15 @@ export default class RoomActionsView extends LoggedView {
 
   constructor(props) {
     super("RoomActionsView", props);
-    this.rooms = [];
+    this.rooms = {};
     this.roomsToken = null;
-    [this.room] = this.rooms;
+    this.onlineMembers = [];
+    this.allMembers = [];
+    this.member = {};
+    this.canViewMembers = false;
+    this.canAddUser = false;
     this.state = {
-      room: this.room,
+      room: {},
       onlineMembers: [],
       allMembers: [],
       member: {}
@@ -73,18 +77,9 @@ export default class RoomActionsView extends LoggedView {
 
   async componentDidMount() {
     await this.updateRoom();
-    this.sections = await this.getSections();
     if (!this.roomsToken) {
       this.roomsToken = PubSub.subscribe("subscriptions", this.updateRoom);
     }
-
-    this.canViewMembers = await this.getCanViewMembers();
-
-    const [members, member] = await Promise.all([
-      this.updateRoomMembers(),
-      this.updateRoomMember()
-    ]);
-    this.setState({ ...members, ...member });
   }
 
   removeListener = token => {
@@ -137,8 +132,9 @@ export default class RoomActionsView extends LoggedView {
     }
     return false;
   };
+
   getCanViewMembers = async () => {
-    const { rid, t, broadcast } = this.state.room;
+    const { rid, t, broadcast } = this.room;
     if (broadcast) {
       const viewBroadcastMemberListPermission = "view-broadcast-member-list";
       const permissions = await RocketChat.hasPermission(
@@ -151,8 +147,8 @@ export default class RoomActionsView extends LoggedView {
     }
     return t === "c" || t === "p";
   };
-  getSections = async () => {
-    const { rid, t, blocker, notifications } = this.room;
+  getSections = () => {
+    const { rid, t, blocker, notifications } = this.state.room;
     const { onlineMembers } = this.state;
 
     const sections = [
@@ -281,8 +277,7 @@ export default class RoomActionsView extends LoggedView {
         });
       }
 
-      const canAddUser = await this.getCanViewMembers();
-      if (canAddUser) {
+      if (this.canAddUser) {
         actions.push({
           icon: "ios-person-add",
           name: this.props.screenProps.translate("ran.chat.Add_user"),
@@ -312,9 +307,9 @@ export default class RoomActionsView extends LoggedView {
   };
 
   updateRoomMembers = async () => {
-    const { t } = this.state.room;
+    const { t } = this.room;
 
-    if (this.canViewMembers) {
+    if (!this.canViewMembers) {
       return {};
     }
 
@@ -323,19 +318,20 @@ export default class RoomActionsView extends LoggedView {
       let allMembers = [];
       try {
         const onlineMembersCall = RocketChat.getRoomMembers(
-          this.state.room.rid,
+          this.room.rid,
           false
         );
-        const allMembersCall = RocketChat.getRoomMembers(
-          this.state.room.rid,
-          true
-        );
+        const allMembersCall = RocketChat.getRoomMembers(this.room.rid, true);
         const [onlineMembersResult, allMembersResult] = await Promise.all([
           onlineMembersCall,
           allMembersCall
         ]);
         onlineMembers = onlineMembersResult.records;
         allMembers = allMembersResult.records;
+
+        console.log(onlineMembers);
+        console.log(allMembers);
+
         return { onlineMembers, allMembers };
       } catch (error) {
         return {};
@@ -344,14 +340,18 @@ export default class RoomActionsView extends LoggedView {
   };
 
   updateRoomMember = async () => {
-    if (this.state.room.t !== "d") {
+    if (this.room.t !== "d") {
       return {};
     }
     try {
       const member = await RocketChat.getRoomMember(
-        this.state.room.rid,
+        this.room.rid,
         this.props.userId
       );
+
+      console.log(this.props.userId);
+      console.log(member);
+
       return { member };
     } catch (e) {
       log("RoomActions updateRoomMember", e);
@@ -366,7 +366,18 @@ export default class RoomActionsView extends LoggedView {
       `WHERE rid == "${rid}"`
     );
     [this.room] = this.rooms;
-    this.setState({ room: this.room });
+
+    console.log(this.room);
+
+    this.canViewMembers = await this.getCanViewMembers();
+    this.canAddUser = await this.getCanAddUser();
+
+    const [members, member] = await Promise.all([
+      this.updateRoomMembers(),
+      this.updateRoomMember()
+    ]);
+    // this.sections = await this.getSections();
+    this.setState({ ...members, ...member, room: this.room });
   };
 
   toggleBlockUser = async () => {
@@ -541,6 +552,8 @@ export default class RoomActionsView extends LoggedView {
 
   render() {
     console.log("render RoomActionsView");
+
+    this.sections = this.getSections();
 
     return (
       <SafeAreaView style={styles.container} testID="room-actions-view">
