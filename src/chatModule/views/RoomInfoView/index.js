@@ -1,6 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity
+} from "react-native";
 import { connect } from "react-redux";
 import PubSub from "pubsub-js";
 import moment from "moment";
@@ -16,7 +22,6 @@ import RocketChat from "../../lib/rocketchat";
 
 import log from "../../utils/log";
 import RoomTypeIcon from "../../containers/RoomTypeIcon";
-import { iconsMap } from "../../Icons";
 
 const PERMISSION_EDIT_ROOM = "edit-room";
 
@@ -51,7 +56,7 @@ const getRoomTitle = room =>
 /** @extends React.Component */
 export default class RoomInfoView extends LoggedView {
   static propTypes = {
-    navigator: PropTypes.object,
+    navigation: PropTypes.object,
     rid: PropTypes.string,
     userId: PropTypes.string,
     baseUrl: PropTypes.string,
@@ -71,9 +76,9 @@ export default class RoomInfoView extends LoggedView {
   }
 
   static navigationOptions = props => {
-    const { screenProps } = props;
+    const { navigation, screenProps } = props;
     return {
-      title: screenProps.translate("ran.chat.Details"),
+      title: navigation.state.params.title,
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -82,7 +87,23 @@ export default class RoomInfoView extends LoggedView {
           size={22}
           color="#4674F1"
         />
-      )
+      ),
+      headerRight: navigation.state.params.hasEditPermisson ? (
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ marginHorizontal: 15 }}
+            onPress={() => {
+              navigation.navigate("RoomInfoEditView", {
+                title: screenProps.translate("ran.chat.Room_Info_Edit"),
+                backButtonTitle: "",
+                rid: navigation.state.params.rid
+              });
+            }}
+          >
+            <Icon name="md-create" size={22} color="#4674F1" />
+          </TouchableOpacity>
+        </View>
+      ) : null
     };
   };
 
@@ -128,15 +149,7 @@ export default class RoomInfoView extends LoggedView {
           this.state.room.rid
         );
         if (permissions[PERMISSION_EDIT_ROOM]) {
-          this.props.navigator.setButtons({
-            rightButtons: [
-              {
-                id: "edit",
-                icon: iconsMap.create,
-                testID: "room-info-view-edit-button"
-              }
-            ]
-          });
+          this.props.navigation.setParams({ hasEditPermisson: true });
         }
       }
     }
@@ -150,21 +163,6 @@ export default class RoomInfoView extends LoggedView {
 
   componentWillUnmount() {
     this.removeListener(this.roomsToken);
-  }
-
-  onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "edit") {
-        this.props.navigator.push({
-          screen: "RoomInfoEditView",
-          title: this.props.screenProps.translate("ran.chat.Room_Info_Edit"),
-          backButtonTitle: "",
-          passProps: {
-            rid: this.props.rid
-          }
-        });
-      }
-    }
   }
 
   getFullUserData = async username => {

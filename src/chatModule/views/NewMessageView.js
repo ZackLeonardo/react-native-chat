@@ -70,7 +70,7 @@ export default class NewMessageView extends LoggedView {
   };
 
   static propTypes = {
-    navigator: PropTypes.object,
+    // navigator: PropTypes.object,
     baseUrl: PropTypes.string
     // onPressItem: PropTypes.func.isRequired
   };
@@ -78,11 +78,10 @@ export default class NewMessageView extends LoggedView {
   constructor(props) {
     super("NewMessageView", props);
     this.data = null;
+    this.dataToken = null;
     this.state = {
       search: []
     };
-    // this.data.addListener(this.updateState);
-    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   async componentWillMount() {
@@ -90,19 +89,20 @@ export default class NewMessageView extends LoggedView {
       "subscriptions",
       `WHERE t="d" ORDER BY roomUpdatedAt ASC`
     );
+    if (!this.dataToken) {
+      this.dataToken = PubSub.subscribe("subscriptions", this.updateState);
+    }
   }
+
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
+    }
+  };
 
   componentWillUnmount() {
     this.updateState.stop();
-    // this.data.removeAllListeners();
-  }
-
-  async onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "cancel") {
-        this.props.navigator.dismissModal();
-      }
-    }
+    this.removeListener(this.dataToken);
   }
 
   onSearchChangeText(text) {
@@ -128,14 +128,18 @@ export default class NewMessageView extends LoggedView {
   };
 
   createChannel = () => {
-    this.props.navigator.push({
-      screen: "SelectedUsersView",
-      title: 'I18n.t("Select_Users")',
-      backButtonTitle: "",
-      passProps: {
-        nextAction: "CREATE_CHANNEL"
-      }
+    this.props.navigation.navigate("SelectedUsersView", {
+      title: this.props.screenProps.translate("ran.chat.Select_Users"),
+      nextAction: "CREATE_CHANNEL"
     });
+    // this.props.navigator.push({
+    //   screen: "SelectedUsersView",
+    //   title: this.props.screenProps.translate("ran.chat.Select_Users"),
+    //   backButtonTitle: "",
+    //   passProps: {
+    //     nextAction: "CREATE_CHANNEL"
+    //   }
+    // });
   };
 
   renderHeader = () => (

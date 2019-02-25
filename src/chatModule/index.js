@@ -30,6 +30,9 @@ import StarredMessagesView from "./views/StarredMessagesView";
 import SearchMessagesView from "./views/SearchMessagesView";
 import PinnedMessagesView from "./views/PinnedMessagesView";
 import SnippetedMessagesView from "./views/SnippetedMessagesView";
+import SelectedUsersView from "./views/SelectedUsersView";
+import RoomInfoEditView from "./views/RoomInfoEditView";
+import RoomMembersView from "./views/RoomMembersView";
 
 import Sidebar from "./containers/Sidebar";
 
@@ -192,6 +195,15 @@ const StackNavigator = createStackNavigator(
     },
     RoomInfoView: {
       screen: RoomInfoView
+    },
+    SelectedUsersView: {
+      screen: SelectedUsersView
+    },
+    RoomInfoEditView: {
+      screen: RoomInfoEditView
+    },
+    RoomMembersView: {
+      screen: RoomMembersView
     }
   },
   {
@@ -238,12 +250,9 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import OAuthView from './OAuthView';
 // import OnboardingView from "./OnboardingView";
 // import ProfileView from './ProfileView';
-// import RoomInfoEditView from './RoomInfoEditView';
-// import RoomMembersView from './RoomMembersView';
 // import RoomsListHeaderView from './RoomsListView/Header';
 // import RoomsListSearchView from './RoomsListView/Search';
 // import RoomsListView from "./RoomsListView";
-// import SelectedUsersView from './SelectedUsersView';
 // import Sidebar from "../containers/Sidebar";
 
 // export const registerScreens = store => {
@@ -263,9 +272,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // Navigation.registerComponent('ProfileView', () => ProfileView, store, Provider);
 // Navigation.registerComponent('RegisterView', () => RegisterView, store, Provider);
 
-// Navigation.registerComponent('RoomInfoEditView', () => RoomInfoEditView, store, Provider);
-
-// Navigation.registerComponent('RoomMembersView', () => RoomMembersView, store, Provider);
 // Navigation.registerComponent('RoomsListHeaderView', () => RoomsListHeaderView, store, Provider);
 // Navigation.registerComponent('RoomsListSearchView', () => RoomsListSearchView, store, Provider);
 // Navigation.registerComponent(
@@ -275,7 +281,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 //   Provider
 // );
 
-// Navigation.registerComponent('SelectedUsersView', () => SelectedUsersView, store, Provider);
 // Navigation.registerComponent('SettingsView', () => SettingsView, store, Provider);
 // Navigation.registerComponent("Sidebar", () => Sidebar, store, Provider);
 // Navigation.registerComponent('TermsServiceView', () => TermsServiceView, store, Provider);

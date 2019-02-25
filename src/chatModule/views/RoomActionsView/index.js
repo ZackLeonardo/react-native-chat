@@ -107,9 +107,8 @@ export default class RoomActionsView extends LoggedView {
   getCanAddUser = async () => {
     // Invite user
     const { rid, t } = this.room;
-    const { allMembers } = this.state;
     // TODO: same test joined
-    const userInRoom = !!allMembers.find(
+    const userInRoom = !!this.allMembers.find(
       m => m.username === this.props.username
     );
     const permissions = await RocketChat.hasPermission(
@@ -314,8 +313,8 @@ export default class RoomActionsView extends LoggedView {
     }
 
     if (t === "c" || t === "p") {
-      let onlineMembers = [];
-      let allMembers = [];
+      this.onlineMembers = [];
+      this.allMembers = [];
       try {
         const onlineMembersCall = RocketChat.getRoomMembers(
           this.room.rid,
@@ -326,13 +325,13 @@ export default class RoomActionsView extends LoggedView {
           onlineMembersCall,
           allMembersCall
         ]);
-        onlineMembers = onlineMembersResult.records;
-        allMembers = allMembersResult.records;
+        this.onlineMembers = onlineMembersResult.records;
+        this.allMembers = allMembersResult.records;
 
-        console.log(onlineMembers);
-        console.log(allMembers);
-
-        return { onlineMembers, allMembers };
+        return {
+          onlineMembers: this.onlineMembers,
+          allMembers: this.allMembers
+        };
       } catch (error) {
         return {};
       }
@@ -348,10 +347,6 @@ export default class RoomActionsView extends LoggedView {
         this.room.rid,
         this.props.userId
       );
-
-      console.log(this.props.userId);
-      console.log(member);
-
       return { member };
     } catch (e) {
       log("RoomActions updateRoomMember", e);
@@ -367,15 +362,14 @@ export default class RoomActionsView extends LoggedView {
     );
     [this.room] = this.rooms;
 
-    console.log(this.room);
-
     this.canViewMembers = await this.getCanViewMembers();
-    this.canAddUser = await this.getCanAddUser();
 
     const [members, member] = await Promise.all([
       this.updateRoomMembers(),
       this.updateRoomMember()
     ]);
+
+    this.canAddUser = await this.getCanAddUser();
     // this.sections = await this.getSections();
     this.setState({ ...members, ...member, room: this.room });
   };

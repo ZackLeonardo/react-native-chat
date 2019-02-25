@@ -18,6 +18,10 @@ module.exports = {
       Activity: "Activity",
       Sorting_by: "Sorting by ",
       error: "error",
+      Unmute: "Unmute",
+      unmuted: "unmuted",
+      Mute: "Mute",
+      muted: "muted",
       // onboardingView
       Welcome_to_RocketChat: "Welcome to WESTWORD",
       Open_Source_Communication: "Open Source Communication",
@@ -161,6 +165,7 @@ module.exports = {
       Details: "Details",
       //roomInfoView
       Room_Info_Edit: "Room Info Edit",
+      Room_Info: "Room Info",
       No_announcement_provided: "No announcement provided.",
       No_description_provided: "No description provided.",
       No_topic_provided: "No topic provided.",
@@ -240,6 +245,11 @@ module.exports = {
       delete: "delete",
       Delete: "Delete",
       DELETE: "DELETE",
+      //roomMembersView
+      User_has_been_unmuted: "User has been unmuted!",
+      User_has_been_muted: "User has been muted!",
+      All: "All",
+      Online: "Online",
 
       // rooms
       unTop: "Not Top",

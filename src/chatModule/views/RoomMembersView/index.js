@@ -43,7 +43,7 @@ export default class RoomMembersView extends LoggedView {
     const { rid, members } = props.navigation.state.params;
     this.rooms = null;
     this.roomsToken = null;
-    this.permissions = RocketChat.hasPermission(["mute-user"], rid);
+    this.permissions = null;
     this.state = {
       allUsers: false,
       filtering: false,
@@ -156,13 +156,13 @@ export default class RoomMembersView extends LoggedView {
   };
 
   onLongPressUser = user => {
-    if (!this.permissions["mute-user"]) {
+    if (!this.permissions) {
       return;
     }
     this.actionSheetOptions = [
       this.props.screenProps.translate("ran.chat.Cancel")
     ];
-    const { muted } = this.state.room;
+    const muted = JSON.parse(this.state.room.muted);
     const userIsMuted = !!muted.find(m => m.value === user.username);
     user.muted = userIsMuted;
     if (userIsMuted) {
@@ -186,6 +186,11 @@ export default class RoomMembersView extends LoggedView {
       "subscriptions",
       `WHERE rid = "${this.props.navigation.state.params.rid}"`
     );
+    this.permissions = await RocketChat.hasPermission(
+      ["mute-user"],
+      this.props.navigation.state.params.rid
+    );
+
     await this.setState({ room });
   };
 
@@ -211,14 +216,14 @@ export default class RoomMembersView extends LoggedView {
         userLongPressed.username,
         !userLongPressed.muted
       );
-      showToast(
-        this.props.screenProps.translate("ran.chat.User_has_been_key") +
-          {
-            key: userLongPressed.muted
-              ? this.props.screenProps.translate("ran.chat.unmuted")
-              : this.props.screenProps.translate("ran.chat.muted")
-          }
-      );
+
+      userLongPressed.muted
+        ? showToast(
+            this.props.screenProps.translate("ran.chat.User_has_been_unmuted")
+          )
+        : showToast(
+            this.props.screenProps.translate("ran.chat.User_has_been_muted")
+          );
     } catch (e) {
       log("handleMute", e);
     }

@@ -79,7 +79,7 @@ export default class RoomInfoEditView extends LoggedView {
   static navigationOptions = props => {
     const { navigation, screenProps } = props;
     return {
-      title: screenProps.translate("ran.chat.Edit"),
+      title: navigation.state.params.title,
       headerBackTitle: null,
       headerBackImage: (
         <Icon

@@ -12,6 +12,7 @@ import {
   FlatList,
   Platform
 } from "react-native";
+import Icon from "@expo/vector-icons/Ionicons";
 
 import Loading from "../containers/Loading";
 import LoggedView from "./View";
@@ -20,7 +21,6 @@ import { removeUser } from "../actions/selectedUsers";
 import sharedStyles from "./Styles";
 import KeyboardView from "../presentation/KeyboardView";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
-// import I18n from '../i18n';
 import UserItem from "../presentation/UserItem";
 import { showErrorAlert } from "../utils/info";
 
@@ -108,10 +108,39 @@ export default class CreateChannelView extends LoggedView {
       readOnly: false,
       broadcast: false
     };
-    props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
+  static navigationOptions = props => {
+    const { screenProps } = props;
+    return {
+      title: "create channel", //screenProps.translate("ran.chat.Details"),
+      headerBackTitle: null,
+      headerBackImage: (
+        <Icon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      ),
+      headerRight: (
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ marginHorizontal: 15 }}
+            onPress={() => {
+              console.log("press submit");
+            }}
+          >
+            <Icon name="md-add" size={22} color="#4674F1" />
+          </TouchableOpacity>
+        </View>
+      )
+    };
+  };
+
   componentDidMount() {
+    this.props.navigation.setParams({ submit: this.submit });
     setTimeout(() => {
       this.channelNameRef.focus();
     }, 600);
@@ -125,34 +154,30 @@ export default class CreateChannelView extends LoggedView {
       setTimeout(() => {
         const msg =
           this.props.createChannel.error.reason ||
-          `I18n.t("There_was_an_error_while_action", {
-            action: 'I18n.t("creating_channel")'
-          })`;
+          this.props.screenProps.translate(
+            "ran.chat.There_was_an_error_while_creating_channel_action"
+          );
         showErrorAlert(msg);
       }, 300);
     }
   }
 
   onChangeText = channelName => {
-    const rightButtons = [];
+    // const rightButtons = [];
     if (channelName.trim().length > 0) {
-      rightButtons.push({
-        id: "create",
-        title: "Create",
-        testID: "create-channel-submit"
-      });
+      this.props.navigation.setParams({ channelName: channelName.trim() });
     }
-    this.props.navigator.setButtons({ rightButtons });
+    // this.props.navigator.setButtons({ rightButtons });
     this.setState({ channelName });
   };
 
-  async onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "create") {
-        this.submit();
-      }
-    }
-  }
+  // async onNavigatorEvent(event) {
+  //   if (event.type === "NavBarButtonPress") {
+  //     if (event.id === "create") {
+  //       this.submit();
+  //     }
+  //   }
+  // }
 
   submit = () => {
     if (!this.state.channelName.trim() || this.props.createChannel.isFetching) {
@@ -183,7 +208,9 @@ export default class CreateChannelView extends LoggedView {
 
   renderSwitch = ({ id, value, label, onValueChange, disabled = false }) => (
     <View style={styles.swithContainer}>
-      <Text style={styles.label}>{`I18n.t(label)`}</Text>
+      <Text style={styles.label}>
+        {this.props.screenProps.translate("ran.chat." + label)}
+      </Text>
       <Switch
         value={value}
         onValueChange={onValueChange}
@@ -275,10 +302,14 @@ export default class CreateChannelView extends LoggedView {
               <TextInput
                 ref={ref => (this.channelNameRef = ref)}
                 style={styles.input}
-                label={'I18n.t("Channel_Name")'}
+                label={this.props.screenProps.translate(
+                  "ran.chat.Channel_Name"
+                )}
                 value={this.state.channelName}
                 onChangeText={this.onChangeText}
-                placeholder={'I18n.t("Channel_Name")'}
+                placeholder={this.props.screenProps.translate(
+                  "ran.chat.Channel_Name"
+                )}
                 returnKeyType="done"
                 testID="create-channel-name"
                 autoCorrect={false}
@@ -293,11 +324,13 @@ export default class CreateChannelView extends LoggedView {
               {this.renderBroadcast()}
             </View>
             <View style={styles.invitedHeader}>
-              <Text style={styles.invitedTitle}>{'I18n.t("Invite")'}</Text>
+              <Text style={styles.invitedTitle}>
+                {this.props.screenProps.translate("ran.chat.Invite")}
+              </Text>
               <Text style={styles.invitedCount}>
                 {userCount === 1
-                  ? 'I18n.t("1_user")'
-                  : 'I18n.t("N_users", { n: userCount })'}
+                  ? this.props.screenProps.translate("ran.chat.1_user")
+                  : this.props.screenProps.translate("ran.chat.N_users")}
               </Text>
             </View>
             {this.renderInvitedList()}
