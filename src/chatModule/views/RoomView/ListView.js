@@ -23,6 +23,7 @@ export class List extends React.Component {
     room: PropTypes.string,
     end: PropTypes.bool
   };
+
   constructor(props) {
     super(props);
 
@@ -33,21 +34,24 @@ export class List extends React.Component {
     this.dataToken = null;
     // this.dataSource = ds.cloneWithRows(this.data);
   }
+
   async componentDidMount() {
     if (!this.dataToken) {
-      this.dataToken = PubSub.subscribe("messages", async () => {
-        let data = await database.objects(
-          "messages",
-          `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
-        );
-        if (!shallowequal(this.state.data, data.slice())) {
-          //!_.isEqualWith(this.unread, newUnread)  //!shallowequal(this.state.data, data.slice())
-          console.log("messages updating");
-          this.setState({ data: data.slice() });
-        }
-      });
+      await this.updateData();
+      this.dataToken = PubSub.subscribe("messages", this.updateData);
     }
   }
+
+  updateData = async () => {
+    let data = await database.objects(
+      "messages",
+      `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
+    );
+    if (!shallowequal(this.state.data, data.slice())) {
+      this.setState({ data: data.slice() });
+    }
+  };
+
   shouldComponentUpdate(nextProps, nextState) {
     return (
       !shallowequal(this.state.data, nextState) ||

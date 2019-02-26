@@ -410,7 +410,7 @@ export default class RoomView extends LoggedView {
   };
 
   renderHeader = () => {
-    if (!this.state.end) {
+    if (!this.state.loaded && !this.state.end) {
       return (
         <ActivityIndicator
           style={[styles.loading, { transform: [{ scaleY: -1 }] }]}

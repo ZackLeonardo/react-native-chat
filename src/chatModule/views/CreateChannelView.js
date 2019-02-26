@@ -10,8 +10,10 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
-  Platform
+  Platform,
+  TouchableOpacity
 } from "react-native";
+import { StackActions, NavigationActions } from "react-navigation";
 import Icon from "@expo/vector-icons/Ionicons";
 
 import Loading from "../containers/Loading";
@@ -112,9 +114,9 @@ export default class CreateChannelView extends LoggedView {
   }
 
   static navigationOptions = props => {
-    const { screenProps } = props;
+    const { navigation, screenProps } = props;
     return {
-      title: "create channel", //screenProps.translate("ran.chat.Details"),
+      title: navigation.state.params.title, //screenProps.translate("ran.chat.Create_Channel"),
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -124,18 +126,22 @@ export default class CreateChannelView extends LoggedView {
           color="#4674F1"
         />
       ),
-      headerRight: (
+      headerRight: navigation.state.params.channelName ? (
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{ marginHorizontal: 15 }}
             onPress={() => {
-              console.log("press submit");
+              navigation.state.params.submit();
             }}
           >
-            <Icon name="md-add" size={22} color="#4674F1" />
+            <Icon
+              name="ios-checkmark-circle-outline"
+              size={22}
+              color="#4674F1"
+            />
           </TouchableOpacity>
         </View>
-      )
+      ) : null
     };
   };
 
@@ -159,25 +165,39 @@ export default class CreateChannelView extends LoggedView {
           );
         showErrorAlert(msg);
       }, 300);
+    } else if (
+      this.props.createChannel.failure == false &&
+      this.props.createChannel.isFetching == false &&
+      this.props.createChannel.result !== ""
+    ) {
+      this.goRoom(
+        this.props.createChannel.result.rid,
+        this.props.createChannel.result.name
+      );
     }
   }
 
+  goRoom = ({ rid, name }) => {
+    this.props.navigation.pop(2);
+    setTimeout(() => {
+      this.props.navigation.dispatch(
+        StackActions.pop({
+          n: 1
+        })
+      );
+      // this.props.navigation.navigate("RoomView", {
+      //   title: name,
+      //   rid: rid
+      // });
+    }, 1000);
+  };
+
   onChangeText = channelName => {
-    // const rightButtons = [];
     if (channelName.trim().length > 0) {
       this.props.navigation.setParams({ channelName: channelName.trim() });
     }
-    // this.props.navigator.setButtons({ rightButtons });
     this.setState({ channelName });
   };
-
-  // async onNavigatorEvent(event) {
-  //   if (event.type === "NavBarButtonPress") {
-  //     if (event.id === "create") {
-  //       this.submit();
-  //     }
-  //   }
-  // }
 
   submit = () => {
     if (!this.state.channelName.trim() || this.props.createChannel.isFetching) {
@@ -215,7 +235,7 @@ export default class CreateChannelView extends LoggedView {
         value={value}
         onValueChange={onValueChange}
         testID={`create-channel-${id}`}
-        onTintColor="#2de0a5"
+        trackColor="#2de0a5"
         tintColor={Platform.OS === "android" ? "#f5455c" : null}
         disabled={disabled}
       />

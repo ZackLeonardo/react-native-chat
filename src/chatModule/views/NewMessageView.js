@@ -132,14 +132,6 @@ export default class NewMessageView extends LoggedView {
       title: this.props.screenProps.translate("ran.chat.Select_Users"),
       nextAction: "CREATE_CHANNEL"
     });
-    // this.props.navigator.push({
-    //   screen: "SelectedUsersView",
-    //   title: this.props.screenProps.translate("ran.chat.Select_Users"),
-    //   backButtonTitle: "",
-    //   passProps: {
-    //     nextAction: "CREATE_CHANNEL"
-    //   }
-    // });
   };
 
   renderHeader = () => (

@@ -178,6 +178,8 @@ module.exports = {
       Roles: "Roles",
       Timezone: "Timezone",
       Broadcast_Channel: "Broadcast Channel",
+      Private_Channel: "Private Channel",
+      Read_Only_Channel: "Read Only Channel",
       Broadcast_channel_Description:
         "Only authorized users can write new messages, but the other users will be able to reply",
 
@@ -203,6 +205,7 @@ module.exports = {
       There_was_an_error_while_creating_channel_action:
         "There was an error while creating channel!",
       Channel_Name: "Channel Name",
+      creating_channel: "creating channel",
       Invite: "Invite",
       "1_user": "1 user",
       N_users: "n users",

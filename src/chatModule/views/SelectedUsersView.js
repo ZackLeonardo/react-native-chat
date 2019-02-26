@@ -5,7 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   FlatList,
-  LayoutAnimation,
+  // LayoutAnimation,
   Platform,
   TouchableOpacity
 } from "react-native";
@@ -81,9 +81,9 @@ export default class SelectedUsersView extends LoggedView {
   }
 
   static navigationOptions = props => {
-    const { screenProps } = props;
+    const { navigation, screenProps } = props;
     return {
-      title: screenProps.translate("ran.chat.Details"),
+      title: navigation.state.params.title,
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -93,15 +93,12 @@ export default class SelectedUsersView extends LoggedView {
           color="#4674F1"
         />
       ),
-      headerRight: (
+      headerRight: navigation.state.params.showRightButton ? (
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{ marginHorizontal: 15 }}
             onPress={() => {
-              navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.chat.New_Message"),
-                onPressItem: navigation.state.params.onPressItem
-              });
+              navigation.state.params.onNavigatorEvent();
             }}
           >
             <Icon
@@ -111,11 +108,16 @@ export default class SelectedUsersView extends LoggedView {
             />
           </TouchableOpacity>
         </View>
-      )
+      ) : null
     };
   };
 
   async componentDidMount() {
+    this.props.navigation.setParams({
+      onNavigatorEvent: this.onNavigatorEvent,
+      checkUserSelected: this.checkUserSelected
+    });
+
     this.data = await database.objects(
       "subscriptions",
       `WHERE t = "d" ORDER BY roomUpdatedAt ASC`
@@ -136,13 +138,14 @@ export default class SelectedUsersView extends LoggedView {
     // }
     if (prevProps.users.length !== this.props.users.length) {
       const { length } = this.props.users;
-      const rightButtons = [];
       if (length > 0) {
-        // rightButtons.push({
-        //   id: "create",
-        //   title: this.props.screenProps.translate("ran.chat.Next"),
-        //   testID: "selected-users-view-submit"
-        // });
+        this.props.navigation.setParams({
+          showRightButton: true
+        });
+      } else {
+        this.props.navigation.setParams({
+          showRightButton: false
+        });
       }
       // this.props.navigator.setButtons({ rightButtons });
     }
@@ -160,31 +163,35 @@ export default class SelectedUsersView extends LoggedView {
     this.props.reset();
   }
 
-  async onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "create") {
-        const { setLoadingInvite, navigator } = this.props;
-        const { nextAction } = this.props.navigation.state.params;
-        if (nextAction === "CREATE_CHANNEL") {
-          this.props.navigator.push({
-            screen: "CreateChannelView",
-            title: this.props.screenProps.translate("ran.chat.Create_Channel"),
-            backButtonTitle: ""
-          });
-        } else {
-          try {
-            setLoadingInvite(true);
-            await RocketChat.addUsersToRoom(this.props.rid);
-            navigator.pop();
-          } catch (e) {
-            log("RoomActions Add User", e);
-          } finally {
-            setLoadingInvite(false);
-          }
-        }
+  // checkUserSelected = () => {
+  //   if (this.props.users) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
+  onNavigatorEvent = async () => {
+    const { setLoadingInvite, navigation } = this.props;
+    const { nextAction, rid } = navigation.state.params;
+    if (nextAction === "CREATE_CHANNEL") {
+      this.props.navigation.navigate("CreateChannelView", {
+        title: this.props.screenProps.translate("ran.chat.Create_Channel"),
+        backButtonTitle: ""
+      });
+    } else {
+      try {
+        setLoadingInvite(true);
+        await RocketChat.addUsersToRoom(rid);
+        navigation.pop({
+          n: 1
+        });
+      } catch (e) {
+        log("RoomActions Add User", e);
+      } finally {
+        setLoadingInvite(false);
       }
     }
-  }
+  };
 
   onSearchChangeText(text) {
     this.search(text);
@@ -205,7 +212,7 @@ export default class SelectedUsersView extends LoggedView {
     this.props.users.findIndex(el => el.name === username) !== -1;
 
   toggleUser = user => {
-    LayoutAnimation.easeInEaseOut();
+    // LayoutAnimation.easeInEaseOut();
     if (!this.isChecked(user.name)) {
       this.props.addUser(user);
     } else {
