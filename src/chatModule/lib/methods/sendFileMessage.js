@@ -95,7 +95,7 @@ export async function sendFileMessage(rid, fileInfo) {
       "uploads",
       `WHERE path = ${fileInfo.path}`
     );
-    database.delete(upload);
+    database.delete("uploads", upload);
   } catch (e) {
     console.log(e);
     fileInfo.error = true;

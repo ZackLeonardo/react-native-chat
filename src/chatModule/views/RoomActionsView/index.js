@@ -399,7 +399,12 @@ export default class RoomActionsView extends LoggedView {
         {
           text: this.props.screenProps.translate("ran.chat.Yes_action_leave"),
           style: "destructive",
-          onPress: () => this.props.leaveRoom(room.rid)
+          onPress: () => {
+            this.props.navigation.pop(2);
+            setTimeout(() => {
+              this.props.leaveRoom(room.rid);
+            }, 1000);
+          }
         }
       ]
     );

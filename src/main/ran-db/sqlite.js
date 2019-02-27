@@ -530,6 +530,20 @@ class DB {
           );
         }
       });
+    } else {
+      let key = keys[schema_name][0];
+      let value = schema_object[key];
+      if (key) {
+        this.database.transaction(
+          tx => {
+            tx.executeSql(
+              `DELETE FROM ${schema_name} WHERE ${key} = "${value}"`
+            );
+          },
+          null,
+          pubsubs("delete")
+        );
+      }
     }
   }
 

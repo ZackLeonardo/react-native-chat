@@ -154,10 +154,14 @@ export default class RoomsListView extends LoggedView {
   }
 
   componentDidMount() {
+    console.log("componentDidMount");
+
     this.getSubscriptions();
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("componentWillReceiveProps");
+
     if (
       nextProps.server &&
       this.props.loadingServer !== nextProps.loadingServer
@@ -173,10 +177,14 @@ export default class RoomsListView extends LoggedView {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log("shouldComponentUpdate");
+
     return !(isEqual(this.props, nextProps) && isEqual(this.state, nextState));
   }
 
   componentDidUpdate(prevProps) {
+    console.log("componentDidUpdate");
+
     if (
       !(
         prevProps.sortBy === this.props.sortBy &&
@@ -251,6 +259,8 @@ export default class RoomsListView extends LoggedView {
     if (!isEqual(this.privateGroup, this.state.privateGroup)) {
       //!_.isEqualWith(this.unread, newUnread)
       console.log("privateGroup updating");
+      console.log(this.privateGroup);
+
       this.setState({ privateGroup: this.privateGroup });
     }
   };

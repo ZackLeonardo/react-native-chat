@@ -12,6 +12,7 @@ import {
 } from "redux-saga/effects";
 import { delay } from "redux-saga";
 import { BACKGROUND } from "redux-enhancer-react-native-appstate";
+import { NavigationActions } from "react-navigation";
 
 import * as types from "../actions/actionsTypes";
 // import { roomsSuccess, roomsFailure } from '../actions/rooms';
@@ -22,6 +23,7 @@ import database from "../../main/ran-db/sqlite";
 import log from "../utils/log";
 // import I18n from "../i18n";
 // import { NavigationActions } from "../Navigation";
+import { ChatModuleNavigator } from "../index";
 
 const leaveRoom = rid => RocketChat.leaveRoom(rid);
 const eraseRoom = rid => RocketChat.eraseRoom(rid);
@@ -150,18 +152,14 @@ const updateLastOpen = function* updateLastOpen() {
 };
 
 const goRoomsListAndDelete = function* goRoomsListAndDelete(rid) {
-  console.log("biubiu: NavigationActions.popToRoot();");
-  // NavigationActions.popToRoot();
-  yield delay(1000);
   try {
-    database.write(() => {
-      const messages = database.objects("messages").filtered("rid = $0", rid);
-      database.delete(messages);
-      const subscription = database
-        .objects("subscriptions")
-        .filtered("rid = $0", rid);
-      database.delete(subscription);
-    });
+    const messages = yield database.objects("messages", `WHERE rid = "${rid}"`);
+    database.delete("messages", messages);
+    const subscription = yield database.objects(
+      "subscriptions",
+      `WHERE rid = "${rid}"`
+    );
+    database.delete("subscriptions", subscription);
   } catch (error) {
     console.warn("goRoomsListAndDelete", error);
   }

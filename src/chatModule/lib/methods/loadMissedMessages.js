@@ -55,7 +55,7 @@ export default async function loadMissedMessages(...args) {
                 "messages",
                 `WHERE _id ="${m._id}"`
               );
-              database.delete(message);
+              database.delete("messages", message);
             });
           });
         }

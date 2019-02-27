@@ -71,15 +71,15 @@ export default async function subscribeRooms(id) {
                 `WHERE rid == "${subscription.rid}"`
               );
             }
-            database.delete(messages);
-            database.delete(subscription);
+            database.delete("messages", messages);
+            database.delete("subscriptions", subscription);
           } else {
             const rooms = await database.objects(
               "rooms",
               `WHERE _id == "${data.rid}"`
             );
             database.create("subscriptions", merge(data, rooms[0]), true);
-            database.delete(rooms);
+            database.delete("rooms", rooms);
           }
         }
         if (/rooms/.test(ev)) {

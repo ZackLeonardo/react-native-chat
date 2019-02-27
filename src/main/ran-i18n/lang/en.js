@@ -217,6 +217,9 @@ module.exports = {
         "There was an error while saving settings!",
       Settings_succesfully_changed: "Settings succesfully changed!",
       Are_you_sure_question_mark: "Are you sure?",
+      Are_you_sure_you_want_to_leave_the_room:
+        "Are you sure you want to leave this room? ",
+      Yes_action_leave: "Yes, leave it!",
       Delete_Room_Warning:
         "Deleting a room will delete all messages posted within the room. This cannot be undone.",
       Yes_action_delete_it: "Yes, delete it!",
