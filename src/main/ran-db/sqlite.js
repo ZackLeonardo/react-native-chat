@@ -526,7 +526,8 @@ class DB {
               );
             },
             null,
-            pubsubs("delete")
+            pubsubs(schema_name)
+            // pubsubs("delete")
           );
         }
       });
@@ -541,7 +542,8 @@ class DB {
             );
           },
           null,
-          pubsubs("delete")
+          pubsubs(schema_name)
+          // pubsubs("delete")
         );
       }
     }

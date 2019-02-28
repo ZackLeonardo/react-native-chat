@@ -258,9 +258,6 @@ export default class RoomsListView extends LoggedView {
 
     if (!isEqual(this.privateGroup, this.state.privateGroup)) {
       //!_.isEqualWith(this.unread, newUnread)
-      console.log("privateGroup updating");
-      console.log(this.privateGroup);
-
       this.setState({ privateGroup: this.privateGroup });
     }
   };
