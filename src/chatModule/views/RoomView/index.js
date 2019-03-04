@@ -247,7 +247,7 @@ export default class RoomView extends LoggedView {
           t: this.state.room.t,
           latest: lastRowData.ts
         });
-        this.setState({ end: result < 20 });
+        this.setState({ end: result ? result.length < 20 : true });
       } catch (e) {
         log("RoomView.onEndReached", e);
       }
