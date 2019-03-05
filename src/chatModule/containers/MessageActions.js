@@ -4,7 +4,9 @@ import { Alert, Clipboard, Vibration, Share } from "react-native";
 import { connect } from "react-redux";
 import ActionSheet from "react-native-actionsheet";
 import * as moment from "moment";
+import { compose, hoistStatics } from "recompose";
 
+import { translate } from "../../main/ran-i18n";
 import {
   deleteRequest,
   editInit,
@@ -16,7 +18,6 @@ import {
 } from "../actions/messages";
 import { showToast } from "../utils/info";
 import RocketChat from "../lib/rocketchat";
-// import I18n from '../i18n';
 
 @connect(
   state => ({
@@ -40,7 +41,7 @@ import RocketChat from "../lib/rocketchat";
     replyInit: (message, mention) => dispatch(replyInit(message, mention))
   })
 )
-export default class MessageActions extends React.Component {
+class MessageActions extends React.Component {
   static propTypes = {
     actionsHide: PropTypes.func.isRequired,
     room: PropTypes.object.isRequired,
@@ -66,62 +67,68 @@ export default class MessageActions extends React.Component {
     this.setPermissions();
 
     // Cancel
-    this.options = ['I18n.t("Cancel")'];
+    this.options = [props.translate("ran.chat.Cancel")];
     this.CANCEL_INDEX = 0;
 
     // Reply
     if (!this.isRoomReadOnly()) {
-      this.options.push('I18n.t("Reply")');
+      this.options.push(props.translate("ran.chat.Reply"));
       this.REPLY_INDEX = this.options.length - 1;
     }
 
     // Edit
     if (this.allowEdit(props)) {
-      this.options.push('I18n.t("Edit")');
+      this.options.push(props.translate("ran.chat.Edit"));
       this.EDIT_INDEX = this.options.length - 1;
     }
 
     // Permalink
-    this.options.push('I18n.t("Copy_Permalink")');
+    this.options.push(props.translate("ran.chat.Copy_Permalink"));
     this.PERMALINK_INDEX = this.options.length - 1;
 
     // Copy
-    this.options.push('I18n.t("Copy_Message")');
+    this.options.push(props.translate("ran.chat.Copy_Message"));
     this.COPY_INDEX = this.options.length - 1;
 
     // Share
-    this.options.push('I18n.t("Share_Message")');
+    this.options.push(props.translate("ran.chat.Share_Message"));
     this.SHARE_INDEX = this.options.length - 1;
 
     // Quote
     if (!this.isRoomReadOnly()) {
-      this.options.push('I18n.t("Quote")');
+      this.options.push(props.translate("ran.chat.Quote"));
       this.QUOTE_INDEX = this.options.length - 1;
     }
 
     // Star
     if (this.props.Message_AllowStarring) {
       this.options.push(
-        'I18n.t(props.actionMessage.starred ? "Unstar" : "Star")'
+        props.actionMessage.starred
+          ? props.translate("ran.chat.Unstar")
+          : props.translate("ran.chat.Star")
       );
       this.STAR_INDEX = this.options.length - 1;
     }
 
     // Pin
     if (this.props.Message_AllowPinning) {
-      this.options.push('I18n.t(props.actionMessage.pinned ? "Unpin" : "Pin")');
+      this.options.push(
+        props.actionMessage.pinned
+          ? props.translate("ran.chat.Unpin")
+          : props.translate("ran.chat.Pin")
+      );
       this.PIN_INDEX = this.options.length - 1;
     }
 
     // Reaction
     if (!this.isRoomReadOnly() || this.canReactWhenReadOnly()) {
-      this.options.push('I18n.t("Add_Reaction")');
+      this.options.push(props.translate("ran.chat.Add_Reaction"));
       this.REACTION_INDEX = this.options.length - 1;
     }
 
     // Delete
     if (this.allowDelete(props)) {
-      this.options.push('I18n.t("Delete")');
+      this.options.push(props.translate("ran.chat.Delete"));
       this.DELETE_INDEX = this.options.length - 1;
     }
     setTimeout(() => {
@@ -223,15 +230,17 @@ export default class MessageActions extends React.Component {
 
   handleDelete() {
     Alert.alert(
-      'I18n.t("Are_you_sure_question_mark")',
-      'I18n.t("You_will_not_be_able_to_recover_this_message")',
+      this.props.translate("ran.chat.Are_you_sure_question_mark"),
+      this.props.translate(
+        "ran.chat.You_will_not_be_able_to_recover_this_message"
+      ),
       [
         {
-          text: 'I18n.t("Cancel")',
+          text: this.props.translate("ran.chat.Cancel"),
           style: "cancel"
         },
         {
-          text: 'I18n.t("Yes_action_it", { action: "delete" })',
+          text: this.props.translate("ran.chat.Yes_delete_it"),
           style: "destructive",
           onPress: () => this.props.deleteRequest(this.props.actionMessage)
         }
@@ -247,15 +256,12 @@ export default class MessageActions extends React.Component {
 
   handleCopy = async () => {
     await Clipboard.setString(this.props.actionMessage.msg);
-    showToast('I18n.t("Copied_to_clipboard")');
+    showToast(this.props.translate("ran.chat.Copied_to_clipboard"));
   };
 
   handleShare = async () => {
     Share.share({
-      message: this.props.actionMessage.msg.content.replace(
-        /<(?:.|\n)*?>/gm,
-        ""
-      )
+      message: this.props.actionMessage.msg.replace(/<(?:.|\n)*?>/gm, "")
     });
   };
 
@@ -266,7 +272,7 @@ export default class MessageActions extends React.Component {
   async handlePermalink() {
     const permalink = await this.getPermalink(this.props.actionMessage);
     Clipboard.setString(permalink);
-    showToast('I18n.t("Permalink_copied_to_clipboard")');
+    showToast(this.props.translate("ran.chat.Permalink_copied_to_clipboard"));
   }
 
   handlePin() {
@@ -327,7 +333,7 @@ export default class MessageActions extends React.Component {
     return (
       <ActionSheet
         ref={o => (this.actionSheet = o)}
-        title={'I18n.t("Message_actions")'}
+        title={this.props.translate("ran.chat.Message_actions")}
         testID="message-actions"
         options={this.options}
         cancelButtonIndex={this.CANCEL_INDEX}
@@ -337,3 +343,5 @@ export default class MessageActions extends React.Component {
     );
   }
 }
+
+export default hoistStatics(compose(translate))(MessageActions);

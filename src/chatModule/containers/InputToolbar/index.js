@@ -49,6 +49,10 @@ export default class InputToolbar extends Component {
     return null;
   }
 
+  focus = () => {
+    this.refs.composerRef.refs.composerInput.focus();
+  };
+
   render() {
     return (
       <Animated.View style={[styles.container, this.props.containerStyle]}>

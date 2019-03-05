@@ -416,11 +416,11 @@ export default class MessageBox extends React.PureComponent {
 
       // if original message wasn't sent by current user and neither from a direct room
       if (
-        username !== replyMessage.u.username &&
+        username !== JSON.parse(replyMessage.u).username &&
         roomType !== "d" &&
         replyMessage.mention
       ) {
-        msg += `@${replyMessage.u.username} `;
+        msg += `@${JSON.parse(replyMessage.u).username} `;
       }
 
       msg = `${msg} ${message}`;
@@ -722,39 +722,39 @@ export default class MessageBox extends React.PureComponent {
     );
   };
 
-  renderContent() {
-    if (this.state.recording) {
-      return <Recording onFinish={this.finishAudioMessage} />;
-    }
-    return [
-      this.renderMentions(),
-      <View style={styles.composer} key="messagebox">
-        {this.renderReplyPreview()}
-        <View
-          style={[styles.textArea, this.props.editing && styles.editing]}
-          testID="messagebox"
-        >
-          {this.leftButtons}
-          <TextInput
-            ref={component => (this.component = component)}
-            style={styles.textBoxInput}
-            returnKeyType="default"
-            keyboardType="twitter"
-            blurOnSubmit={false}
-            placeholder={this.props.translate("ran.chat.New_Message")}
-            onChangeText={text => this.onChangeText(text)}
-            value={this.state.text}
-            underlineColorAndroid="transparent"
-            defaultValue=""
-            multiline
-            placeholderTextColor="#9EA2A8"
-            testID="messagebox-input"
-          />
-          {this.rightButtons}
-        </View>
-      </View>
-    ];
-  }
+  // renderContent() {
+  //   if (this.state.recording) {
+  //     return <Recording onFinish={this.finishAudioMessage} />;
+  //   }
+  //   return [
+  //     this.renderMentions(),
+  //     <View style={styles.composer} key="messagebox">
+  //       {this.renderReplyPreview()}
+  //       <View
+  //         style={[styles.textArea, this.props.editing && styles.editing]}
+  //         testID="messagebox"
+  //       >
+  //         {this.leftButtons}
+  //         <TextInput
+  //           ref={component => (this.component = component)}
+  //           style={styles.textBoxInput}
+  //           returnKeyType="default"
+  //           keyboardType="twitter"
+  //           blurOnSubmit={false}
+  //           placeholder={this.props.translate("ran.chat.New_Message")}
+  //           onChangeText={text => this.onChangeText(text)}
+  //           value={this.state.text}
+  //           underlineColorAndroid="transparent"
+  //           defaultValue=""
+  //           multiline
+  //           placeholderTextColor="#9EA2A8"
+  //           testID="messagebox-input"
+  //         />
+  //         {this.rightButtons}
+  //       </View>
+  //     </View>
+  //   ];
+  // }
 
   onEmojiSelected = emoji => {
     this.setState({ text: this.state.text + emoji });

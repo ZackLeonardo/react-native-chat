@@ -189,6 +189,7 @@ module.exports = {
       No_mentioned_messages: "No mentioned messages",
       //starredMessagesView
       Unstar: "Unstar",
+      Star: "Star",
       No_starred_messages: "No starred messages",
       //searchMessagesView
       Search_Messages: "Search Messages",
@@ -196,6 +197,7 @@ module.exports = {
         "You can search using RegExp. e.g. `/^text$/i`",
       //pinnedMessagesView
       Unpin: "Unpin",
+      Pin: "Pin",
       No_pinned_messages: "No pinned messages",
       //snippedMessagesView
       No_snippeted_messages: "No snippeted messages",
@@ -256,6 +258,18 @@ module.exports = {
       User_has_been_muted: "User has been muted!",
       All: "All",
       Online: "Online",
+      //messageActions
+      Copy_Permalink: "Copy Permalink",
+      Copy_Message: "Copy Message",
+      Quote: "Quote",
+      Add_Reaction: "Add Reaction",
+      Message_actions: "Message actions",
+      You_will_not_be_able_to_recover_this_message:
+        "You will not be able to recover this message!",
+      Yes_action_it: "Yes, delete it!",
+      Copied_to_clipboard: "Copied to clipboard!",
+      Permalink_copied_to_clipboard: "Permalink copied to clipboard!",
+      Share_Message: "Share Message",
 
       // rooms
       unTop: "Not Top",

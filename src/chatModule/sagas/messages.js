@@ -68,6 +68,9 @@ const handleToggleStarRequest = function* handleToggleStarRequest({ message }) {
 
 const handleTogglePinRequest = function* handleTogglePinRequest({ message }) {
   try {
+    if (message.u) {
+      message.u = JSON.parse(message.u);
+    }
     yield call(togglePinMessage, message);
     yield put(togglePinSuccess());
   } catch (error) {
