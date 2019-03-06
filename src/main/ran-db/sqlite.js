@@ -224,7 +224,7 @@ const uploadsKeys = [
 const uploadsPk = ["path"];
 
 const schemas = [
-  serversSchema,
+  // serversSchema,
   settingsSchema,
   subscriptionSchema,
   subscriptionRolesSchema,
@@ -303,14 +303,25 @@ class DB {
   constructor() {
     this.database = SQLite.openDatabase("default.chat");
 
+    this.database.transaction(tx => {
+      // console.log(`schema is : ${schema}`);
+      tx.executeSql(serversSchema);
+    });
+    // this.initDB("localhost:3000.chat"); //("default.chat");
+  }
+
+  initDB = database => {
+    this.database = SQLite.openDatabase(database);
+
     schemas.map(schema =>
       this.database.transaction(tx => {
         // console.log(`schema is : ${schema}`);
         tx.executeSql(schema);
       })
     );
-  }
 
+    return this.database;
+  };
   // get database() {
   //   return this.database.activeDB;
   // }
@@ -551,7 +562,10 @@ class DB {
 
   setActiveDB(db = "") {
     const path = db.replace(/(^\w+:|^)\/\//, "");
-    return (this.database.activeDB = SQLite.openDatabase(`${path}.chat`));
+
+    return this.initDB(`${path}.chat`);
+
+    // return (this.database = SQLite.openDatabase(`${path}.chat`));
   }
 }
 export default new DB();

@@ -430,8 +430,7 @@ export default class RoomsListView extends LoggedView {
   };
 
   // this is necessary during development (enables Cmd + r)
-  hasActiveDB = () =>
-    database && database.database && database.database.activeDB;
+  hasActiveDB = () => database && database.database; // && database.database.activeDB;
 
   cancelSearchingAndroid = () => {
     if (Platform.OS === "android") {

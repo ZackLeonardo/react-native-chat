@@ -248,7 +248,7 @@ export const ChatModuleNavigator = createDrawerNavigator(
 // import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 // import OAuthView from './OAuthView';
-// import OnboardingView from "./OnboardingView";
+
 // import ProfileView from './ProfileView';
 // import RoomsListHeaderView from './RoomsListView/Header';
 // import RoomsListSearchView from './RoomsListView/Search';
