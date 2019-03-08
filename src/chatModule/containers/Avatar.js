@@ -126,17 +126,9 @@ export default class Avatar extends React.PureComponent {
     let image;
 
     if (type === "d" && !forceInitials) {
-      const uri = avatar || `${baseUrl}/avatar/${text}`;
+      const uri = avatar || `${baseUrl}/avatar/${text}?time=${new Date()}`;
       image = uri ? (
-        <Image
-          style={[styles.avatar, avatarStyle]}
-          source={
-            {
-              // uri,
-              // priority: Image.priority.high
-            }
-          }
-        />
+        <Image style={[styles.avatar, avatarStyle]} source={{ uri: uri }} />
       ) : null;
     }
 

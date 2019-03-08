@@ -33,6 +33,7 @@ import SnippetedMessagesView from "./views/SnippetedMessagesView";
 import SelectedUsersView from "./views/SelectedUsersView";
 import RoomInfoEditView from "./views/RoomInfoEditView";
 import RoomMembersView from "./views/RoomMembersView";
+import ProfileView from "./views/ProfileView";
 
 import Sidebar from "./containers/Sidebar";
 
@@ -139,9 +140,9 @@ const StackNavigator = createStackNavigator(
         header: null
       }
     },
-    Sidebar: {
-      screen: Sidebar
-    },
+    // Sidebar: {
+    //   screen: Sidebar
+    // },
     NewServerView: {
       screen: NewServerView,
       navigationOptions: {
@@ -168,6 +169,9 @@ const StackNavigator = createStackNavigator(
     },
     SettingsView: {
       screen: SettingsView
+    },
+    ProfileView: {
+      screen: ProfileView
     },
     RoomView: {
       screen: gestureHandlerRootHOC(RoomView)
@@ -212,29 +216,11 @@ const StackNavigator = createStackNavigator(
   }
 );
 
-const CustomDrawerContent = props => (
-  <ScrollView>
-    <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
-      <DrawerItems
-        {...props}
-        onItemPress={navigation => {
-          if (navigation.route.key === "StackNavigator") {
-            props.navigation.navigate("RoomsListView");
-          } else {
-            props.navigation.navigate(navigation.route.key);
-          }
-        }}
-      />
-    </SafeAreaView>
-  </ScrollView>
-);
+const CustomDrawerContent = props => <Sidebar {...props} />;
 
 export const ChatModuleNavigator = createDrawerNavigator(
   {
-    StackNavigator: StackNavigator,
-    SettingsView: {
-      screen: SettingsView
-    }
+    StackNavigator: StackNavigator
   },
   {
     drawerPosition: "left",
@@ -249,7 +235,6 @@ export const ChatModuleNavigator = createDrawerNavigator(
 
 // import OAuthView from './OAuthView';
 
-// import ProfileView from './ProfileView';
 // import RoomsListHeaderView from './RoomsListView/Header';
 // import RoomsListSearchView from './RoomsListView/Search';
 // import RoomsListView from "./RoomsListView";

@@ -270,6 +270,27 @@ module.exports = {
       Copied_to_clipboard: "Copied to clipboard!",
       Permalink_copied_to_clipboard: "Permalink copied to clipboard!",
       Share_Message: "Share Message",
+      //sidebar
+      Busy: "Busy",
+      Away: "Away",
+      Invisible: "Invisible",
+      Chats: "Chats",
+      Messages: "Messages",
+      Profile: "Profile",
+      Logout: "Logout",
+      Add_Server: "Add Server",
+      //profileView
+      "error-too-many-requests":
+        "Error, too many requests. Please slow down. Try later!",
+      Profile_saved_successfully: "Profile saved successfully!",
+      Avatar_changed_successfully: "Avatar changed successfully!",
+      New_Message: "New Message",
+      New_Password: "New Password",
+      Avatar_Url: "Avatar URL",
+      Save_Changes: "Save Changes",
+      Please_enter_your_password: "Please enter your password",
+      For_your_security_you_must_enter_your_current_password_to_continue:
+        "For your security, you must enter your current password to continue",
 
       // rooms
       unTop: "Not Top",

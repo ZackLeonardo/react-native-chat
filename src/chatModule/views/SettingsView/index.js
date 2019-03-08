@@ -28,7 +28,7 @@ import { setUser } from "../../actions/login";
 /** @extends React.Component */
 export default class SettingsView extends LoggedView {
   static propTypes = {
-    navigator: PropTypes.object,
+    navigation: PropTypes.object,
     userLanguage: PropTypes.string,
     setUser: PropTypes.func
   };
@@ -66,17 +66,6 @@ export default class SettingsView extends LoggedView {
       ],
       saving: false
     };
-    // props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
-  onNavigatorEvent(event) {
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "settings") {
-        this.props.navigator.toggleDrawer({
-          side: "left"
-        });
-      }
-    }
   }
 
   getLabel = language => {

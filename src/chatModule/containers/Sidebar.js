@@ -25,7 +25,6 @@ import Touch from "../utils/touch";
 import { STATUS_COLORS } from "../constants/colors";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
-// import I18n from "../i18n";
 import { NavigationActions } from "../Navigation";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
 
@@ -127,7 +126,7 @@ export default class Sidebar extends Component {
   componentDidMount() {
     this.setState(this.getState());
     this.setStatus();
-    database.databases.serversDB.addListener("change", this.updateState);
+    // database.databases.serversDB.addListener("change", this.updateState);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -141,7 +140,7 @@ export default class Sidebar extends Component {
   }
 
   componentWillUnmount() {
-    database.databases.serversDB.removeListener("change", this.updateState);
+    // database.databases.serversDB.removeListener("change", this.updateState);
   }
 
   onPressItem = item => {
@@ -154,19 +153,19 @@ export default class Sidebar extends Component {
         status: [
           {
             id: "online",
-            name: 'I18n.t("Online")'
+            name: this.props.screenProps.translate("ran.chat.Online")
           },
           {
             id: "busy",
-            name: 'I18n.t("Busy")'
+            name: this.props.screenProps.translate("ran.chat.Busy")
           },
           {
             id: "away",
-            name: 'I18n.t("Away")'
+            name: this.props.screenProps.translate("ran.chat.Away")
           },
           {
             id: "offline",
-            name: 'I18n.t("Invisible")'
+            name: this.props.screenProps.translate("ran.chat.Invisible")
           }
         ]
       });
@@ -174,7 +173,7 @@ export default class Sidebar extends Component {
   };
 
   getState = () => ({
-    servers: database.databases.serversDB.objects("servers")
+    // servers: database.databases.serversDB.objects("servers")
   });
 
   updateState = () => {
@@ -182,11 +181,7 @@ export default class Sidebar extends Component {
   };
 
   closeDrawer = () => {
-    this.props.navigator.toggleDrawer({
-      side: "left",
-      animated: true,
-      to: "close"
-    });
+    this.props.navigation.goBack();
   };
 
   toggleServers = () => {
@@ -196,7 +191,7 @@ export default class Sidebar extends Component {
 
   sidebarNavigate = (screen, title) => {
     this.closeDrawer();
-    NavigationActions.resetTo({ screen, title });
+    this.props.navigation.navigate(screen, { title });
   };
 
   renderSeparator = key => <View key={key} style={styles.separator} />;
@@ -278,27 +273,38 @@ export default class Sidebar extends Component {
 
   renderNavigation = () => [
     this.renderItem({
-      text: 'I18n.t("Chats")',
+      text: this.props.screenProps.translate("ran.chat.Chats"),
       left: <Icon name="chat-bubble" size={20} />,
       onPress: () =>
-        this.sidebarNavigate("RoomsListView", 'I18n.t("Messages")'),
+        this.sidebarNavigate(
+          "RoomsListView",
+          this.props.screenProps.translate("ran.chat.Messages")
+        ),
       testID: "sidebar-chats"
     }),
     this.renderItem({
-      text: 'I18n.t("Profile")',
+      text: this.props.screenProps.translate("ran.chat.Profile"),
       left: <Icon name="person" size={20} />,
-      onPress: () => this.sidebarNavigate("ProfileView", 'I18n.t("Profile")'),
+      onPress: () =>
+        this.sidebarNavigate(
+          "ProfileView",
+          this.props.screenProps.translate("ran.chat.Profile")
+        ),
       testID: "sidebar-profile"
     }),
     this.renderItem({
-      text: 'I18n.t("Settings")',
+      text: this.props.screenProps.translate("ran.chat.Settings"),
       left: <Icon name="settings" size={20} />,
-      onPress: () => this.sidebarNavigate("SettingsView", 'I18n.t("Settings")'),
+      onPress: () =>
+        this.sidebarNavigate(
+          "SettingsView",
+          this.props.screenProps.translate("ran.chat.Settings")
+        ),
       testID: "sidebar-settings"
     }),
     this.renderSeparator("separator-logout"),
     this.renderItem({
-      text: 'I18n.t("Logout")',
+      text: this.props.screenProps.translate("ran.chat.Logout"),
       left: <Icon name="exit-to-app" size={20} />,
       onPress: () => this.props.logout(),
       testID: "sidebar-logout"
@@ -323,18 +329,18 @@ export default class Sidebar extends Component {
     />,
     this.renderSeparator("separator-add-server"),
     this.renderItem({
-      text: 'I18n.t("Add_Server")',
+      text: this.props.screenProps.translate("ran.chat.Add_Server"),
       left: <Icon name="add" size={20} />,
       onPress: () => {
         this.closeDrawer();
         this.toggleServers();
-        this.props.navigator.showModal({
-          screen: "NewServerView",
-          title: 'I18n.t("Add_Server")',
-          passProps: {
-            previousServer: this.props.server
-          }
-        });
+        // this.props.navigator.showModal({
+        //   screen: "NewServerView",
+        //   title: 'I18n.t("Add_Server")',
+        //   passProps: {
+        //     previousServer: this.props.server
+        //   }
+        // });
       },
       testID: "sidebar-add-server"
     })
