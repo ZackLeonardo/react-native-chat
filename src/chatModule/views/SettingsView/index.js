@@ -109,11 +109,11 @@ export default class SettingsView extends LoggedView {
           this.props.screenProps.translate("ran.chat.Preferences_saved")
         );
 
-        // if (params.language) {
-        //   this.props.navigation.setTitle({
-        //     title: this.props.translate("ran.common.Settings")
-        //   });
-        // }
+        if (params.language) {
+          this.props.navigation.setParams({
+            title: this.props.screenProps.translate("ran.chat.Settings")
+          });
+        }
       }, 300);
     } catch (e) {
       this.setState({ saving: false });

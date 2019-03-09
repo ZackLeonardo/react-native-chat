@@ -14,6 +14,7 @@ import {
 import { connect } from "react-redux";
 // import FastImage from "react-native-fast-image"; //change to Image
 import Icon from "@expo/vector-icons/MaterialIcons";
+import { StackActions, NavigationActions } from "react-navigation";
 
 import database from "../../main/ran-db/sqlite";
 import { selectServerRequest } from "../actions/server";
@@ -25,7 +26,6 @@ import Touch from "../utils/touch";
 import { STATUS_COLORS } from "../constants/colors";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
-import { NavigationActions } from "../Navigation";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
 
 const styles = StyleSheet.create({
@@ -189,6 +189,29 @@ export default class Sidebar extends Component {
     this.setState({ showServers: !this.state.showServers });
   };
 
+  toggleLogout = () => {
+    const { server } = this.props;
+
+    this.props.logout();
+
+    const resetAction = StackActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: "OnboardingView" }),
+        NavigationActions.navigate({
+          routeName: "NewServerView",
+          params: { server: server, dontAutoConnectServer: true }
+        })
+        // NavigationActions.navigate({
+        //   routeName: "LoginSignupView"
+        // })
+      ]
+    });
+
+    this.props.navigation.dispatch(StackActions.popToTop());
+    this.props.navigation.dispatch(resetAction);
+  };
+
   sidebarNavigate = (screen, title) => {
     this.closeDrawer();
     this.props.navigation.navigate(screen, { title });
@@ -306,7 +329,7 @@ export default class Sidebar extends Component {
     this.renderItem({
       text: this.props.screenProps.translate("ran.chat.Logout"),
       left: <Icon name="exit-to-app" size={20} />,
-      onPress: () => this.props.logout(),
+      onPress: () => this.toggleLogout(),
       testID: "sidebar-logout"
     })
   ];

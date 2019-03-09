@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/FontAwesome";
+import IonIcon from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Base64 } from "js-base64";
 
@@ -22,7 +23,6 @@ import scrollPersistTaps from "../utils/scrollPersistTaps";
 import random from "../utils/random";
 import Button from "../containers/Button";
 import Loading from "../containers/Loading";
-// import I18n from "../i18n";
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +96,15 @@ export default class LoginSignupView extends LoggedView {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("title"),
-      headerBackTitle: null
+      headerBackTitle: null,
+      headerBackImage: (
+        <IonIcon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      )
     };
   };
 

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Keyboard, Text, ScrollView, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
+import IonIcon from "@expo/vector-icons/Ionicons";
 // import { Answers } from "react-native-fabric";
 
 import RocketChat from "../lib/rocketchat";
@@ -45,7 +46,15 @@ export default class LoginView extends LoggedView {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("title"),
-      headerBackTitle: null
+      headerBackTitle: null,
+      headerBackImage: (
+        <IonIcon
+          name="ios-arrow-back"
+          style={{ marginHorizontal: 15 }}
+          size={22}
+          color="#4674F1"
+        />
+      )
     };
   };
 

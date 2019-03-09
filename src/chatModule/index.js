@@ -140,9 +140,6 @@ const StackNavigator = createStackNavigator(
         header: null
       }
     },
-    // Sidebar: {
-    //   screen: Sidebar
-    // },
     NewServerView: {
       screen: NewServerView,
       navigationOptions: {
