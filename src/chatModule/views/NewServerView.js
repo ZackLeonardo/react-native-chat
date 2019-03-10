@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import { logout } from "../actions/login";
 
 import { serverRequest } from "../actions/server";
 import sharedStyles from "./Styles";
@@ -64,7 +65,8 @@ const defaultServer = "https://open.rocket.chat";
     failure: state.server.failure
   }),
   dispatch => ({
-    connectServer: server => dispatch(serverRequest(server))
+    connectServer: server => dispatch(serverRequest(server)),
+    logout: () => dispatch(logout())
   })
 )
 /** @extends React.Component */
@@ -115,9 +117,20 @@ export default class NewServerView extends LoggedView {
   };
 
   submit = () => {
+    const { previousServer } = this.props.navigation.state.params;
+
     if (this.state.text) {
       Keyboard.dismiss();
-      this.props.connectServer(this.completeUrl(this.state.text));
+      if (previousServer) {
+        if (this.state.text !== previousServer) {
+          this.props.logout();
+          this.props.connectServer(this.completeUrl(this.state.text));
+        } else {
+          this.props.navigation.navigate("RoomsListView", {});
+        }
+      } else {
+        this.props.connectServer(this.completeUrl(this.state.text));
+      }
     }
   };
 

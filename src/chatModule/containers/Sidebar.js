@@ -192,8 +192,6 @@ export default class Sidebar extends Component {
   toggleLogout = () => {
     const { server } = this.props;
 
-    this.props.logout();
-
     const resetAction = StackActions.reset({
       index: 1,
       actions: [
@@ -201,6 +199,7 @@ export default class Sidebar extends Component {
         NavigationActions.navigate({
           routeName: "NewServerView",
           params: { server: server, dontAutoConnectServer: true }
+          // params: { previousServer: server }
         })
         // NavigationActions.navigate({
         //   routeName: "LoginSignupView"
@@ -329,7 +328,10 @@ export default class Sidebar extends Component {
     this.renderItem({
       text: this.props.screenProps.translate("ran.chat.Logout"),
       left: <Icon name="exit-to-app" size={20} />,
-      onPress: () => this.toggleLogout(),
+      onPress: () => {
+        this.props.logout();
+        this.toggleLogout();
+      },
       testID: "sidebar-logout"
     })
   ];
@@ -355,15 +357,13 @@ export default class Sidebar extends Component {
       text: this.props.screenProps.translate("ran.chat.Add_Server"),
       left: <Icon name="add" size={20} />,
       onPress: () => {
-        this.closeDrawer();
         this.toggleServers();
-        // this.props.navigator.showModal({
-        //   screen: "NewServerView",
-        //   title: 'I18n.t("Add_Server")',
-        //   passProps: {
-        //     previousServer: this.props.server
-        //   }
-        // });
+        this.closeDrawer();
+        // this.toggleLogout();
+        this.props.navigation.navigate("NewServerView", {
+          title: this.props.screenProps.translate("ran.chat.Add_Server"),
+          previousServer: this.props.server
+        });
       },
       testID: "sidebar-add-server"
     })
