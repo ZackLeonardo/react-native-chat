@@ -232,16 +232,10 @@ export const ChatModuleNavigator = createDrawerNavigator(
 
 // import OAuthView from './OAuthView';
 
-// import RoomsListHeaderView from './RoomsListView/Header';
-// import RoomsListSearchView from './RoomsListView/Search';
-// import RoomsListView from "./RoomsListView";
-// import Sidebar from "../containers/Sidebar";
+// import RoomsListHeaderView from './RoomsListView/Header';  roomslist上面header
+// import RoomsListSearchView from './RoomsListView/Search';  android搜索
 
 // export const registerScreens = store => {
-// Navigation.registerComponent('CreateChannelView', () => CreateChannelView, store, Provider);
-// Navigation.registerComponent('ForgotPasswordView', () => ForgotPasswordView, store, Provider);
-
-// Navigation.registerComponent('MentionedMessagesView', () => gestureHandlerRootHOC(MentionedMessagesView), store, Provider);
 
 // Navigation.registerComponent('OAuthView', () => OAuthView, store, Provider);
 // Navigation.registerComponent(
@@ -251,19 +245,9 @@ export const ChatModuleNavigator = createDrawerNavigator(
 //   Provider
 // );
 // Navigation.registerComponent('PrivacyPolicyView', () => PrivacyPolicyView, store, Provider);
-// Navigation.registerComponent('ProfileView', () => ProfileView, store, Provider);
-// Navigation.registerComponent('RegisterView', () => RegisterView, store, Provider);
 
 // Navigation.registerComponent('RoomsListHeaderView', () => RoomsListHeaderView, store, Provider);
 // Navigation.registerComponent('RoomsListSearchView', () => RoomsListSearchView, store, Provider);
-// Navigation.registerComponent(
-//   "RoomsListView",
-//   () => gestureHandlerRootHOC(RoomsListView),
-//   store,
-//   Provider
-// );
 
-// Navigation.registerComponent('SettingsView', () => SettingsView, store, Provider);
-// Navigation.registerComponent("Sidebar", () => Sidebar, store, Provider);
 // Navigation.registerComponent('TermsServiceView', () => TermsServiceView, store, Provider);
 // };

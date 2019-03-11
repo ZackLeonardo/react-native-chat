@@ -301,9 +301,10 @@ const isDateColumn = column => {
 
 class DB {
   constructor() {
-    this.database = SQLite.openDatabase("default.chat");
+    this.database = null;
+    this.serversDB = SQLite.openDatabase("default.chat");
 
-    this.database.transaction(tx => {
+    this.serversDB.transaction(tx => {
       // console.log(`schema is : ${schema}`);
       tx.executeSql(serversSchema);
     });
@@ -314,10 +315,14 @@ class DB {
     this.database = SQLite.openDatabase(database);
 
     schemas.map(schema =>
-      this.database.transaction(tx => {
-        // console.log(`schema is : ${schema}`);
-        tx.executeSql(schema);
-      })
+      this.database.transaction(
+        tx => {
+          // console.log(`schema is : ${schema}`);
+          tx.executeSql(schema);
+        },
+        null,
+        pubsubs("change")
+      )
     );
 
     return this.database;
@@ -344,7 +349,7 @@ class DB {
     );
   };
 
-  objects = (table, requirement) => {
+  objects = (table, requirement, db = this.database) => {
     let sql = requirement
       ? `SELECT * FROM ${table} ${requirement}`
       : `SELECT * FROM ${table}`;
@@ -354,7 +359,7 @@ class DB {
       try {
         // let result = await fetchDoubanApi();
         // console.log(result);
-        this.database.transaction(tx => {
+        db.transaction(tx => {
           tx.executeSql(sql, [], (_, { rows }) => {
             console.log("sql: " + sql + " rows:  " + JSON.stringify(rows));
             resolve(rows._array);
@@ -373,7 +378,7 @@ class DB {
   // } else if (schema_object[key] === false) {
   //   values.push(0);
   // }
-  create(schema_name, schema_object, update) {
+  create(schema_name, schema_object, update, db = this.database) {
     if (update) {
       let sql = `INSERT OR IGNORE INTO ${schema_name} (`;
       let validKeys = [];
@@ -432,7 +437,7 @@ class DB {
 
       console.log("update sql:" + updateSql);
 
-      this.database.transaction(
+      db.transaction(
         tx => {
           tx.executeSql(sql, values);
           tx.executeSql(updateSql, values);
@@ -473,7 +478,7 @@ class DB {
       console.log("create sql:" + sql);
       console.log("create sql values:" + values);
 
-      this.database.transaction(
+      db.transaction(
         tx => {
           tx.executeSql(sql, values);
         },
@@ -521,7 +526,7 @@ class DB {
   //   );
   // }
 
-  delete(schema_name, schema_object) {
+  delete(schema_name, schema_object, db = this.database) {
     console.log("delete: " + schema_name);
     console.log(schema_object);
 
@@ -530,7 +535,7 @@ class DB {
         let key = keys[schema_name][0];
         let value = item[key];
         if (key) {
-          this.database.transaction(
+          db.transaction(
             tx => {
               tx.executeSql(
                 `DELETE FROM ${schema_name} WHERE ${key} = "${value}"`
@@ -546,7 +551,7 @@ class DB {
       let key = keys[schema_name][0];
       let value = schema_object[key];
       if (key) {
-        this.database.transaction(
+        db.transaction(
           tx => {
             tx.executeSql(
               `DELETE FROM ${schema_name} WHERE ${key} = "${value}"`
@@ -562,10 +567,11 @@ class DB {
 
   setActiveDB(db = "") {
     const path = db.replace(/(^\w+:|^)\/\//, "");
+    if (this.database) {
+      // this.database._db._closed = true;
+    }
 
     return this.initDB(`${path}.chat`);
-
-    // return (this.database = SQLite.openDatabase(`${path}.chat`));
   }
 }
 export default new DB();

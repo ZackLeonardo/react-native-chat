@@ -30,66 +30,69 @@ const handleSelectServer = function* handleSelectServer({ server }) {
     const token = yield AsyncStorage.getItem(
       `${RocketChat.TOKEN_KEY}-${server}`
     );
+
+    console.log(token);
+
     if (token) {
       yield put(actions.appStart("inside"));
     }
 
-    // const settings = yield database.objects("settings");
-    // yield put(
-    //   actions.setAllSettings(
-    //     RocketChat.parseSettings(settings.slice(0, settings.length))
-    //   )
-    // );
-    database.objects("settings").then(function*(rows) {
-      console.log("settings rows  " + JSON.stringify(rows));
-      if (rows) {
-        yield put(
-          actions.setAllSettings(
-            RocketChat.parseSettings(settings.slice(0, settings.length))
-          )
-        );
-      }
-    });
+    const settings = yield database.objects("settings");
+    yield put(
+      actions.setAllSettings(
+        RocketChat.parseSettings(settings.slice(0, settings.length))
+      )
+    );
+    // database.objects("settings").then(function*(rows) {
+    //   console.log("settings rows  " + JSON.stringify(rows));
+    //   if (rows) {
+    //     yield put(
+    //       actions.setAllSettings(
+    //         RocketChat.parseSettings(settings.slice(0, settings.length))
+    //       )
+    //     );
+    //   }
+    // });
 
-    // const emojis = yield database.objects("customEmojis");
-    // yield put(
-    //   actions.setCustomEmojis(
-    //     RocketChat.parseEmojis(emojis.slice(0, emojis.length))
-    //   )
-    // );
-    database.objects("customEmojis").then(function*(rows) {
-      console.log("customEmojis rows  " + JSON.stringify(rows));
-      if (rows) {
-        yield put(
-          actions.setCustomEmojis(
-            RocketChat.parseEmojis(emojis.slice(0, emojis.length))
-          )
-        );
-      }
-    });
+    const emojis = yield database.objects("customEmojis");
+    yield put(
+      actions.setCustomEmojis(
+        RocketChat.parseEmojis(emojis.slice(0, emojis.length))
+      )
+    );
+    // database.objects("customEmojis").then(function*(rows) {
+    //   console.log("customEmojis rows  " + JSON.stringify(rows));
+    //   if (rows) {
+    //     yield put(
+    //       actions.setCustomEmojis(
+    //         RocketChat.parseEmojis(emojis.slice(0, emojis.length))
+    //       )
+    //     );
+    //   }
+    // });
 
-    // const roles = yield database.objects("roles");
-    // yield put(
-    //   setRoles(
-    //     roles.reduce((result, role) => {
-    //       result[role._id] = role.description;
-    //       return result;
-    //     }, {})
-    //   )
-    // );
-    database.objects("roles").then(function*(rows) {
-      console.log("roles rows  " + JSON.stringify(rows));
-      if (rows) {
-        yield put(
-          setRoles(
-            roles.reduce((result, role) => {
-              result[role._id] = role.description;
-              return result;
-            }, {})
-          )
-        );
-      }
-    });
+    const roles = yield database.objects("roles");
+    yield put(
+      setRoles(
+        roles.reduce((result, role) => {
+          result[role._id] = role.description;
+          return result;
+        }, {})
+      )
+    );
+    // database.objects("roles").then(function*(rows) {
+    //   console.log("roles rows  " + JSON.stringify(rows));
+    //   if (rows) {
+    //     yield put(
+    //       setRoles(
+    //         roles.reduce((result, role) => {
+    //           result[role._id] = role.description;
+    //           return result;
+    //         }, {})
+    //       )
+    //     );
+    //   }
+    // });
 
     yield put(connectRequest());
     yield put(selectServerSuccess(server));
@@ -100,17 +103,6 @@ const handleSelectServer = function* handleSelectServer({ server }) {
 
 const handleServerRequest = function* handleServerRequest({ server }) {
   try {
-    // if (LoginSignupView == null) {
-    //   LoginSignupView = require("../views/LoginSignupView").default;
-
-    //   // Navigation.registerComponent(
-    //   //   "LoginSignupView",
-    //   //   () => LoginSignupView,
-    //   //   store,
-    //   //   Provider
-    //   // );
-    // }
-
     yield call(validate, server);
     const pushAction = StackActions.push({
       routeName: "LoginSignupView",
@@ -120,7 +112,7 @@ const handleServerRequest = function* handleServerRequest({ server }) {
     });
     yield call(NavigationActions.push, pushAction);
 
-    database.create("servers", { id: server }, true);
+    database.create("servers", { id: server }, true, database.serversDB);
     yield put(selectServerRequest(server));
   } catch (e) {
     yield put(serverFailure());

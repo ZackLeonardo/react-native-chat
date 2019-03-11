@@ -117,17 +117,21 @@ export default class Sidebar extends Component {
 
   constructor(props) {
     super(props);
+    this.serversToken = null;
     this.state = {
       servers: [],
       showServers: false
     };
   }
 
-  componentDidMount() {
-    this.setState(this.getState());
+  componentDidMount = async () => {
+    const servers = await this.updateState();
+    if (!this.serversToken) {
+      this.serversToken = PubSub.subscribe("change", this.updateState);
+    }
     this.setStatus();
     // database.databases.serversDB.addListener("change", this.updateState);
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (
@@ -172,12 +176,16 @@ export default class Sidebar extends Component {
     });
   };
 
-  getState = () => ({
-    // servers: database.databases.serversDB.objects("servers")
-  });
+  getState = async () => {
+    const servers = await database.objects("servers", null, database.serversDB);
+    return servers;
+  };
 
-  updateState = () => {
-    this.setState(this.getState());
+  updateState = async () => {
+    const servers = await database.objects("servers", null, database.serversDB);
+    this.setState({
+      servers: servers
+    });
   };
 
   closeDrawer = () => {
@@ -276,16 +284,8 @@ export default class Sidebar extends Component {
           if (!token) {
             this.props.appStart();
             setTimeout(() => {
-              NavigationActions.push({
-                screen: "NewServerView",
-                backButtonTitle: "",
-                passProps: {
-                  server: item.id
-                },
-                navigatorStyle: {
-                  navBarHidden: true
-                }
-              });
+              // this.props.logout();
+              this.toggleLogout();
             }, 1000);
           }
         }

@@ -16,7 +16,12 @@ const getLastUpdate = async () => {
 };
 
 function updateServer(param) {
-  database.create("servers", { id: this.ddp.url, ...param }, true);
+  database.create(
+    "servers",
+    { id: this.ddp.url, ...param },
+    true,
+    database.serversDB
+  );
 }
 
 export default async function() {

@@ -169,7 +169,9 @@ export default class RoomsListView extends LoggedView {
       if (nextProps.loadingServer) {
         this.setState({ loading: true });
       } else {
-        // this.getSubscriptions();
+        console.log("20190311");
+
+        this.getSubscriptions();
       }
     } else if (this.props.searchText !== nextProps.searchText) {
       this.search(nextProps.searchText);
