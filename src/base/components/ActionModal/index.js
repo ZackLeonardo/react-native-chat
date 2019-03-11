@@ -1,3 +1,7 @@
+/**
+ * ModoalView for actions
+ */
+
 import React, { Component } from "react";
 import { Modal, StyleSheet } from "react-native";
 import PropTypes from "prop-types";

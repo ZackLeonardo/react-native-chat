@@ -148,7 +148,9 @@ export default class CreateChannelView extends LoggedView {
   componentDidMount() {
     this.props.navigation.setParams({ submit: this.submit });
     setTimeout(() => {
-      this.channelNameRef.focus();
+      if (this.channelNameRef) {
+        this.channelNameRef.focus();
+      }
     }, 600);
   }
 
@@ -165,32 +167,8 @@ export default class CreateChannelView extends LoggedView {
           );
         showErrorAlert(msg);
       }, 300);
-    } else if (
-      this.props.createChannel.failure == false &&
-      this.props.createChannel.isFetching == false &&
-      this.props.createChannel.result !== ""
-    ) {
-      this.goRoom(
-        this.props.createChannel.result.rid,
-        this.props.createChannel.result.name
-      );
     }
   }
-
-  goRoom = ({ rid, name }) => {
-    this.props.navigation.pop(2);
-    setTimeout(() => {
-      this.props.navigation.dispatch(
-        StackActions.pop({
-          n: 1
-        })
-      );
-      // this.props.navigation.navigate("RoomView", {
-      //   title: name,
-      //   rid: rid
-      // });
-    }, 1000);
-  };
 
   onChangeText = channelName => {
     if (channelName.trim().length > 0) {

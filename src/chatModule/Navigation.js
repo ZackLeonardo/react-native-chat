@@ -6,7 +6,7 @@ class NavigationActionsClass {
   push = action => this.navigation && this.navigation.dispatch(action);
   // push = action => this.navigation && this.navigation.navigate("LoginSignupView");
 
-  pop = action => this.navigation && this.navigation.pop(action);
+  pop = action => this.navigation && this.navigation.dispatch(action);
 
   popToRoot = action => this.navigation && this.navigation.popToRoot(action);
 

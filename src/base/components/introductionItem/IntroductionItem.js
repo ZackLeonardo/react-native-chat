@@ -12,7 +12,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   FlatList,
   Dimensions
 } from "react-native";

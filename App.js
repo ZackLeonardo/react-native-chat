@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 
 import RNChatApp from "./src/src";
 import { Screen } from "./src/main/main";
-import RoomsView from "./src/chatModule/rooms/RoomsView";
 // import { LoginView } from "./src/defaultLoginModule/LoginView";
 
 class HomeScreen extends React.Component {
