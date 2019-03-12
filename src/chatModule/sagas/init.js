@@ -8,7 +8,6 @@ import { setAllPreferences } from "../actions/sortPreferences";
 import { APP } from "../actions/actionsTypes";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
-// import I18n from '../i18n';
 
 const restore = function* restore() {
   try {

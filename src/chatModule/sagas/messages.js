@@ -1,5 +1,6 @@
 import { delay } from "redux-saga";
 import { takeLatest, put, call } from "redux-saga/effects";
+import { StackActions } from "react-navigation";
 
 import { MESSAGES } from "../actions/actionsTypes";
 import {
@@ -18,7 +19,7 @@ import {
 import RocketChat from "../lib/rocketchat";
 import database from "../../main/ran-db/sqlite";
 import log from "../utils/log";
-// import { NavigationActions } from "../Navigation";
+import { NavigationActions } from "../Navigation";
 
 const deleteMessage = message => RocketChat.deleteMessage(message);
 const editMessage = message => RocketChat.editMessage(message);
@@ -79,24 +80,30 @@ const handleTogglePinRequest = function* handleTogglePinRequest({ message }) {
 };
 
 const goRoom = function* goRoom({ rid, name }) {
-  console.log("biubiu:  NavigationActions.popToRoot();");
-  // NavigationActions.popToRoot();
-  yield delay(1000);
+  const popAction = StackActions.pop({
+    n: 1
+  });
+  yield call(NavigationActions.pop, popAction);
+
+  yield delay(600);
   console.log("biubiu:  NavigationActions.push({");
-  // NavigationActions.push({
-  //   screen: "RoomView",
-  //   title: name,
-  //   backButtonTitle: "",
-  //   passProps: { rid }
-  // });
+  const pushAction = StackActions.push({
+    routeName: "RoomView",
+    params: {
+      title: name,
+      rid: rid
+    }
+  });
+  yield call(NavigationActions.push, pushAction);
 };
 
 const handleReplyBroadcast = function* handleReplyBroadcast({ message }) {
   try {
-    const { username } = message.u;
-    const subscriptions = database
-      .objects("subscriptions")
-      .filtered("name = $0", username);
+    const { username } = JSON.parse(message.u);
+    const subscriptions = yield database.objects(
+      "subscriptions",
+      `WHERE name = "${username}"`
+    );
     if (subscriptions.length) {
       yield goRoom({ rid: subscriptions[0].rid, name: subscriptions[0].name });
     } else {

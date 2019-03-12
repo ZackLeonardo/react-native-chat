@@ -45,10 +45,7 @@ const handleLoginSuccess = function* handleLoginSuccess() {
       yield put(registerIncomplete());
     } else {
       yield delay(300);
-      if (adding) {
-        console.log("biubiu: NavigationActions.dismissModal();");
-        // NavigationActions.dismissModal();
-      } else {
+      if (!adding) {
         yield put(appStart("inside"));
       }
       yield put(serverFinishAdd());

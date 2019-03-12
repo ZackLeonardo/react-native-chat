@@ -383,10 +383,8 @@ class Message extends PureComponent {
           activeOpacity={0.5}
           underlayColor="#fff"
         >
-          <ImageRN
-            source={{ uri: "reply" }}
-            style={styles.broadcastButtonIcon}
-          />
+          <Icon name="reply" color="white" size={25} />
+
           <Text style={styles.broadcastButtonText}>
             {this.props.translate("ran.chat.Reply")}
           </Text>
