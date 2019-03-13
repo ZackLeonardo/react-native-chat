@@ -295,6 +295,29 @@ const pks = {
   uploads: uploadsPk
 };
 
+const tables = [
+  "settings",
+  "permissionsRoles",
+  "permissions",
+  "rooms",
+  "subscriptionRolesSchema",
+  "usersMuted",
+  "subscriptions",
+  "users",
+  "attachmentFields",
+  "attachment",
+  "url",
+  "messagesReactionsUsernames",
+  "messagesReactions",
+  "messagesEditedBy",
+  "messages",
+  "frequentlyUsedEmoji",
+  "customEmojiAliases",
+  "customEmojis",
+  "roles",
+  "uploads"
+];
+
 const isDateColumn = column => {
   return ["_updatedAt", "ts"].indexOf(column) > -1;
 };
@@ -563,6 +586,15 @@ class DB {
         );
       }
     }
+  }
+
+  deleteAll() {
+    tables.map(schema =>
+      this.database.transaction(tx => {
+        // console.log(`schema is : ${schema}`);
+        tx.executeSql(`DROP TABLE ${schema}`);
+      })
+    );
   }
 
   setActiveDB(db = "") {

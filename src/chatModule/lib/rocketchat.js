@@ -623,9 +623,7 @@ const RocketChat = {
     AsyncStorage.removeItem(TOKEN_KEY);
     AsyncStorage.removeItem(`${TOKEN_KEY}-${server}`);
     setTimeout(() => {
-      console.log("database.deleteAll");
-
-      // database.deleteAll();
+      database.deleteAll();
     }, 1000);
   },
 
