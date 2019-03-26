@@ -97,11 +97,14 @@ const handleSetUsernameRequest = function* handleSetUsernameRequest({
   }
 };
 
-const handleLogout = function* handleLogout() {
+const handleLogout = function* handleLogout({ outside }) {
   const server = yield select(getServer);
   if (server) {
     try {
-      yield put(appStart("outside"));
+      if (outside) {
+        yield put(appStart("outside"));
+      }
+
       // yield delay(300);
       yield call(logoutCall, { server });
     } catch (e) {

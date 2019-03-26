@@ -87,15 +87,10 @@ export default class NewServerView extends LoggedView {
   }
 
   componentDidMount() {
-    const {
-      server,
-      dontAutoConnectServer
-    } = this.props.navigation.state.params;
+    const { server } = this.props;
     if (server) {
+      this.props.connectServer(server);
       this.setState({ text: server });
-      if (!dontAutoConnectServer) {
-        this.props.connectServer(server);
-      }
     } else {
       setTimeout(() => {
         this.input.focus();

@@ -31,8 +31,6 @@ const handleSelectServer = function* handleSelectServer({ server }) {
       `${RocketChat.TOKEN_KEY}-${server}`
     );
 
-    console.log(token);
-
     if (token) {
       yield put(actions.appStart("inside"));
     }

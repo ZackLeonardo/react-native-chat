@@ -215,7 +215,7 @@ const StackNavigator = createStackNavigator(
 
 const CustomDrawerContent = props => <Sidebar {...props} />;
 
-export const ChatModuleNavigator = createDrawerNavigator(
+const ChatModuleNavigator = createDrawerNavigator(
   {
     StackNavigator: StackNavigator
   },
@@ -225,6 +225,33 @@ export const ChatModuleNavigator = createDrawerNavigator(
     contentComponent: CustomDrawerContent
   }
 );
+
+const routesWithTabBar = ["RoomsListView"];
+
+const getCurrentRouteName = navigationState => {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getCurrentRouteName(route);
+  }
+  return route.routeName;
+};
+
+ChatModuleNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = false;
+  if (routesWithTabBar.indexOf(getCurrentRouteName(navigation.state)) > -1) {
+    tabBarVisible = true;
+  }
+
+  return {
+    tabBarVisible
+  };
+};
+
+export { ChatModuleNavigator };
 
 // import { Navigation } from "react-native-navigation";
 // import { Provider } from "react-redux";

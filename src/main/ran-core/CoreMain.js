@@ -41,20 +41,25 @@ class CoreMain extends React.Component {
   // };
 
   render() {
-    const Nav = CoreMainNavigator(this.props.modules);
-
-    const AuthNav = createSwitchNavigator(
-      {
-        // AuthLoading: AuthLoadingScreen,
-        App: Nav,
-        Base: ChatModuleNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
+    const Nav = CoreMainNavigator({
+      Chat: {
+        screen: ChatModuleNavigator
       },
-      {
-        initialRouteName: "Base"
-      }
-    );
+      ...this.props.modules
+    });
 
-    return <AuthNav screenProps={{ translate: this.props.translate }} />;
+    // const AuthNav = createSwitchNavigator(
+    //   {
+    //     // AuthLoading: AuthLoadingScreen,
+    //     App: Nav,
+    //     Base: ChatModuleNavigator //() => <ChatModule /> //this.props.loginPage ? this.props.loginPage : () => <LoginView />
+    //   },
+    //   {
+    //     initialRouteName: "App"
+    //   }
+    // );
+
+    return <Nav screenProps={{ translate: this.props.translate }} />;
   }
 }
 

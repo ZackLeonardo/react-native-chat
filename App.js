@@ -8,9 +8,9 @@ import { Screen } from "./src/main/main";
 class HomeScreen extends React.Component {
   render() {
     return (
-      <Screen>
-        <RoomsView />
-      </Screen>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Home!</Text>
+      </View>
     );
   }
 }

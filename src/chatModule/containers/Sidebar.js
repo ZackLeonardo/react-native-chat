@@ -12,7 +12,6 @@ import {
   Image
 } from "react-native";
 import { connect } from "react-redux";
-// import FastImage from "react-native-fast-image"; //change to Image
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { StackActions, NavigationActions } from "react-navigation";
 
@@ -27,6 +26,7 @@ import { STATUS_COLORS } from "../constants/colors";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
 import scrollPersistTaps from "../utils/scrollPersistTaps";
+import { serverRequest } from "../actions/server";
 
 const styles = StyleSheet.create({
   container: {
@@ -100,8 +100,9 @@ const keyExtractor = item => item.id;
   }),
   dispatch => ({
     selectServerRequest: server => dispatch(selectServerRequest(server)),
-    logout: () => dispatch(logout()),
-    appStart: () => dispatch(appStart("outside"))
+    logout: outside => dispatch(logout(outside)),
+    appStart: () => dispatch(appStart("outside")),
+    connectServer: server => dispatch(serverRequest(server))
   })
 )
 export default class Sidebar extends Component {
@@ -197,26 +198,9 @@ export default class Sidebar extends Component {
     this.setState({ showServers: !this.state.showServers });
   };
 
-  toggleLogout = () => {
-    const { server } = this.props;
-
-    const resetAction = StackActions.reset({
-      index: 1,
-      actions: [
-        NavigationActions.navigate({ routeName: "OnboardingView" }),
-        NavigationActions.navigate({
-          routeName: "NewServerView",
-          params: { server: server, dontAutoConnectServer: true }
-          // params: { previousServer: server }
-        })
-        // NavigationActions.navigate({
-        //   routeName: "LoginSignupView"
-        // })
-      ]
-    });
-
+  toggleLogout = outside => {
+    this.props.logout(outside);
     this.props.navigation.dispatch(StackActions.popToTop());
-    this.props.navigation.dispatch(resetAction);
   };
 
   sidebarNavigate = (screen, title) => {
@@ -277,17 +261,12 @@ export default class Sidebar extends Component {
         this.closeDrawer();
         this.toggleServers();
         if (this.props.server !== item.id) {
-          this.props.selectServerRequest(item.id);
-          const token = await AsyncStorage.getItem(
-            `${RocketChat.TOKEN_KEY}-${item.id}`
-          );
-          if (!token) {
-            this.props.appStart();
-            setTimeout(() => {
-              // this.props.logout();
-              this.toggleLogout();
-            }, 1000);
-          }
+          this.props.appStart();
+          this.props.logout();
+
+          setTimeout(() => {
+            this.props.connectServer(item.id);
+          }, 1000);
         }
       },
       testID: `sidebar-${item.id}`
@@ -329,8 +308,7 @@ export default class Sidebar extends Component {
       text: this.props.screenProps.translate("ran.chat.Logout"),
       left: <Icon name="exit-to-app" size={20} />,
       onPress: () => {
-        this.props.logout();
-        this.toggleLogout();
+        this.toggleLogout(true);
       },
       testID: "sidebar-logout"
     })
@@ -359,7 +337,6 @@ export default class Sidebar extends Component {
       onPress: () => {
         this.toggleServers();
         this.closeDrawer();
-        // this.toggleLogout();
         this.props.navigation.navigate("NewServerView", {
           title: this.props.screenProps.translate("ran.chat.Add_Server"),
           previousServer: this.props.server
