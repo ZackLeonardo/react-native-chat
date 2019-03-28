@@ -22,6 +22,7 @@ import {
 } from "../actions/login";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
+import { changeLocale } from "../../main/ran-i18n/redux/actions/localeActions";
 // import I18n from "../i18n";
 // import { NavigationActions } from "../Navigation";
 
@@ -154,7 +155,7 @@ const handleSetUser = function* handleSetUser() {
     // TODO: temporary... remove in future releases
     // delete user.user;
     if (user.language) {
-      // I18n.locale = user.language;
+      yield put(changeLocale(user.language));
     }
   }
   yield AsyncStorage.setItem(

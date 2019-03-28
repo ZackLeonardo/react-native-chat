@@ -25,7 +25,7 @@ export default ({
   const saga = function* rootSaga() {
     yield all(
       [
-        adminSaga(dataProvider, authProvider, dataRXProvider),
+        adminSaga(dataProvider, authProvider, dataRXProvider, i18nProvider),
         ...customSagas
       ].map(fork)
     );

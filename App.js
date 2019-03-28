@@ -4,6 +4,8 @@ import { View, Text } from "react-native";
 import RNChatApp from "./src/src";
 import { Screen } from "./src/main/main";
 // import { LoginView } from "./src/defaultLoginModule/LoginView";
+import zhMessages from "./src/main/ran-i18n/lang/zh";
+import enMessages from "./src/main/ran-i18n/lang/en";
 
 class HomeScreen extends React.Component {
   render() {
@@ -54,10 +56,18 @@ export default class App extends React.Component {
       Setting: SettingsScreen
     };
 
+    const i18ns = {
+      cn_zh: zhMessages,
+      en: enMessages
+    };
+    const i18nProvider = locale => i18ns[locale];
+
     return (
       <RNChatApp
         // loginPage={LoginView}
         authProvider={authProvider}
+        // locale="en"
+        i18nProvider={i18nProvider}
         modules={modules}
       />
     );

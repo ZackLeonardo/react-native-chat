@@ -1,5 +1,6 @@
 import { all } from "redux-saga/effects";
 import rocketSagas from "../../chatModule/sagas";
+import { i18n } from "../../main/ran-i18n";
 // import auth from "./auth";
 // import callback from "./callback";
 // import fetch from "./fetch";
@@ -12,7 +13,7 @@ import rocketSagas from "../../chatModule/sagas";
 // import undo from "./undo";
 // import recordForm from "./recordForm";
 
-export default (dataProvider, authProvider, dataRXProvider) =>
+export default (dataProvider, authProvider, dataRXProvider, i18nProvider) =>
   function* admin() {
-    yield all([rocketSagas()]);
+    yield all([rocketSagas(), i18n(i18nProvider)]);
   };
