@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Text, View, SafeAreaView, ScrollView } from "react-native";
 import { connect } from "react-redux";
+import i18n from "i18n-js";
 
 import LoggedView from "./View";
 import { forgotPasswordInit, forgotPasswordRequest } from "../actions/login";
@@ -52,14 +53,13 @@ export default class ForgotPasswordView extends LoggedView {
 
   componentDidUpdate() {
     const { login } = this.props;
-    const { translate } = this.props.screenProps;
 
     if (login.success) {
       this.props.navigation.pop();
       setTimeout(() => {
         showErrorAlert(
-          translate("ran.chat.Forgot_password_If_this_email_is_registered"),
-          translate("ran.chat.Alert")
+          i18n.t("ran.chat.Forgot_password_If_this_email_is_registered"),
+          i18n.t("ran.chat.Alert")
         );
       });
     }
@@ -84,7 +84,6 @@ export default class ForgotPasswordView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props.screenProps;
     return (
       <KeyboardView
         contentContainerStyle={styles.container}
@@ -100,8 +99,8 @@ export default class ForgotPasswordView extends LoggedView {
                 inputStyle={
                   this.state.invalidEmail ? { borderColor: "red" } : {}
                 }
-                label={translate("ran.chat.Email")}
-                placeholder={translate("ran.chat.Email")}
+                label={i18n.t("ran.chat.Email")}
+                placeholder={i18n.t("ran.chat.Email")}
                 keyboardType="email-address"
                 returnKeyType="next"
                 onChangeText={email => this.validate(email)}
@@ -111,7 +110,7 @@ export default class ForgotPasswordView extends LoggedView {
 
               <View style={styles.alignItemsFlexStart}>
                 <Button
-                  title={translate("ran.chat.Reset_password")}
+                  title={i18n.t("ran.chat.Reset_password")}
                   type="primary"
                   onPress={this.resetPassword}
                   testID="forgot-password-view-submit"

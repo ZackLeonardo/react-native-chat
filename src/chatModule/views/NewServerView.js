@@ -13,6 +13,7 @@ import {
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 import { logout } from "../actions/login";
+import i18n from "i18n-js";
 
 import { serverRequest } from "../actions/server";
 import sharedStyles from "./Styles";
@@ -101,8 +102,8 @@ export default class NewServerView extends LoggedView {
   componentWillReceiveProps(nextProps) {
     if (nextProps.failure && nextProps.failure !== this.props.failure) {
       Alert.alert(
-        this.props.screenProps.translate("ran.chat.Oops"),
-        this.props.screenProps.translate("ran.chat.The_URL_is_invalid")
+        i18n.t("ran.chat.Oops"),
+        i18n.t("ran.chat.The_URL_is_invalid")
       );
     }
   }
@@ -174,7 +175,6 @@ export default class NewServerView extends LoggedView {
 
   render() {
     const { connecting } = this.props;
-    const { translate } = this.props.screenProps;
     const { text } = this.state;
     return (
       <KeyboardView
@@ -189,7 +189,7 @@ export default class NewServerView extends LoggedView {
           <SafeAreaView style={sharedStyles.container} testID="new-server-view">
             <Image style={styles.image} source={{ uri: "new_server" }} />
             <Text style={styles.title}>
-              {translate("ran.chat.Sign_in_your_server")}
+              {i18n.t("ran.chat.Sign_in_your_server")}
             </Text>
             <TextInput
               inputRef={e => (this.input = e)}
@@ -204,7 +204,7 @@ export default class NewServerView extends LoggedView {
               clearButtonMode="while-editing"
             />
             <Button
-              title={translate("ran.chat.Connect")}
+              title={i18n.t("ran.chat.Connect")}
               type="primary"
               onPress={this.submit}
               disabled={text.length === 0}

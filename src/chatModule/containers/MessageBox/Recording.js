@@ -10,8 +10,8 @@ import {
 import { Audio, FileSystem, Permissions } from "expo";
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { compose, hoistStatics } from "recompose";
+import i18n from "i18n-js";
 
-import { translate } from "../../../main/ran-i18n";
 import styles from "./styles";
 
 export const _formatTime = function(seconds) {
@@ -298,25 +298,21 @@ class Recording extends React.PureComponent {
             style={[styles.actionButtons, { color: "red" }]}
             name="clear"
             key="clear"
-            accessibilityLabel={this.props.translate(
-              "ran.chat.Cancel_recording"
-            )}
+            accessibilityLabel={i18n.t("ran.chat.Cancel_recording")}
             accessibilityTraits="button"
             onPress={this.cancelAudioMessage}
           />
           <Text key="soundDuration" style={styles.textBoxInput}>
             {this.state.soundDuration
               ? _formatTime(Math.round(this.state.soundDuration / 1000))
-              : this.props.translate("ran.chat.recording")}
+              : i18n.t("ran.chat.recording")}
           </Text>
           {this.state.isRecording ? (
             <Icon
               style={[styles.actionButtons, { color: "green" }]}
               name="check"
               key="check"
-              accessibilityLabel={this.props.translate(
-                "ran.chat.Finish_recording"
-              )}
+              accessibilityLabel={i18n.t("ran.chat.Finish_recording")}
               accessibilityTraits="button"
               onPress={this.finishAudioMessage}
             />
@@ -325,9 +321,7 @@ class Recording extends React.PureComponent {
               style={[styles.actionButtons, { color: "#1D74F5" }]}
               name="send"
               key="sendIcon"
-              accessibilityLabel={this.props.translate(
-                "ran.chat.Finish_recording"
-              )}
+              accessibilityLabel={i18n.t("ran.chat.Finish_recording")}
               accessibilityTraits="button"
               onPress={this.finishAudioMessage}
             />
@@ -336,10 +330,10 @@ class Recording extends React.PureComponent {
       </SafeAreaView>
     ) : (
       <Text style={[styles.textArea, { backgroundColor: "#F6F7F9" }]}>
-        {this.props.translate("ran.chat.Not_haveRecordingPermissions")}
+        {i18n.t("ran.chat.Not_haveRecordingPermissions")}
       </Text>
     );
   }
 }
 
-export default hoistStatics(compose(translate))(Recording);
+export default Recording;

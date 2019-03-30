@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FlatList, View, Text, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import { openRoomFiles, closeRoomFiles } from "../../actions/roomFiles";
@@ -97,7 +98,7 @@ export default class RoomFilesView extends LoggedView {
 
   renderEmpty = () => (
     <View style={styles.listEmptyContainer} testID="room-files-view">
-      <Text>{this.props.screenProps.translate("ran.chat.No_files")}</Text>
+      <Text>{i18n.t("ran.chat.No_files")}</Text>
     </View>
   );
 

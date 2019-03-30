@@ -6,13 +6,12 @@ import {
   StyleSheet,
   TouchableWithoutFeedback
 } from "react-native";
-import { StackNavigator, NavigationActions } from "react-navigation";
+import { StackNavigator } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
 import _ from "underscore";
-import { FileSystem } from "expo";
 import { compose, hoistStatics } from "recompose";
+import i18n from "i18n-js";
 
-import { translate } from "../../../main/ran-i18n";
 import MediaGridBrowserContainer from "./containers/MediaGridBrowserContainer";
 import MediaFullScreenBrowser from "./components/MediaFullScreenBrowser";
 import BackButton from "./components/BackButton";
@@ -220,7 +219,6 @@ class MediaFullScreenBrowserScreen extends Component {
   render() {
     console.log("MediaFullScreenBrowserScreen render");
     const { params } = this.props.navigation.state;
-    const { translate } = this.props.screenProps;
     let selectedMediaList = Array.from(params.selectedDataSource.values());
     return (
       <MediaFullScreenBrowser
@@ -237,9 +235,9 @@ class MediaFullScreenBrowserScreen extends Component {
         middleBtSelected={params.middleBtSelected}
         toggleHeader={this.toggleHeader}
         displayHeader={this.state.displayHeader}
-        leftButtonText={translate("ran.chat.Edit")}
-        middleButtonText={translate("ran.chat.Original")}
-        rightButtonText={translate("ran.chat.Send")}
+        leftButtonText={i18n.t("ran.chat.Edit")}
+        middleButtonText={i18n.t("ran.chat.Original")}
+        rightButtonText={i18n.t("ran.chat.Send")}
       />
       //     <Button
       //   title="Update the title"
@@ -257,13 +255,13 @@ class MediaGridBrowserScreen extends Component {
           // params.
           navigation.goBack();
         }}
-        title={screenProps.translate("ran.chat.Gallery")}
+        title={i18n.t("ran.chat.Gallery")}
       />
     ),
     title: navigation.state.params.title,
     headerRight: (
       <Button
-        title={screenProps.translate("ran.chat.Cancel")}
+        title={i18n.t("ran.chat.Cancel")}
         color="white"
         onPress={() => {
           screenProps.closeModal();
@@ -337,7 +335,6 @@ class MediaGridBrowserScreen extends Component {
 
   render() {
     console.log("render MediaGridBrowserScreen");
-    const { translate } = this.props.screenProps;
 
     return (
       <MediaGridBrowserContainer
@@ -346,9 +343,9 @@ class MediaGridBrowserScreen extends Component {
         rightButtonPressed={this.sendButtonPressed}
         updateSelectedDataSource={this.updateSelectedDataSource}
         groupName={this.props.navigation.state.params.title}
-        leftButtonText={translate("ran.chat.Preview")}
-        middleButtonText={translate("ran.chat.Original")}
-        rightButtonText={translate("ran.chat.Send")}
+        leftButtonText={i18n.t("ran.chat.Preview")}
+        middleButtonText={i18n.t("ran.chat.Original")}
+        rightButtonText={i18n.t("ran.chat.Send")}
         {...this.props}
       />
     );
@@ -376,10 +373,10 @@ class MediaListScreen extends Component {
   };
 
   static navigationOptions = ({ navigation, screenProps }) => ({
-    title: screenProps.translate("ran.chat.Gallery"),
+    title: i18n.t("ran.chat.Gallery"),
     headerRight: (
       <Button
-        title={screenProps.translate("ran.chat.Cancel")}
+        title={i18n.t("ran.chat.Cancel")}
         color="white"
         onPress={() => {
           screenProps.closeModal ? screenProps.closeModal() : null;
@@ -431,7 +428,7 @@ class MediaPicker extends Component {
   }
 }
 
-export default hoistStatics(compose(translate))(MediaPicker);
+export default MediaPicker;
 
 const styles = StyleSheet.create({
   ...SelectionButtonStyles

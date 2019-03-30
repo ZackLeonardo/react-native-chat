@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import i18n from "i18n-js";
 
 import Touch from "../../utils/touch";
 import styles from "./styles";
@@ -110,13 +111,7 @@ export default class Sort extends Component {
       inputRange: [0, 1],
       outputRange: [0, 0.3]
     });
-    const {
-      sortBy,
-      groupByType,
-      showFavorites,
-      showUnread,
-      translate
-    } = this.props;
+    const { sortBy, groupByType, showFavorites, showUnread } = this.props;
     return [
       <TouchableWithoutFeedback key="sort-backdrop" onPress={this.close}>
         <Animated.View
@@ -138,7 +133,7 @@ export default class Sort extends Component {
               source={{ uri: "sort_alphabetically" }}
             />
             <Text style={styles.sortItemText}>
-              {translate("ran.chat.Alphabetical")}
+              {i18n.t("ran.chat.Alphabetical")}
             </Text>
             {sortBy === "alphabetical" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -153,7 +148,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "sort_activity" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.chat.Activity")}
+              {i18n.t("ran.chat.Activity")}
             </Text>
             {sortBy === "activity" ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -169,7 +164,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_type" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.chat.Group_by_type")}
+              {i18n.t("ran.chat.Group_by_type")}
             </Text>
             {groupByType ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -187,7 +182,7 @@ export default class Sort extends Component {
               source={{ uri: "group_favorites" }}
             />
             <Text style={styles.sortItemText}>
-              {translate("ran.chat.Group_by_favorites")}
+              {i18n.t("ran.chat.Group_by_favorites")}
             </Text>
             {showFavorites ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -202,7 +197,7 @@ export default class Sort extends Component {
           <View style={styles.sortItemContainer}>
             <Image style={styles.sortIcon} source={{ uri: "group_unread" }} />
             <Text style={styles.sortItemText}>
-              {translate("ran.chat.Unread_on_top")}
+              {i18n.t("ran.chat.Unread_on_top")}
             </Text>
             {showUnread ? (
               <Image style={styles.sortIcon} source={{ uri: "check" }} />
@@ -220,8 +215,8 @@ export default class Sort extends Component {
       >
         <View style={styles.sortItemContainer}>
           <Text style={styles.sortToggleText}>
-            {translate("ran.chat.Sorting_by")}
-            {translate(
+            {i18n.t("ran.chat.Sorting_by")}
+            {i18n.t(
               this.props.sortBy === "alphabetical"
                 ? "ran.chat.name"
                 : "ran.chat.activity"

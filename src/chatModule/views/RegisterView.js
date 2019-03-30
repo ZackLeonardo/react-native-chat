@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Keyboard, Text, View, ScrollView, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import IonIcon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import { registerSubmit, setUsernameSubmit } from "../actions/login";
 import TextInput from "../containers/TextInput";
@@ -93,11 +94,7 @@ export default class RegisterView extends LoggedView {
   submit = () => {
     const { name, email, password, code } = this.state;
     if (!this.valid()) {
-      showToast(
-        this.props.screenProps.translate(
-          "ran.chat.Some_field_is_invalid_or_empty"
-        )
-      );
+      showToast(i18n.t("ran.chat.Some_field_is_invalid_or_empty"));
       return;
     }
 
@@ -113,7 +110,7 @@ export default class RegisterView extends LoggedView {
   usernameSubmit = () => {
     const { username } = this.state;
     if (!username) {
-      showToast(this.props.screenProps.translate("ran.chat.Username_is_empty"));
+      showToast(i18n.t("ran.chat.Username_is_empty"));
       return;
     }
 
@@ -123,18 +120,17 @@ export default class RegisterView extends LoggedView {
 
   termsService = () => {
     this.props.navigation.navigate("TermsServiceView", {
-      title: this.props.screenProps.translate("ran.chat.Terms_of_Service")
+      title: i18n.t("ran.chat.Terms_of_Service")
     });
   };
 
   privacyPolicy = () => {
     this.props.navigation.navigate("PrivacyPolicyView", {
-      title: this.props.screenProps.translate("ran.chat.Privacy_Policy")
+      title: i18n.t("ran.chat.Privacy_Policy")
     });
   };
 
   _renderRegister() {
-    const { translate } = this.props.screenProps;
     if (this.props.login.token) {
       return null;
     }
@@ -144,11 +140,9 @@ export default class RegisterView extends LoggedView {
           inputRef={e => {
             this.name = e;
           }}
-          label={
-            this.props.Accounts_NamePlaceholder || translate("ran.chat.Name")
-          }
+          label={this.props.Accounts_NamePlaceholder || i18n.t("ran.chat.Name")}
           placeholder={
-            this.props.Accounts_NamePlaceholder || translate("ran.chat.Name")
+            this.props.Accounts_NamePlaceholder || i18n.t("ran.chat.Name")
           }
           returnKeyType="next"
           iconLeft="account"
@@ -164,11 +158,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_EmailOrUsernamePlaceholder ||
-            translate("ran.chat.Email")
+            i18n.t("ran.chat.Email")
           }
           placeholder={
             this.props.Accounts_EmailOrUsernamePlaceholder ||
-            translate("ran.chat.Email")
+            i18n.t("ran.chat.Email")
           }
           returnKeyType="next"
           keyboardType="email-address"
@@ -186,11 +180,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_PasswordPlaceholder ||
-            translate("ran.chat.Password")
+            i18n.t("ran.chat.Password")
           }
           placeholder={
             this.props.Accounts_PasswordPlaceholder ||
-            translate("ran.chat.Password")
+            i18n.t("ran.chat.Password")
           }
           returnKeyType="next"
           iconLeft="key-variant"
@@ -214,11 +208,11 @@ export default class RegisterView extends LoggedView {
           }
           label={
             this.props.Accounts_RepeatPasswordPlaceholder ||
-            translate("ran.chat.Repeat_Password")
+            i18n.t("ran.chat.Repeat_Password")
           }
           placeholder={
             this.props.Accounts_RepeatPasswordPlaceholder ||
-            translate("ran.chat.Repeat_Password")
+            i18n.t("ran.chat.Repeat_Password")
           }
           returnKeyType="done"
           iconLeft="key-variant"
@@ -230,17 +224,17 @@ export default class RegisterView extends LoggedView {
 
         <View style={styles.alignItemsFlexStart}>
           <Text style={styles.loginTermsText}>
-            {translate("ran.chat.By_proceeding_you_are_agreeing")}
+            {i18n.t("ran.chat.By_proceeding_you_are_agreeing")}
             <Text style={styles.link} onPress={this.termsService}>
-              {translate("ran.chat.Terms_of_Service")}
+              {i18n.t("ran.chat.Terms_of_Service")}
             </Text>
-            {translate("ran.chat.and")}
+            {i18n.t("ran.chat.and")}
             <Text style={styles.link} onPress={this.privacyPolicy}>
-              {translate("ran.chat.Privacy_Policy")}
+              {i18n.t("ran.chat.Privacy_Policy")}
             </Text>
           </Text>
           <Button
-            title={translate("ran.chat.Register")}
+            title={i18n.t("ran.chat.Register")}
             type="primary"
             onPress={this.submit}
             testID="register-view-submit"
@@ -251,7 +245,6 @@ export default class RegisterView extends LoggedView {
   }
 
   _renderUsername() {
-    const { translate } = this.props.screenProps;
     if (!this.props.login.token) {
       return null;
     }
@@ -263,11 +256,11 @@ export default class RegisterView extends LoggedView {
           }}
           label={
             this.props.Accounts_UsernamePlaceholder ||
-            translate("ran.chat.Username")
+            i18n.t("ran.chat.Username")
           }
           placeholder={
             this.props.Accounts_UsernamePlaceholder ||
-            translate("ran.chat.Username")
+            i18n.t("ran.chat.Username")
           }
           returnKeyType="done"
           iconLeft="at"
@@ -280,7 +273,7 @@ export default class RegisterView extends LoggedView {
 
         <View style={styles.alignItemsFlexStart}>
           <Button
-            title={translate("ran.chat.Register")}
+            title={i18n.t("ran.chat.Register")}
             type="primary"
             onPress={this.usernameSubmit}
             testID="register-view-submit-username"
@@ -299,7 +292,7 @@ export default class RegisterView extends LoggedView {
         >
           <SafeAreaView style={styles.container} testID="register-view">
             <Text style={[styles.loginText, styles.loginTitle]}>
-              {this.props.screenProps.translate("ran.chat.Sign_Up")}
+              {i18n.t("ran.chat.Sign_Up")}
             </Text>
             {this._renderRegister()}
             {this._renderUsername()}

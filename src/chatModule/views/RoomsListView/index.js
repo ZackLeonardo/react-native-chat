@@ -19,6 +19,7 @@ import { isEqual } from "lodash";
 import PubSub from "pubsub-js";
 import Icon from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
+import i18n from "i18n-js";
 
 import SearchBox from "../../containers/SearchBox";
 import database from "../../../main/ran-db/sqlite";
@@ -98,7 +99,7 @@ export default class RoomsListView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("NewMessageView", {
-                title: screenProps.translate("ran.chat.New_Message"),
+                title: i18n.t("ran.chat.New_Message"),
                 onPressItem: navigation.state.params.onPressItem
               });
             }}
@@ -510,13 +511,12 @@ export default class RoomsListView extends LoggedView {
   };
 
   renderSort = () => {
-    const { translate } = this.props.screenProps;
     return (
       <Touch onPress={this.toggleSort} style={styles.dropdownContainerHeader}>
         <View style={styles.sortItemContainer}>
           <Text style={styles.sortToggleText}>
-            {translate("ran.chat.Sorting_by") +
-              translate(
+            {i18n.t("ran.chat.Sorting_by") +
+              i18n.t(
                 this.props.sortBy === "alphabetical"
                   ? "ran.chat.name"
                   : "ran.chat.activity"
@@ -557,7 +557,6 @@ export default class RoomsListView extends LoggedView {
         onPress={() => this._onPressItem(item)}
         testID={`rooms-list-view-item-${item.name}`}
         height={ROW_HEIGHT}
-        translate={this.props.screenProps.translate}
       />
     );
   };
@@ -674,7 +673,6 @@ export default class RoomsListView extends LoggedView {
       showServerDropdown,
       showSortDropdown
     } = this.props;
-    const { translate } = this.props.screenProps;
 
     return (
       <View style={styles.container} testID="rooms-list-view">
@@ -686,7 +684,6 @@ export default class RoomsListView extends LoggedView {
             groupByType={groupByType}
             showFavorites={showFavorites}
             showUnread={showUnread}
-            translate={translate}
           />
         ) : null}
         {showServerDropdown ? (

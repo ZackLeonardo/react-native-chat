@@ -13,8 +13,8 @@ import {
   Platform,
   TouchableOpacity
 } from "react-native";
-import { StackActions, NavigationActions } from "react-navigation";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import Loading from "../containers/Loading";
 import LoggedView from "./View";
@@ -116,7 +116,7 @@ export default class CreateChannelView extends LoggedView {
   static navigationOptions = props => {
     const { navigation, screenProps } = props;
     return {
-      title: navigation.state.params.title, //screenProps.translate("ran.chat.Create_Channel"),
+      title: navigation.state.params.title,
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -162,9 +162,7 @@ export default class CreateChannelView extends LoggedView {
       setTimeout(() => {
         const msg =
           this.props.createChannel.error.reason ||
-          this.props.screenProps.translate(
-            "ran.chat.There_was_an_error_while_creating_channel_action"
-          );
+          i18n.t("ran.chat.There_was_an_error_while_creating_channel_action");
         showErrorAlert(msg);
       }, 300);
     }
@@ -206,9 +204,7 @@ export default class CreateChannelView extends LoggedView {
 
   renderSwitch = ({ id, value, label, onValueChange, disabled = false }) => (
     <View style={styles.swithContainer}>
-      <Text style={styles.label}>
-        {this.props.screenProps.translate("ran.chat." + label)}
-      </Text>
+      <Text style={styles.label}>{i18n.t("ran.chat." + label)}</Text>
       <Switch
         value={value}
         onValueChange={onValueChange}
@@ -300,14 +296,10 @@ export default class CreateChannelView extends LoggedView {
               <TextInput
                 ref={ref => (this.channelNameRef = ref)}
                 style={styles.input}
-                label={this.props.screenProps.translate(
-                  "ran.chat.Channel_Name"
-                )}
+                label={i18n.t("ran.chat.Channel_Name")}
                 value={this.state.channelName}
                 onChangeText={this.onChangeText}
-                placeholder={this.props.screenProps.translate(
-                  "ran.chat.Channel_Name"
-                )}
+                placeholder={i18n.t("ran.chat.Channel_Name")}
                 returnKeyType="done"
                 testID="create-channel-name"
                 autoCorrect={false}
@@ -323,12 +315,12 @@ export default class CreateChannelView extends LoggedView {
             </View>
             <View style={styles.invitedHeader}>
               <Text style={styles.invitedTitle}>
-                {this.props.screenProps.translate("ran.chat.Invite")}
+                {i18n.t("ran.chat.Invite")}
               </Text>
               <Text style={styles.invitedCount}>
                 {userCount === 1
-                  ? this.props.screenProps.translate("ran.chat.1_user")
-                  : this.props.screenProps.translate("ran.chat.N_users")}
+                  ? i18n.t("ran.chat.1_user")
+                  : i18n.t("ran.chat.N_users")}
               </Text>
             </View>
             {this.renderInvitedList()}

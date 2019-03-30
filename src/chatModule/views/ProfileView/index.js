@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Feather from "@expo/vector-icons/Feather";
 import RNPickerSelect from "react-native-picker-select";
 import { ImagePicker, Permissions } from "expo";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import KeyboardView from "../../presentation/KeyboardView";
@@ -159,18 +160,12 @@ export default class ProfileView extends LoggedView {
   handleError = (e, func, action) => {
     if (e && e.error && e.error !== 500) {
       if (e.details && e.details.timeToReset) {
-        return showErrorAlert(
-          this.props.screenProps.translate("ran.chat.error-too-many-requests")
-        );
+        return showErrorAlert(i18n.t("ran.chat.error-too-many-requests"));
       }
-      return showErrorAlert(
-        this.props.screenProps.translate(`ran.chat.${e.error}`)
-      );
+      return showErrorAlert(i18n.t(`ran.chat.${e.error}`));
     }
     showErrorAlert(
-      this.props.screenProps.translate(
-        `ran.chat.There_was_an_error_while_${action}_action`
-      )
+      i18n.t(`ran.chat.There_was_an_error_while_${action}_action`)
     );
     log(func, e);
   };
@@ -247,11 +242,7 @@ export default class ProfileView extends LoggedView {
       await RocketChat.saveUserProfile(params, customFields);
       this.setState({ saving: false });
       setTimeout(() => {
-        showToast(
-          this.props.screenProps.translate(
-            "ran.chat.Profile_saved_successfully"
-          )
-        );
+        showToast(i18n.t("ran.chat.Profile_saved_successfully"));
         this.init();
       }, 300);
     } catch (e) {
@@ -265,35 +256,12 @@ export default class ProfileView extends LoggedView {
   resetAvatar = async () => {
     try {
       await RocketChat.resetAvatar();
-      showToast(
-        this.props.screenProps.translate("ran.chat.Avatar_changed_successfully")
-      );
+      showToast(i18n.t("ran.chat.Avatar_changed_successfully"));
       this.init();
     } catch (e) {
       this.handleError(e, "resetAvatar", "changing_avatar");
     }
   };
-
-  // pickImage = async () => {
-  //   const options = {
-  //     cropping: true,
-  //     compressImageQuality: 0.8,
-  //     cropperAvoidEmptySpaceAroundImage: false,
-  //     cropperChooseText: this.props.screenProps.translate("ran.chat.Choose"),
-  //     cropperCancelText: this.props.screenProps.translate("ran.chat.Cancel"),
-  //     includeBase64: true
-  //   };
-  //   try {
-  //     const response = await ImagePicker.openPicker(options);
-  //     this.setAvatar({
-  //       url: response.path,
-  //       data: `data:image/jpeg;base64,${response.data}`,
-  //       service: "upload"
-  //     });
-  //   } catch (error) {
-  //     console.warn(error);
-  //   }
-  // };
 
   cameraRollPermission = async () => {
     const response = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -488,8 +456,8 @@ export default class ProfileView extends LoggedView {
               inputRef={e => {
                 this.name = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Name")}
-              placeholder={this.props.screenProps.translate("ran.chat.Name")}
+              label={i18n.t("ran.chat.Name")}
+              placeholder={i18n.t("ran.chat.Name")}
               value={name}
               onChangeText={value => this.setState({ name: value })}
               onSubmitEditing={() => {
@@ -501,10 +469,8 @@ export default class ProfileView extends LoggedView {
               inputRef={e => {
                 this.username = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Username")}
-              placeholder={this.props.screenProps.translate(
-                "ran.chat.Username"
-              )}
+              label={i18n.t("ran.chat.Username")}
+              placeholder={i18n.t("ran.chat.Username")}
               value={username}
               onChangeText={value => this.setState({ username: value })}
               onSubmitEditing={() => {
@@ -516,8 +482,8 @@ export default class ProfileView extends LoggedView {
               inputRef={e => {
                 this.email = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Email")}
-              placeholder={this.props.screenProps.translate("ran.chat.Email")}
+              label={i18n.t("ran.chat.Email")}
+              placeholder={i18n.t("ran.chat.Email")}
               value={email}
               onChangeText={value => this.setState({ email: value })}
               onSubmitEditing={() => {
@@ -529,10 +495,8 @@ export default class ProfileView extends LoggedView {
               inputRef={e => {
                 this.newPassword = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.New_Password")}
-              placeholder={this.props.screenProps.translate(
-                "ran.chat.New_Password"
-              )}
+              label={i18n.t("ran.chat.New_Password")}
+              placeholder={i18n.t("ran.chat.New_Password")}
               value={newPassword}
               onChangeText={value => this.setState({ newPassword: value })}
               onSubmitEditing={() => {
@@ -549,10 +513,8 @@ export default class ProfileView extends LoggedView {
               inputRef={e => {
                 this.avatarUrl = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Avatar_Url")}
-              placeholder={this.props.screenProps.translate(
-                "ran.chat.Avatar_Url"
-              )}
+              label={i18n.t("ran.chat.Avatar_Url")}
+              placeholder={i18n.t("ran.chat.Avatar_Url")}
               value={avatarUrl}
               onChangeText={value => this.setState({ avatarUrl: value })}
               onSubmitEditing={this.submit}
@@ -561,9 +523,7 @@ export default class ProfileView extends LoggedView {
             {this.renderAvatarButtons()}
             <View style={sharedStyles.alignItemsFlexStart}>
               <Button
-                title={this.props.screenProps.translate(
-                  "ran.chat.Save_Changes"
-                )}
+                title={i18n.t("ran.chat.Save_Changes")}
                 type="primary"
                 onPress={this.submit}
                 disabled={!this.formIsChanged()}
@@ -573,12 +533,10 @@ export default class ProfileView extends LoggedView {
             <Loading visible={this.state.saving} />
             <Dialog.Container visible={this.state.showPasswordAlert}>
               <Dialog.Title>
-                {this.props.screenProps.translate(
-                  "ran.chat.Please_enter_your_password"
-                )}
+                {i18n.t("ran.chat.Please_enter_your_password")}
               </Dialog.Title>
               <Dialog.Description>
-                {this.props.screenProps.translate(
+                {i18n.t(
                   "ran.chat.For_your_security_you_must_enter_your_current_password_to_continue"
                 )}
               </Dialog.Description>
@@ -589,11 +547,11 @@ export default class ProfileView extends LoggedView {
                 style={styles.dialogInput}
               />
               <Dialog.Button
-                label={this.props.screenProps.translate("ran.chat.Cancel")}
+                label={i18n.t("ran.chat.Cancel")}
                 onPress={this.closePasswordAlert}
               />
               <Dialog.Button
-                label={this.props.screenProps.translate("ran.chat.Save")}
+                label={i18n.t("ran.chat.Save")}
                 onPress={this.submit}
               />
             </Dialog.Container>

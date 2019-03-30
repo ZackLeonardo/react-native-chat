@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Text, View } from "react-native-animatable";
 import PropTypes from "prop-types";
-import compose from "recompose/compose";
+import i18n from "i18n-js";
 
-import { translate } from "../../../main/ran-i18n";
 import CustomButton from "../../components/CustomButton";
 import CustomTextInput from "../../components/CustomTextInput";
 
@@ -31,7 +30,6 @@ class SignupForm extends Component {
       isLoading,
       onLoginLinkPress,
       onSignupPress,
-      translate,
       userAccount,
       emailAccount,
       passwd,
@@ -44,7 +42,7 @@ class SignupForm extends Component {
         <View style={styles.form} ref={ref => (this.formRef = ref)}>
           <CustomTextInput
             ref={ref => (this.emailInputRef = ref)}
-            placeholder={translate(userAccount)}
+            placeholder={i18n.t(userAccount)}
             editable={!isLoading}
             returnKeyType={"next"}
             blurOnSubmit={false}
@@ -55,7 +53,7 @@ class SignupForm extends Component {
           />
           <CustomTextInput
             ref={ref => (this.mobileInputRef = ref)}
-            placeholder={translate(emailAccount)}
+            placeholder={i18n.t(emailAccount)}
             keyboardType={"email-address"}
             editable={!isLoading}
             returnKeyType={"next"}
@@ -67,7 +65,7 @@ class SignupForm extends Component {
           />
           <CustomTextInput
             ref={ref => (this.passwordInputRef = ref)}
-            placeholder={translate(passwd)}
+            placeholder={i18n.t(passwd)}
             editable={!isLoading}
             returnKeyType={"done"}
             secureTextEntry={true}
@@ -89,7 +87,7 @@ class SignupForm extends Component {
               isLoading={isLoading}
               buttonStyle={styles.createAccountButton}
               textStyle={styles.createAccountButtonText}
-              text={translate(signAccount)}
+              text={i18n.t(signAccount)}
             />
           </View>
           <Text
@@ -100,7 +98,7 @@ class SignupForm extends Component {
             duration={600}
             delay={400}
           >
-            {translate(already)}
+            {i18n.t(already)}
           </Text>
         </View>
       </View>
@@ -112,7 +110,6 @@ SignupForm.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onSignupPress: PropTypes.func.isRequired,
   onLoginLinkPress: PropTypes.func.isRequired,
-  translate: PropTypes.func.isRequired,
   userAccount: PropTypes.string,
   emailAccount: PropTypes.string,
   passwd: PropTypes.string,
@@ -153,4 +150,4 @@ const styles = EStyleSheet.create({
   }
 });
 
-export default compose(translate)(SignupForm);
+export default SignupForm;

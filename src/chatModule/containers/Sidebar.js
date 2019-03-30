@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/MaterialIcons";
-import { StackActions, NavigationActions } from "react-navigation";
+import { StackActions } from "react-navigation";
+import i18n from "i18n-js";
 
 import database from "../../main/ran-db/sqlite";
 import { selectServerRequest } from "../actions/server";
@@ -126,7 +127,7 @@ export default class Sidebar extends Component {
   }
 
   componentDidMount = async () => {
-    const servers = await this.updateState();
+    await this.updateState();
     if (!this.serversToken) {
       this.serversToken = PubSub.subscribe("change", this.updateState);
     }
@@ -144,8 +145,14 @@ export default class Sidebar extends Component {
     }
   }
 
+  removeListener = token => {
+    if (token) {
+      PubSub.unsubscribe(token);
+    }
+  };
+
   componentWillUnmount() {
-    // database.databases.serversDB.removeListener("change", this.updateState);
+    this.removeListener(this.serversToken);
   }
 
   onPressItem = item => {
@@ -158,19 +165,19 @@ export default class Sidebar extends Component {
         status: [
           {
             id: "online",
-            name: this.props.screenProps.translate("ran.chat.Online")
+            name: i18n.t("ran.chat.Online")
           },
           {
             id: "busy",
-            name: this.props.screenProps.translate("ran.chat.Busy")
+            name: i18n.t("ran.chat.Busy")
           },
           {
             id: "away",
-            name: this.props.screenProps.translate("ran.chat.Away")
+            name: i18n.t("ran.chat.Away")
           },
           {
             id: "offline",
-            name: this.props.screenProps.translate("ran.chat.Invisible")
+            name: i18n.t("ran.chat.Invisible")
           }
         ]
       });
@@ -274,38 +281,29 @@ export default class Sidebar extends Component {
 
   renderNavigation = () => [
     this.renderItem({
-      text: this.props.screenProps.translate("ran.chat.Chats"),
+      text: i18n.t("ran.chat.Chats"),
       left: <Icon name="chat-bubble" size={20} />,
       onPress: () =>
-        this.sidebarNavigate(
-          "RoomsListView",
-          this.props.screenProps.translate("ran.chat.Messages")
-        ),
+        this.sidebarNavigate("RoomsListView", i18n.t("ran.chat.Messages")),
       testID: "sidebar-chats"
     }),
     this.renderItem({
-      text: this.props.screenProps.translate("ran.chat.Profile"),
+      text: i18n.t("ran.chat.Profile"),
       left: <Icon name="person" size={20} />,
       onPress: () =>
-        this.sidebarNavigate(
-          "ProfileView",
-          this.props.screenProps.translate("ran.chat.Profile")
-        ),
+        this.sidebarNavigate("ProfileView", i18n.t("ran.chat.Profile")),
       testID: "sidebar-profile"
     }),
     this.renderItem({
-      text: this.props.screenProps.translate("ran.chat.Settings"),
+      text: i18n.t("ran.chat.Settings"),
       left: <Icon name="settings" size={20} />,
       onPress: () =>
-        this.sidebarNavigate(
-          "SettingsView",
-          this.props.screenProps.translate("ran.chat.Settings")
-        ),
+        this.sidebarNavigate("SettingsView", i18n.t("ran.chat.Settings")),
       testID: "sidebar-settings"
     }),
     this.renderSeparator("separator-logout"),
     this.renderItem({
-      text: this.props.screenProps.translate("ran.chat.Logout"),
+      text: i18n.t("ran.chat.Logout"),
       left: <Icon name="exit-to-app" size={20} />,
       onPress: () => {
         this.toggleLogout(true);
@@ -332,13 +330,13 @@ export default class Sidebar extends Component {
     />,
     this.renderSeparator("separator-add-server"),
     this.renderItem({
-      text: this.props.screenProps.translate("ran.chat.Add_Server"),
+      text: i18n.t("ran.chat.Add_Server"),
       left: <Icon name="add" size={20} />,
       onPress: () => {
         this.toggleServers();
         this.closeDrawer();
         this.props.navigation.navigate("NewServerView", {
-          title: this.props.screenProps.translate("ran.chat.Add_Server"),
+          title: i18n.t("ran.chat.Add_Server"),
           previousServer: this.props.server
         });
       },

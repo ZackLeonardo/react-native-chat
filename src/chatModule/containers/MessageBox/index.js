@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   View,
-  TextInput,
   FlatList,
   Text,
   TouchableOpacity,
@@ -18,6 +17,7 @@ import { emojify } from "react-emojione";
 // import { KeyboardAccessoryView } from "react-native-keyboard-input";
 import InputToolbar from "../InputToolbar";
 import { Permissions } from "expo";
+import i18n from "i18n-js";
 
 import { userTyping } from "../../actions/room";
 import RocketChat from "../../lib/rocketchat";
@@ -210,7 +210,7 @@ export default class MessageBox extends React.PureComponent {
         <Icon
           style={styles.actionButtons}
           name="close"
-          accessibilityLabel={this.props.translate("ran.chat.Cancel_editing")}
+          accessibilityLabel={i18n.t("ran.chat.Cancel_editing")}
           accessibilityTraits="button"
           onPress={() => this.editCancel()}
           testID="messagebox-cancel-editing"
@@ -221,9 +221,7 @@ export default class MessageBox extends React.PureComponent {
       <Icon
         style={styles.actionButtons}
         onPress={() => this.openEmoji()}
-        accessibilityLabel={this.props.translate(
-          "ran.chat.Open_emoji_selector"
-        )}
+        accessibilityLabel={i18n.t("ran.chat.Open_emoji_selector")}
         accessibilityTraits="button"
         name="mood"
         testID="messagebox-open-emoji"
@@ -234,9 +232,7 @@ export default class MessageBox extends React.PureComponent {
           this.component.refs.composerRef.refs.composerInput.focus();
         }}
         style={styles.actionButtons}
-        accessibilityLabel={this.props.translate(
-          "ran.chat.Close_emoji_selector"
-        )}
+        accessibilityLabel={i18n.t("ran.chat.Close_emoji_selector")}
         accessibilityTraits="button"
         name="keyboard"
         testID="messagebox-close-emoji"
@@ -252,7 +248,7 @@ export default class MessageBox extends React.PureComponent {
           style={[styles.actionButtons, { color: "#1D74F5" }]}
           name="send"
           key="sendIcon"
-          accessibilityLabel={this.props.translate("ran.chat.Send_message")}
+          accessibilityLabel={i18n.t("ran.chat.Send_message")}
           accessibilityTraits="button"
           onPress={() => this.submit(this.state.text)}
           testID="messagebox-send-message"
@@ -268,7 +264,7 @@ export default class MessageBox extends React.PureComponent {
         ]}
         name="mic"
         key="micIcon"
-        accessibilityLabel={this.props.translate("ran.chat.Send_audio_message")}
+        accessibilityLabel={i18n.t("ran.chat.Send_audio_message")}
         accessibilityTraits="button"
         onPress={() => this.recordAudioMessage()}
         testID="messagebox-send-audio"
@@ -279,7 +275,7 @@ export default class MessageBox extends React.PureComponent {
         style={[styles.actionButtons, { color: "#2F343D", fontSize: 16 }]}
         name="plus"
         key="fileIcon"
-        accessibilityLabel={this.props.translate("ran.chat.Message_actions")}
+        accessibilityLabel={i18n.t("ran.chat.Message_actions")}
         accessibilityTraits="button"
         onPress={this.toggleFilesActions}
         testID="messagebox-actions"
@@ -384,7 +380,7 @@ export default class MessageBox extends React.PureComponent {
         await RocketChat.sendFileMessage(this.props.rid, fileInfo);
       } catch (e) {
         if (e && e.error === "error-file-too-large") {
-          return Alert.alert(this.props.translate("ran.chat.error"));
+          return Alert.alert(i18n.t("ran.chat.error"));
         }
         log("finishAudioMessage", e);
       }
@@ -620,8 +616,8 @@ export default class MessageBox extends React.PureComponent {
       <Text style={styles.fixedMentionAvatar}>{item.username}</Text>
       <Text>
         {item.username === "here"
-          ? this.props.translate("ran.chat.Notify_active_in_this_room")
-          : this.props.translate("ran.chat.Notify_all_in_this_room")}
+          ? i18n.t("ran.chat.Notify_active_in_this_room")
+          : i18n.t("ran.chat.Notify_all_in_this_room")}
       </Text>
     </TouchableOpacity>
   );
@@ -782,7 +778,7 @@ export default class MessageBox extends React.PureComponent {
     console.log("MessageBox");
 
     const inputToolbarProps = {
-      placeholder: this.props.translate("ran.chat.input"),
+      placeholder: i18n.t("ran.chat.input"),
       // sendButtonLabel: this.props.translate("ran.chat.send"),
       text: this.state.text,
       leftButtons: this.leftButtons,

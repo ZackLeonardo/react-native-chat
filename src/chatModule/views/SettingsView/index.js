@@ -4,6 +4,7 @@ import { View, ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { connect } from "react-redux";
 import Feather from "@expo/vector-icons/Feather";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import RocketChat from "../../lib/rocketchat";
@@ -105,13 +106,11 @@ export default class SettingsView extends LoggedView {
 
       this.setState({ saving: false });
       setTimeout(() => {
-        showToast(
-          this.props.screenProps.translate("ran.chat.Preferences_saved")
-        );
+        showToast(i18n.t("ran.chat.Preferences_saved"));
 
         if (params.language) {
           this.props.navigation.setParams({
-            title: this.props.screenProps.translate("ran.chat.Settings")
+            title: i18n.t("ran.chat.Settings")
           });
         }
       }, 300);
@@ -122,10 +121,8 @@ export default class SettingsView extends LoggedView {
           return showErrorAlert(e.error, e.details);
         }
         showErrorAlert(
-          this.props.screenProps.translate(
-            "ran.chat.There_was_an_error_while_action"
-          ),
-          this.props.screenProps.translate("ran.chat.saving_preferences")
+          i18n.t("ran.chat.There_was_an_error_while_action"),
+          i18n.t("ran.chat.saving_preferences")
         );
         log("saveUserPreferences", e);
       }, 300);
@@ -158,19 +155,15 @@ export default class SettingsView extends LoggedView {
                 inputRef={e => {
                   this.name = e;
                 }}
-                label={this.props.screenProps.translate("ran.chat.Language")}
-                placeholder={this.props.screenProps.translate(
-                  "ran.chat.Language"
-                )}
+                label={i18n.t("ran.chat.Language")}
+                placeholder={i18n.t("ran.chat.Language")}
                 value={this.getLabel(language)}
                 testID="settings-view-language"
               />
             </RNPickerSelect>
             <View style={sharedStyles.alignItemsFlexStart}>
               <Button
-                title={this.props.screenProps.translate(
-                  "ran.chat.Save_Changes"
-                )}
+                title={i18n.t("ran.chat.Save_Changes")}
                 type="primary"
                 onPress={this.submit}
                 disabled={!this.formIsChanged()}

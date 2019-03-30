@@ -8,16 +8,11 @@ import {
 import { Image, View } from "react-native-animatable";
 import EStyleSheet from "react-native-extended-stylesheet";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import compose from "recompose/compose";
 
-import { translate } from "../../../main/ran-i18n";
 import imgLogo from "../../images/logo.png";
 import Opening from "./Opening";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
-
-import { store } from "../../../src";
 
 if (Platform.OS === "android")
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -106,13 +101,12 @@ class AuthScreen extends Component {
           style={styles.logoImg}
           source={imgLogo}
         />
-        {!visibleForm &&
-          failure && (
-            <Opening
-              onCreateAccountPress={() => this._setVisibleForm("SIGNUP")}
-              onSignInPress={() => this._setVisibleForm("LOGIN")}
-            />
-          )}
+        {!visibleForm && failure && (
+          <Opening
+            onCreateAccountPress={() => this._setVisibleForm("SIGNUP")}
+            onSignInPress={() => this._setVisibleForm("LOGIN")}
+          />
+        )}
         <KeyboardAvoidingView
           keyboardVerticalOffset={-100}
           behavior={"padding"}
@@ -177,7 +171,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(
-  connect(mapStateToProps),
-  translate
-)(AuthScreen);
+export default AuthScreen;

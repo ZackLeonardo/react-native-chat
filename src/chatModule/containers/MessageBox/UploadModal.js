@@ -12,8 +12,8 @@ import Modal from "react-native-modal";
 import { responsive } from "react-native-responsive-ui";
 import equal from "deep-equal";
 import { compose, hoistStatics } from "recompose";
+import i18n from "i18n-js";
 
-import { translate } from "../../../main/ran-i18n";
 import TextInput from "../TextInput";
 import Button from "../Button";
 // import I18n from '../../i18n';
@@ -108,9 +108,7 @@ class UploadModal extends Component {
       >
         <View style={[styles.container, { width: width - 32 }]}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-              {this.props.translate("ran.chat.Upload_file")}
-            </Text>
+            <Text style={styles.title}>{i18n.t("ran.chat.Upload_file")}</Text>
           </View>
 
           <ScrollView style={styles.scrollView}>
@@ -131,14 +129,14 @@ class UploadModal extends Component {
           </ScrollView>
           <View style={styles.buttonContainer}>
             <Button
-              title={this.props.translate("ran.chat.Cancel")}
+              title={i18n.t("ran.chat.Cancel")}
               type="secondary"
               backgroundColor={cancelButtonColor}
               margin={styles.buttonMargin}
               onPress={close}
             />
             <Button
-              title={this.props.translate("ran.chat.Send")}
+              title={i18n.t("ran.chat.Send")}
               type="primary"
               margin={styles.buttonMargin}
               onPress={this._submit}
@@ -150,4 +148,4 @@ class UploadModal extends Component {
   }
 }
 
-export default hoistStatics(compose(translate))(UploadModal);
+export default UploadModal;

@@ -6,8 +6,7 @@ import {
   LayoutAnimation,
   ActivityIndicator,
   SafeAreaView,
-  TouchableOpacity,
-  Image
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 import equal from "deep-equal";
@@ -15,6 +14,7 @@ import PubSub from "pubsub-js";
 import { RectButton } from "react-native-gesture-handler";
 import Icon from "@expo/vector-icons/Ionicons"; //ios-star-outline
 import { NavigationActions } from "react-navigation";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import { List } from "./ListView";
@@ -120,7 +120,7 @@ export default class RoomView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("RoomActionsView", {
-                title: screenProps.translate("ran.chat.Actions"),
+                title: i18n.t("ran.chat.Actions"),
                 rid: navigation.state.params.rid
               });
             }}
@@ -218,7 +218,7 @@ export default class RoomView extends LoggedView {
       if (event.id === "more") {
         this.props.navigator.push({
           screen: "RoomActionsView",
-          title: this.props.screenProps.translate("ran.chat.Actions"),
+          title: i18n.t("ran.chat.Actions"),
           backButtonTitle: "",
           passProps: {
             rid: this.state.room.rid
@@ -365,12 +365,11 @@ export default class RoomView extends LoggedView {
   );
 
   renderFooter = () => {
-    const { translate } = this.props.screenProps;
     if (!this.state.joined) {
       return (
         <View style={styles.joinRoomContainer} key="room-view-join">
           <Text style={styles.previewMode}>
-            {translate("ran.chat.You_are_in_preview_mode")}
+            {i18n.t("ran.chat.You_are_in_preview_mode")}
           </Text>
           <RectButton
             onPress={this.joinRoom}
@@ -378,9 +377,7 @@ export default class RoomView extends LoggedView {
             activeOpacity={0.5}
             underlayColor="#fff"
           >
-            <Text style={styles.joinRoomText}>
-              {translate("ran.chat.Join")}
-            </Text>
+            <Text style={styles.joinRoomText}>{i18n.t("ran.chat.Join")}</Text>
           </RectButton>
         </View>
       );
@@ -388,14 +385,14 @@ export default class RoomView extends LoggedView {
     if (this.state.room.archived || this.isReadOnly()) {
       return (
         <View style={styles.readOnly}>
-          <Text>{translate("ran.chat.This_room_is_read_only")}</Text>
+          <Text>{i18n.t("ran.chat.This_room_is_read_only")}</Text>
         </View>
       );
     }
     if (this.isBlocked()) {
       return (
         <View style={styles.blockedOrBlocker}>
-          <Text>{translate("ran.chat.This_room_is_blocked")}</Text>
+          <Text>{i18n.t("ran.chat.This_room_is_blocked")}</Text>
         </View>
       );
     }
@@ -404,7 +401,6 @@ export default class RoomView extends LoggedView {
         key="room-view-messagebox"
         onSubmit={this.sendMessage}
         rid={this.rid}
-        translate={translate}
       />
     );
   };

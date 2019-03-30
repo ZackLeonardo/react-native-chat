@@ -12,6 +12,7 @@ import {
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 import PubSub from "pubsub-js";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import KeyboardView from "../../presentation/KeyboardView";
@@ -201,9 +202,7 @@ export default class RoomInfoEditView extends LoggedView {
     let error = false;
 
     if (!this.formIsChanged()) {
-      showErrorAlert(
-        this.props.screenProps.translate("ran.chat.Nothing_to_save")
-      );
+      showErrorAlert(i18n.t("ran.chat.Nothing_to_save"));
       return;
     }
 
@@ -260,33 +259,25 @@ export default class RoomInfoEditView extends LoggedView {
     setTimeout(() => {
       if (error) {
         showErrorAlert(
-          this.props.screenProps.translate(
-            "ran.chat.There_was_an_error_while_saving_settings_action"
-          )
+          i18n.t("ran.chat.There_was_an_error_while_saving_settings_action")
         );
       } else {
-        showToast(
-          this.props.screenProps.translate(
-            "ran.chat.Settings_succesfully_changed"
-          )
-        );
+        showToast(i18n.t("ran.chat.Settings_succesfully_changed"));
       }
     }, 100);
   };
 
   delete = () => {
     Alert.alert(
-      this.props.screenProps.translate("ran.chat.Are_you_sure_question_mark"),
-      this.props.screenProps.translate("ran.chat.Delete_Room_Warning"),
+      i18n.t("ran.chat.Are_you_sure_question_mark"),
+      i18n.t("ran.chat.Delete_Room_Warning"),
       [
         {
-          text: this.props.screenProps.translate("ran.chat.Cancel"),
+          text: i18n.t("ran.chat.Cancel"),
           style: "cancel"
         },
         {
-          text: this.props.screenProps.translate(
-            "ran.chat.Yes_action_delete_it"
-          ),
+          text: i18n.t("ran.chat.Yes_action_delete_it"),
           style: "destructive",
           onPress: () => this.props.eraseRoom(this.state.room.rid)
         }
@@ -297,23 +288,19 @@ export default class RoomInfoEditView extends LoggedView {
 
   toggleArchive = () => {
     const { archived } = this.state.room;
-    const action = this.props.screenProps.translate(
-      `ran.chat.${archived ? "un" : ""}archive`
-    );
+    const action = i18n.t(`ran.chat.${archived ? "un" : ""}archive`);
     Alert.alert(
-      this.props.screenProps.translate("ran.chat.Are_you_sure_question_mark"),
-      this.props.screenProps.translate(
+      i18n.t("ran.chat.Are_you_sure_question_mark"),
+      i18n.t(
         `ran.chat.Do_you_really_want_to_${action}_this_room_question_mark`
       ),
       [
         {
-          text: this.props.screenProps.translate("ran.chat.Cancel"),
+          text: i18n.t("ran.chat.Cancel"),
           style: "cancel"
         },
         {
-          text: this.props.screenProps.translate(
-            `ran.chat.Yes_action_${action}_it`
-          ),
+          text: i18n.t(`ran.chat.Yes_action_${action}_it`),
           style: "destructive",
           onPress: () => {
             try {
@@ -371,7 +358,7 @@ export default class RoomInfoEditView extends LoggedView {
               inputRef={e => {
                 this.name = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Name")}
+              label={i18n.t("ran.chat.Name")}
               value={name}
               onChangeText={value => this.setState({ name: value })}
               onSubmitEditing={() => {
@@ -384,7 +371,7 @@ export default class RoomInfoEditView extends LoggedView {
               inputRef={e => {
                 this.description = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Description")}
+              label={i18n.t("ran.chat.Description")}
               value={description}
               onChangeText={value => this.setState({ description: value })}
               onSubmitEditing={() => {
@@ -396,7 +383,7 @@ export default class RoomInfoEditView extends LoggedView {
               inputRef={e => {
                 this.topic = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Topic")}
+              label={i18n.t("ran.chat.Topic")}
               value={topic}
               onChangeText={value => this.setState({ topic: value })}
               onSubmitEditing={() => {
@@ -408,7 +395,7 @@ export default class RoomInfoEditView extends LoggedView {
               inputRef={e => {
                 this.announcement = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Announcement")}
+              label={i18n.t("ran.chat.Announcement")}
               value={announcement}
               onChangeText={value => this.setState({ announcement: value })}
               onSubmitEditing={() => {
@@ -420,7 +407,7 @@ export default class RoomInfoEditView extends LoggedView {
               inputRef={e => {
                 this.joinCode = e;
               }}
-              label={this.props.screenProps.translate("ran.chat.Password")}
+              label={i18n.t("ran.chat.Password")}
               value={joinCode}
               onChangeText={value => this.setState({ joinCode: value })}
               onSubmitEditing={this.submit}
@@ -429,16 +416,12 @@ export default class RoomInfoEditView extends LoggedView {
             />
             <SwitchContainer
               value={t ? true : false}
-              leftLabelPrimary={this.props.screenProps.translate(
-                "ran.chat.Public"
-              )}
-              leftLabelSecondary={this.props.screenProps.translate(
+              leftLabelPrimary={i18n.t("ran.chat.Public")}
+              leftLabelSecondary={i18n.t(
                 "ran.chat.Everyone_can_access_this_channel"
               )}
-              rightLabelPrimary={this.props.screenProps.translate(
-                "ran.chat.Private"
-              )}
-              rightLabelSecondary={this.props.screenProps.translate(
+              rightLabelPrimary={i18n.t("ran.chat.Private")}
+              rightLabelSecondary={i18n.t(
                 "ran.chat.Just_invited_people_can_access_this_channel"
               )}
               onValueChange={value => this.setState({ t: value })}
@@ -446,16 +429,12 @@ export default class RoomInfoEditView extends LoggedView {
             />
             <SwitchContainer
               value={ro ? true : false}
-              leftLabelPrimary={this.props.screenProps.translate(
-                "ran.chat.Colaborative"
-              )}
-              leftLabelSecondary={this.props.screenProps.translate(
+              leftLabelPrimary={i18n.t("ran.chat.Colaborative")}
+              leftLabelSecondary={i18n.t(
                 "ran.chat.All_users_in_the_channel_can_write_new_messages"
               )}
-              rightLabelPrimary={this.props.screenProps.translate(
-                "ran.chat.Read_Only"
-              )}
-              rightLabelSecondary={this.props.screenProps.translate(
+              rightLabelPrimary={i18n.t("ran.chat.Read_Only")}
+              rightLabelSecondary={i18n.t(
                 "ran.chat.Only_authorized_users_can_write_new_messages"
               )}
               onValueChange={value => this.setState({ ro: value })}
@@ -467,18 +446,10 @@ export default class RoomInfoEditView extends LoggedView {
             {ro && !room.broadcast ? (
               <SwitchContainer
                 value={reactWhenReadOnly ? true : false}
-                leftLabelPrimary={this.props.screenProps.translate(
-                  "ran.chat.No_Reactions"
-                )}
-                leftLabelSecondary={this.props.screenProps.translate(
-                  "ran.chat.Reactions_are_disabled"
-                )}
-                rightLabelPrimary={this.props.screenProps.translate(
-                  "ran.chat.Allow_Reactions"
-                )}
-                rightLabelSecondary={this.props.screenProps.translate(
-                  "ran.chat.Reactions_are_enabled"
-                )}
+                leftLabelPrimary={i18n.t("ran.chat.No_Reactions")}
+                leftLabelSecondary={i18n.t("ran.chat.Reactions_are_disabled")}
+                rightLabelPrimary={i18n.t("ran.chat.Allow_Reactions")}
+                rightLabelSecondary={i18n.t("ran.chat.Reactions_are_enabled")}
                 onValueChange={value =>
                   this.setState({ reactWhenReadOnly: value })
                 }
@@ -489,9 +460,7 @@ export default class RoomInfoEditView extends LoggedView {
             {room.broadcast
               ? [
                   <Text style={styles.broadcast}>
-                    {this.props.screenProps.translate(
-                      "ran.chat.Broadcast_Channel"
-                    )}
+                    {i18n.t("ran.chat.Broadcast_Channel")}
                   </Text>,
                   <View style={styles.divider} />
                 ]
@@ -506,7 +475,7 @@ export default class RoomInfoEditView extends LoggedView {
               testID="room-info-edit-view-submit"
             >
               <Text style={sharedStyles.button} accessibilityTraits="button">
-                {this.props.screenProps.translate("ran.chat.SAVE")}
+                {i18n.t("ran.chat.SAVE")}
               </Text>
             </TouchableOpacity>
             <View style={{ flexDirection: "row" }}>
@@ -523,7 +492,7 @@ export default class RoomInfoEditView extends LoggedView {
                   style={sharedStyles.button_inverted}
                   accessibilityTraits="button"
                 >
-                  {this.props.screenProps.translate("ran.chat.RESET")}
+                  {i18n.t("ran.chat.RESET")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -542,8 +511,8 @@ export default class RoomInfoEditView extends LoggedView {
                   accessibilityTraits="button"
                 >
                   {room.archived
-                    ? this.props.screenProps.translate("ran.chat.UNARCHIVE")
-                    : this.props.screenProps.translate("ran.chat.ARCHIVE")}
+                    ? i18n.t("ran.chat.UNARCHIVE")
+                    : i18n.t("ran.chat.ARCHIVE")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -563,7 +532,7 @@ export default class RoomInfoEditView extends LoggedView {
                 style={[sharedStyles.button_inverted, styles.colorDanger]}
                 accessibilityTraits="button"
               >
-                {this.props.screenProps.translate("ran.chat.DELETE")}
+                {i18n.t("ran.chat.DELETE")}
               </Text>
             </TouchableOpacity>
             <Loading visible={this.state.saving} />

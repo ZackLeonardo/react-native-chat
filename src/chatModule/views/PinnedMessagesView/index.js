@@ -4,6 +4,7 @@ import { FlatList, View, Text, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import ActionSheet from "react-native-actionsheet";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import {
@@ -126,9 +127,7 @@ export default class PinnedMessagesView extends LoggedView {
 
   renderEmpty = () => (
     <View style={styles.listEmptyContainer} testID="pinned-messages-view">
-      <Text>
-        {this.props.screenProps.translate("ran.chat.No_pinned_messages")}
-      </Text>
+      <Text>{i18n.t("ran.chat.No_pinned_messages")}</Text>
     </View>
   );
 
@@ -146,9 +145,8 @@ export default class PinnedMessagesView extends LoggedView {
   render() {
     const { loading, loadingMore } = this.state;
     const { messages, ready } = this.props;
-    const { translate } = this.props.screenProps;
 
-    const options = [translate("ran.chat.Unpin"), translate("ran.chat.Cancel")];
+    const options = [i18n.t("ran.chat.Unpin"), i18n.t("ran.chat.Cancel")];
 
     if (ready && messages.length === 0) {
       return this.renderEmpty();
@@ -167,7 +165,7 @@ export default class PinnedMessagesView extends LoggedView {
         />
         <ActionSheet
           ref={o => (this.actionSheet = o)}
-          title={translate("ran.chat.Actions")}
+          title={i18n.t("ran.chat.Actions")}
           options={options}
           cancelButtonIndex={CANCEL_INDEX}
           onPress={this.handleActionPress}

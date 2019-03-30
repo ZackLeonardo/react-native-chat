@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Text, View } from "react-native-animatable";
 import PropTypes from "prop-types";
-import compose from "recompose/compose";
-import { translate } from "../../../main/ran-i18n";
+import i18n from "i18n-js";
 
 import CustomButton from "../../components/CustomButton";
 
@@ -15,14 +14,13 @@ class Opening extends Component {
       onSignInPress,
       loginLabel,
       orLabel,
-      signLabel,
-      translate
+      signLabel
     } = this.props;
     return (
       <View style={styles.container}>
         <View animation={"zoomIn"} delay={600} duration={400}>
           <CustomButton
-            text={translate(signLabel)}
+            text={i18n.t(signLabel)}
             onPress={onCreateAccountPress}
             buttonStyle={styles.createAccountButton}
             textStyle={styles.createAccountButtonText}
@@ -35,12 +33,12 @@ class Opening extends Component {
           duration={400}
         >
           <View style={styles.separatorLine} />
-          <Text style={styles.separatorOr}>{translate(orLabel)}</Text>
+          <Text style={styles.separatorOr}>{i18n.t(orLabel)}</Text>
           <View style={styles.separatorLine} />
         </View>
         <View animation={"zoomIn"} delay={800} duration={400}>
           <CustomButton
-            text={translate(loginLabel)}
+            text={i18n.t(loginLabel)}
             onPress={onSignInPress}
             buttonStyle={styles.signInButton}
             textStyle={styles.signInButtonText}
@@ -56,8 +54,7 @@ Opening.propTypes = {
   onSignInPress: PropTypes.func.isRequired,
   loginLabel: PropTypes.string,
   orLabel: PropTypes.string,
-  signLabel: PropTypes.string,
-  translate: PropTypes.func.isRequired
+  signLabel: PropTypes.string
 };
 
 Opening.defaultProps = {
@@ -101,4 +98,4 @@ const styles = EStyleSheet.create({
   }
 });
 
-export default compose(translate)(Opening);
+export default Opening;

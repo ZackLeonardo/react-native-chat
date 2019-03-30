@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { createSwitchNavigator } from "react-navigation";
-import { compose, hoistStatics } from "recompose";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { translate } from "../ran-i18n";
 import CoreMainNavigator from "./CoreMainNavigator";
 // import LoginView from "../../defaultLoginModule/LoginView";
 // import { store } from "../../src";
@@ -43,7 +41,17 @@ class CoreMain extends React.Component {
   render() {
     const Nav = CoreMainNavigator({
       Chat: {
-        screen: ChatModuleNavigator
+        screen: ChatModuleNavigator,
+        navigationOptions: {
+          tabBarLabel: "我的",
+          tabBarIcon: ({ tintColor }) => (
+            <Ionicons
+              name={"ios-text"}
+              size={26}
+              style={{ color: tintColor }}
+            />
+          )
+        }
       },
       ...this.props.modules
     });
@@ -59,7 +67,7 @@ class CoreMain extends React.Component {
     //   }
     // );
 
-    return <Nav screenProps={{ translate: this.props.translate }} />;
+    return <Nav />;
   }
 }
 
@@ -67,4 +75,4 @@ CoreMain.propTypes = {
   modules: PropTypes.object.isRequired
 };
 
-export default hoistStatics(compose(translate))(CoreMain);
+export default CoreMain;

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { View, FlatList, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import RCTextInput from "../../containers/TextInput";
@@ -135,7 +136,6 @@ export default class SearchMessagesView extends LoggedView {
 
   render() {
     const { searching, loadingMore } = this.state;
-    const { translate } = this.props.screenProps;
 
     return (
       <SafeAreaView style={styles.container} testID="search-messages-view">
@@ -144,13 +144,13 @@ export default class SearchMessagesView extends LoggedView {
             inputRef={e => {
               this.name = e;
             }}
-            label={translate("ran.chat.Search")}
+            label={i18n.t("ran.chat.Search")}
             onChangeText={this.onChangeSearch}
-            placeholder={translate("ran.chat.Search_Messages")}
+            placeholder={i18n.t("ran.chat.Search_Messages")}
             testID="search-message-view-input"
           />
           <Markdown
-            msg={translate("ran.chat.You_can_search_using_RegExp_eg")}
+            msg={i18n.t("ran.chat.You_can_search_using_RegExp_eg")}
             username=""
             baseUrl=""
             customEmojis={{}}

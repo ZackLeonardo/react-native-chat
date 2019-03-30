@@ -2,6 +2,7 @@ import React from "react";
 import { View, TextInput } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import i18n from "i18n-js";
 
 import { setSearch } from "../../../actions/rooms";
 import styles from "./styles";
@@ -34,7 +35,7 @@ export default class RoomsListSearchView extends React.Component {
           style={styles.inputSearch}
           onChangeText={text => this.onSearchChangeText(text)}
           returnKeyType="search"
-          placeholder={this.props.screenProps.translate("ran.chat.Search")}
+          placeholder={i18n.t("ran.chat.Search")}
           placeholderTextColor="#eee"
           clearButtonMode="while-editing"
           blurOnSubmit

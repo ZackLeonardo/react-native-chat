@@ -9,8 +9,7 @@ import {
 import PropTypes from "prop-types";
 import Icon from "@expo/vector-icons/MaterialIcons";
 import { connect } from "react-redux";
-// import compose from "recompose/compose";
-// import { translate } from "../../../main/ran-i18n";
+import i18n from "i18n-js";
 
 import {
   selectServerRequest,
@@ -118,7 +117,6 @@ export default class OnboardingView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props;
     return (
       <SafeAreaView style={styles.container} testID="onboarding-view">
         <Image
@@ -126,15 +124,15 @@ export default class OnboardingView extends LoggedView {
           source={require("../../static/images/logo.png")}
         />
         <Text style={styles.title}>
-          {translate("ran.chat.Welcome_to_RocketChat")}
+          {i18n.t("ran.chat.Welcome_to_RocketChat")}
         </Text>
         <Text style={styles.subtitle}>
-          {translate("ran.chat.Open_Source_Communication")}
+          {i18n.t("ran.chat.Open_Source_Communication")}
         </Text>
         <View style={styles.buttonsContainer}>
           <Button
             type="secondary"
-            title={translate("ran.chat.Connect_to_a_server")}
+            title={i18n.t("ran.chat.Connect_to_a_server")}
             icon={
               <Image
                 source={{ uri: "connect_server" }}
@@ -146,7 +144,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="secondary"
-            title={translate("ran.chat.Join_the_community")}
+            title={i18n.t("ran.chat.Join_the_community")}
             subtitle="open.rocket.chat"
             icon={
               <Image
@@ -159,7 +157,7 @@ export default class OnboardingView extends LoggedView {
           />
           <Button
             type="primary"
-            title={translate("ran.chat.Create_a_new_workspace")}
+            title={i18n.t("ran.chat.Create_a_new_workspace")}
             icon={
               <Image
                 source={{ uri: "plus_onboarding" }}

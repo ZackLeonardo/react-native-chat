@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import database from "../../main/ran-db/sqlite";
 import RocketChat from "../lib/rocketchat";
@@ -129,7 +130,7 @@ export default class NewMessageView extends LoggedView {
 
   createChannel = () => {
     this.props.navigation.navigate("SelectedUsersView", {
-      title: this.props.screenProps.translate("ran.chat.Select_Users"),
+      title: i18n.t("ran.chat.Select_Users"),
       nextAction: "CREATE_CHANNEL"
     });
   };
@@ -156,7 +157,7 @@ export default class NewMessageView extends LoggedView {
             source={require("../Icons/plus.imageset/plus.png")}
           />
           <Text style={styles.createChannelText}>
-            {this.props.screenProps.translate("ran.chat.Create_Channel")}
+            {i18n.t("ran.chat.Create_Channel")}
           </Text>
         </View>
       </Touch>

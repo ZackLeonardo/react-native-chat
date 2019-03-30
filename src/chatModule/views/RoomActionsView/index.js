@@ -5,6 +5,7 @@ import Icon from "@expo/vector-icons/Ionicons";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { connect } from "react-redux";
 import PubSub from "pubsub-js";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import styles from "./styles";
@@ -60,9 +61,8 @@ export default class RoomActionsView extends LoggedView {
   }
 
   static navigationOptions = props => {
-    const { screenProps } = props;
     return {
-      title: screenProps.translate("ran.chat.Details"),
+      title: i18n.t("ran.chat.Details"),
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -155,7 +155,7 @@ export default class RoomActionsView extends LoggedView {
         data: [
           {
             icon: "ios-star",
-            name: this.props.screenProps.translate("ran.chat.Room_Info"),
+            name: i18n.t("ran.chat.Room_Info"),
             route: "RoomInfoView",
             params: { rid },
             testID: "room-actions-info"
@@ -167,13 +167,13 @@ export default class RoomActionsView extends LoggedView {
         data: [
           {
             icon: "ios-call",
-            name: this.props.screenProps.translate("ran.chat.Voice_call"),
+            name: i18n.t("ran.chat.Voice_call"),
             disabled: true,
             testID: "room-actions-voice"
           },
           {
             icon: "ios-videocam",
-            name: this.props.screenProps.translate("ran.chat.Video_call"),
+            name: i18n.t("ran.chat.Video_call"),
             disabled: true,
             testID: "room-actions-video"
           }
@@ -184,55 +184,55 @@ export default class RoomActionsView extends LoggedView {
         data: [
           {
             icon: "ios-attach",
-            name: this.props.screenProps.translate("ran.chat.Files"),
+            name: i18n.t("ran.chat.Files"),
             route: "RoomFilesView",
             params: { rid },
             testID: "room-actions-files"
           },
           {
             icon: "ios-at",
-            name: this.props.screenProps.translate("ran.chat.Mentions"),
+            name: i18n.t("ran.chat.Mentions"),
             route: "MentionedMessagesView",
             params: { rid },
             testID: "room-actions-mentioned"
           },
           {
             icon: "ios-star",
-            name: this.props.screenProps.translate("ran.chat.Starred"),
+            name: i18n.t("ran.chat.Starred"),
             route: "StarredMessagesView",
             params: { rid },
             testID: "room-actions-starred"
           },
           {
             icon: "ios-search",
-            name: this.props.screenProps.translate("ran.chat.Search"),
+            name: i18n.t("ran.chat.Search"),
             route: "SearchMessagesView",
             params: { rid },
             testID: "room-actions-search"
           },
           {
             icon: "ios-share",
-            name: this.props.screenProps.translate("ran.chat.Share"),
+            name: i18n.t("ran.chat.Share"),
             disabled: true,
             testID: "room-actions-share"
           },
           {
             icon: "ios-pin",
-            name: this.props.screenProps.translate("ran.chat.Pinned"),
+            name: i18n.t("ran.chat.Pinned"),
             route: "PinnedMessagesView",
             params: { rid },
             testID: "room-actions-pinned"
           },
           {
             icon: "ios-code",
-            name: this.props.screenProps.translate("ran.chat.Snippets"),
+            name: i18n.t("ran.chat.Snippets"),
             route: "SnippetedMessagesView",
             params: { rid },
             testID: "room-actions-snippeted"
           },
           {
             icon: `ios-notifications${notifications ? "" : "-off"}`,
-            name: this.props.screenProps.translate(
+            name: i18n.t(
               `ran.chat.${notifications ? "Enable" : "Disable"}_notifications`
             ),
             event: () => this.toggleNotifications(),
@@ -248,9 +248,7 @@ export default class RoomActionsView extends LoggedView {
         data: [
           {
             icon: "block",
-            name: this.props.screenProps.translate(
-              `ran.chat.${blocker ? "Unblock" : "Block"}_user`
-            ),
+            name: i18n.t(`ran.chat.${blocker ? "Unblock" : "Block"}_user`),
             type: "danger",
             event: () => this.toggleBlockUser(),
             testID: "room-actions-block-user"
@@ -264,12 +262,11 @@ export default class RoomActionsView extends LoggedView {
       if (this.canViewMembers) {
         actions.push({
           icon: "ios-people",
-          name: this.props.screenProps.translate("ran.chat.Members"),
+          name: i18n.t("ran.chat.Members"),
           description:
             onlineMembers.length === 1
-              ? this.props.screenProps.translate("ran.chat.One_online_member")
-              : onlineMembers.length +
-                this.props.screenProps.translate("ran.chat.N_online_members"),
+              ? i18n.t("ran.chat.One_online_member")
+              : onlineMembers.length + i18n.t("ran.chat.N_online_members"),
           route: "RoomMembersView",
           params: { rid, members: onlineMembers },
           testID: "room-actions-members"
@@ -279,7 +276,7 @@ export default class RoomActionsView extends LoggedView {
       if (this.canAddUser) {
         actions.push({
           icon: "ios-person-add",
-          name: this.props.screenProps.translate("ran.chat.Add_user"),
+          name: i18n.t("ran.chat.Add_user"),
           route: "SelectedUsersView",
           params: {
             nextAction: "ADD_USER",
@@ -293,7 +290,7 @@ export default class RoomActionsView extends LoggedView {
         data: [
           {
             icon: "block",
-            name: this.props.screenProps.translate("ran.chat.Leave_channel"),
+            name: i18n.t("ran.chat.Leave_channel"),
             type: "danger",
             event: () => this.leaveChannel(),
             testID: "room-actions-leave-channel"
@@ -387,17 +384,16 @@ export default class RoomActionsView extends LoggedView {
   leaveChannel = () => {
     const { room } = this.state;
     Alert.alert(
-      this.props.screenProps.translate("ran.chat.Are_you_sure_question_mark"),
-      this.props.screenProps.translate(
-        "ran.chat.Are_you_sure_you_want_to_leave_the_room"
-      ) + `${room.t === "d" ? room.fname : room.name}`,
+      i18n.t("ran.chat.Are_you_sure_question_mark"),
+      i18n.t("ran.chat.Are_you_sure_you_want_to_leave_the_room") +
+        `${room.t === "d" ? room.fname : room.name}`,
       [
         {
-          text: this.props.screenProps.translate("ran.chat.Cancel"),
+          text: i18n.t("ran.chat.Cancel"),
           style: "cancel"
         },
         {
-          text: this.props.screenProps.translate("ran.chat.Yes_action_leave"),
+          text: i18n.t("ran.chat.Yes_action_leave"),
           style: "destructive",
           onPress: () => {
             this.props.navigation.pop(2);

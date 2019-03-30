@@ -13,6 +13,7 @@ import PubSub from "pubsub-js";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 import { StackActions } from "react-navigation";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import styles from "./styles";
@@ -56,9 +57,9 @@ export default class RoomMembersView extends LoggedView {
   }
 
   static navigationOptions = props => {
-    const { navigation, screenProps } = props;
+    const { navigation } = props;
     return {
-      title: screenProps.translate("ran.chat.Members"),
+      title: i18n.t("ran.chat.Members"),
       headerBackTitle: null,
       headerBackImage: (
         <Icon
@@ -79,8 +80,8 @@ export default class RoomMembersView extends LoggedView {
             {/* <Icon name="ios-contacts" size={22} color="#4674F1" /> */}
             <Text style={{ color: "#4674F1" }}>
               {navigation.state.params.allUsers
-                ? screenProps.translate("ran.chat.Online")
-                : screenProps.translate("ran.chat.All")}
+                ? i18n.t("ran.chat.Online")
+                : i18n.t("ran.chat.All")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -159,20 +160,14 @@ export default class RoomMembersView extends LoggedView {
     if (!this.permissions) {
       return;
     }
-    this.actionSheetOptions = [
-      this.props.screenProps.translate("ran.chat.Cancel")
-    ];
+    this.actionSheetOptions = [i18n.t("ran.chat.Cancel")];
     const muted = JSON.parse(this.state.room.muted);
     const userIsMuted = !!muted.find(m => m.value === user.username);
     user.muted = userIsMuted;
     if (userIsMuted) {
-      this.actionSheetOptions.push(
-        this.props.screenProps.translate("ran.chat.Unmute")
-      );
+      this.actionSheetOptions.push(i18n.t("ran.chat.Unmute"));
     } else {
-      this.actionSheetOptions.push(
-        this.props.screenProps.translate("ran.chat.Mute")
-      );
+      this.actionSheetOptions.push(i18n.t("ran.chat.Mute"));
     }
     this.setState({ userLongPressed: user });
     Vibration.vibrate(50);
@@ -218,12 +213,8 @@ export default class RoomMembersView extends LoggedView {
       );
 
       userLongPressed.muted
-        ? showToast(
-            this.props.screenProps.translate("ran.chat.User_has_been_unmuted")
-          )
-        : showToast(
-            this.props.screenProps.translate("ran.chat.User_has_been_muted")
-          );
+        ? showToast(i18n.t("ran.chat.User_has_been_unmuted"))
+        : showToast(i18n.t("ran.chat.User_has_been_muted"));
     } catch (e) {
       log("handleMute", e);
     }
@@ -274,7 +265,7 @@ export default class RoomMembersView extends LoggedView {
         />
         <ActionSheet
           ref={o => (this.actionSheet = o)}
-          title={this.props.screenProps.translate("ran.chat.Actions")}
+          title={i18n.t("ran.chat.Actions")}
           options={this.actionSheetOptions}
           cancelButtonIndex={this.CANCEL_INDEX}
           onPress={this.handleActionPress}

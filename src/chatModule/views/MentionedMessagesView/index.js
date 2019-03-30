@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FlatList, View, Text, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import {
@@ -101,9 +102,7 @@ export default class MentionedMessagesView extends LoggedView {
 
   renderEmpty = () => (
     <View style={styles.listEmptyContainer} testID="mentioned-messages-view">
-      <Text>
-        {this.props.screenProps.translate("ran.chat.No_mentioned_messages")}
-      </Text>
+      <Text>{i18n.t("ran.chat.No_mentioned_messages")}</Text>
     </View>
   );
 

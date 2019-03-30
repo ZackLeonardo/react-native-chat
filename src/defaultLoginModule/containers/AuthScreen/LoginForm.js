@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Text, View } from "react-native-animatable";
 import PropTypes from "prop-types";
-import compose from "recompose/compose";
+import i18n from "i18n-js";
 
-import { translate } from "../../../main/ran-i18n";
 import CustomButton from "../../components/CustomButton";
 import CustomTextInput from "../../components/CustomTextInput";
 
@@ -31,7 +30,6 @@ class LoginForm extends Component {
       isLoading,
       onSignupLinkPress,
       onLoginPress,
-      translate,
       userAccount,
       passwd,
       login,
@@ -49,7 +47,7 @@ class LoginForm extends Component {
           <CustomTextInput
             name={"username"}
             ref={ref => (this.emailInputRef = ref)}
-            placeholder={translate(userAccount)}
+            placeholder={i18n.t(userAccount)}
             editable={!isLoading}
             returnKeyType={"next"}
             blurOnSubmit={false}
@@ -61,7 +59,7 @@ class LoginForm extends Component {
           <CustomTextInput
             name={"password"}
             ref={ref => (this.passwordInputRef = ref)}
-            placeholder={translate(passwd)}
+            placeholder={i18n.t(passwd)}
             editable={!isLoading}
             returnKeyType={"done"}
             secureTextEntry={true}
@@ -83,7 +81,7 @@ class LoginForm extends Component {
               isLoading={isLoading}
               buttonStyle={styles.loginButton}
               textStyle={styles.loginButtonText}
-              text={translate(login)}
+              text={i18n.t(login)}
             />
           </View>
           <Text
@@ -94,7 +92,7 @@ class LoginForm extends Component {
             duration={600}
             delay={400}
           >
-            {translate(notYet)}
+            {i18n.t(notYet)}
           </Text>
         </View>
       </View>
@@ -106,7 +104,6 @@ LoginForm.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onLoginPress: PropTypes.func.isRequired,
   onSignupLinkPress: PropTypes.func.isRequired,
-  translate: PropTypes.func.isRequired,
   userAccount: PropTypes.string,
   passwd: PropTypes.string,
   login: PropTypes.string,
@@ -145,4 +142,4 @@ const styles = EStyleSheet.create({
   }
 });
 
-export default compose(translate)(LoginForm);
+export default LoginForm;

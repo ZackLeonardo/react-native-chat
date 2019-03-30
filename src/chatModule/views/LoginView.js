@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Keyboard, Text, ScrollView, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import IonIcon from "@expo/vector-icons/Ionicons";
-// import { Answers } from "react-native-fabric";
+import i18n from "i18n-js";
 
 import RocketChat from "../lib/rocketchat";
 import KeyboardView from "../presentation/KeyboardView";
@@ -69,11 +69,7 @@ export default class LoginView extends LoggedView {
   submit = async () => {
     const { username, password, code } = this.state;
     if (username.trim() === "" || password.trim() === "") {
-      showToast(
-        this.props.screenProps.translate(
-          "ran.chat.Email_or_password_field_is_empty"
-        )
-      );
+      showToast(i18n.t("ran.chat.Email_or_password_field_is_empty"));
       return;
     }
     Keyboard.dismiss();
@@ -94,7 +90,7 @@ export default class LoginView extends LoggedView {
 
   forgotPassword = () => {
     this.props.navigation.navigate("ForgotPasswordView", {
-      title: this.props.screenProps.translate("ran.chat.Forgot_Password")
+      title: i18n.t("ran.chat.Forgot_Password")
     });
   };
 
@@ -103,9 +99,9 @@ export default class LoginView extends LoggedView {
       return (
         <TextInput
           inputRef={ref => (this.codeInput = ref)}
-          label={this.props.screenProps.translate("ran.chat.Code")}
+          label={i18n.t("ran.chat.Code")}
           onChangeText={code => this.setState({ code })}
-          placeholder={this.props.screenProps.translate("ran.chat.Code")}
+          placeholder={i18n.t("ran.chat.Code")}
           keyboardType="numeric"
           returnKeyType="done"
           autoCapitalize="none"
@@ -117,7 +113,6 @@ export default class LoginView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props.screenProps;
     return (
       <KeyboardView
         contentContainerStyle={styles.container}
@@ -131,10 +126,10 @@ export default class LoginView extends LoggedView {
           <SafeAreaView style={styles.container} testID="login-view">
             <Text style={[styles.loginText, styles.loginTitle]}>Login</Text>
             <TextInput
-              label={translate("ran.chat.Username")}
+              label={i18n.t("ran.chat.Username")}
               placeholder={
                 this.props.Accounts_EmailOrUsernamePlaceholder ||
-                translate("ran.chat.Username")
+                i18n.t("ran.chat.Username")
               }
               keyboardType="email-address"
               returnKeyType="next"
@@ -150,10 +145,10 @@ export default class LoginView extends LoggedView {
               inputRef={e => {
                 this.password = e;
               }}
-              label={translate("ran.chat.Password")}
+              label={i18n.t("ran.chat.Password")}
               placeholder={
                 this.props.Accounts_PasswordPlaceholder ||
-                translate("ran.chat.Password")
+                i18n.t("ran.chat.Password")
               }
               returnKeyType="done"
               iconLeft="key-variant"
@@ -167,7 +162,7 @@ export default class LoginView extends LoggedView {
 
             <View style={styles.alignItemsFlexStart}>
               <Button
-                title={translate("ran.chat.Login")}
+                title={i18n.t("ran.chat.Login")}
                 type="primary"
                 onPress={this.submit}
                 testID="login-view-submit"
@@ -177,9 +172,9 @@ export default class LoginView extends LoggedView {
                 testID="login-view-register"
                 onPress={() => this.register()}
               >
-                {translate("ran.chat.New_in_RocketChat_question_mark")} &nbsp;
+                {i18n.t("ran.chat.New_in_RocketChat_question_mark")} &nbsp;
                 <Text style={{ color: COLOR_BUTTON_PRIMARY }}>
-                  {translate("ran.chat.Sign_Up")}
+                  {i18n.t("ran.chat.Sign_Up")}
                 </Text>
               </Text>
               <Text
@@ -187,7 +182,7 @@ export default class LoginView extends LoggedView {
                 onPress={() => this.forgotPassword()}
                 testID="login-view-forgot-password"
               >
-                {translate("ran.chat.Forgot_password")}
+                {i18n.t("ran.chat.Forgot_password")}
               </Text>
             </View>
 

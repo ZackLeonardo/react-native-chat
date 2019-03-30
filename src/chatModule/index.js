@@ -8,6 +8,7 @@ import {
   SafeAreaView
 } from "react-navigation";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import i18n from "i18n-js";
 
 import OnboardingView from "./views/OnboardingView";
 import RoomsListView from "./views/RoomsListView";
@@ -43,10 +44,6 @@ import { deepLinkingOpen } from "./actions/deepLinking";
 import parseQuery from "./lib/methods/helpers/parseQuery";
 import { connect } from "react-redux";
 import { compose, hoistStatics } from "recompose";
-import { translate } from "../main/ran-i18n";
-// import { iconsLoaded } from "./Icons";
-
-// iconsLoaded();
 
 const handleOpenURL = ({ url }) => {
   if (url) {
@@ -84,8 +81,7 @@ const ChatInitView = hoistStatics(
   compose(
     connect(state => ({
       root: state.app.root
-    })),
-    translate
+    }))
   )
 )(ChatInit);
 

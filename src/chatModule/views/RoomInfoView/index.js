@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import PubSub from "pubsub-js";
 import moment from "moment";
 import Icon from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import LoggedView from "../View";
 import Status from "../../containers/status";
@@ -94,7 +95,7 @@ export default class RoomInfoView extends LoggedView {
             style={{ marginHorizontal: 15 }}
             onPress={() => {
               navigation.navigate("RoomInfoEditView", {
-                title: screenProps.translate("ran.chat.Room_Info_Edit"),
+                title: i18n.t("ran.chat.Room_Info_Edit"),
                 backButtonTitle: "",
                 rid: navigation.state.params.rid
               });
@@ -189,15 +190,13 @@ export default class RoomInfoView extends LoggedView {
   renderItem = (key, room) => (
     <View style={styles.item}>
       <Text style={styles.itemLabel}>
-        {this.props.screenProps.translate(`ran.chat.${camelize(key)}`)}
+        {i18n.t(`ran.chat.${camelize(key)}`)}
       </Text>
       <Text
         style={[styles.itemContent, !room[key] && styles.itemContent__empty]}
         testID={`room-info-view-${key}`}
       >
-        {room[key]
-          ? room[key]
-          : this.props.screenProps.translate(`ran.chat.No_${key}_provided`)}
+        {room[key] ? room[key] : i18n.t(`ran.chat.No_${key}_provided`)}
       </Text>
     </View>
   );
@@ -205,9 +204,7 @@ export default class RoomInfoView extends LoggedView {
   renderRoles = () =>
     this.state.roles.length > 0 ? (
       <View style={styles.item}>
-        <Text style={styles.itemLabel}>
-          {this.props.screenProps.translate("ran.chat.Roles")}
-        </Text>
+        <Text style={styles.itemLabel}>{i18n.t("ran.chat.Roles")}</Text>
         <View style={styles.rolesContainer}>
           {this.state.roles.map(role => (
             <View style={styles.roleBadge} key={role}>
@@ -227,9 +224,7 @@ export default class RoomInfoView extends LoggedView {
       }
       return (
         <View style={styles.item}>
-          <Text style={styles.itemLabel}>
-            {this.props.screenProps.translate("ran.chat.Timezone")}
-          </Text>
+          <Text style={styles.itemLabel}>{i18n.t("ran.chat.Timezone")}</Text>
           <Text style={styles.itemContent}>
             {moment()
               .utcOffset(utcOffset)
@@ -262,12 +257,10 @@ export default class RoomInfoView extends LoggedView {
   renderBroadcast = () => (
     <View style={styles.item}>
       <Text style={styles.itemLabel}>
-        {this.props.screenProps.translate("ran.chat.Broadcast_Channel")}
+        {i18n.t("ran.chat.Broadcast_Channel")}
       </Text>
       <Text style={styles.itemContent} testID="room-info-view-broadcast">
-        {this.props.screenProps.translate(
-          "ran.chat.Broadcast_channel_Description"
-        )}
+        {i18n.t("ran.chat.Broadcast_channel_Description")}
       </Text>
     </View>
   );

@@ -15,6 +15,7 @@ import Icon from "@expo/vector-icons/FontAwesome";
 import IonIcon from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Base64 } from "js-base64";
+import i18n from "i18n-js";
 
 import { open, close } from "../actions/login";
 import LoggedView from "./View";
@@ -225,14 +226,13 @@ export default class LoginSignupView extends LoggedView {
 
   renderServices = () => {
     const { services } = this.props;
-    const { translate } = this.props.screenProps;
     if (!Object.keys(services).length) {
       return null;
     }
     return (
       <View style={styles.servicesContainer}>
         <Text style={styles.servicesTitle}>
-          {translate("ran.chat.Or_continue_using_social_accounts")}
+          {i18n.t("ran.chat.Or_continue_using_social_accounts")}
         </Text>
         <View style={sharedStyles.loginOAuthButtons} key="services">
           {this.props.Accounts_OAuth_Facebook &&
@@ -300,7 +300,6 @@ export default class LoginSignupView extends LoggedView {
   };
 
   render() {
-    const { translate } = this.props.screenProps;
     return (
       <ScrollView
         style={[sharedStyles.container, sharedStyles.containerScrollView]}
@@ -315,23 +314,23 @@ export default class LoginSignupView extends LoggedView {
                 { color: "#81848A" }
               ]}
             >
-              {translate("ran.chat.Welcome_title_pt_1")}
+              {i18n.t("ran.chat.Welcome_title_pt_1")}
             </Text>
             <Text style={[sharedStyles.loginText, styles.header]}>
-              {translate("ran.chat.Welcome_title_pt_2")}
+              {i18n.t("ran.chat.Welcome_title_pt_2")}
             </Text>
             <Image
               style={styles.planetImage}
               source={require("../Icons/new_server.imageset/new_server.png")}
             />
             <Button
-              title={translate("ran.chat.I_have_an_account")}
+              title={i18n.t("ran.chat.I_have_an_account")}
               type="primary"
               onPress={() => this.login()}
               testID="welcome-view-login"
             />
             <Button
-              title={translate("ran.chat.Create_account")}
+              title={i18n.t("ran.chat.Create_account")}
               type="secondary"
               onPress={() => this.register()}
               testID="welcome-view-register"

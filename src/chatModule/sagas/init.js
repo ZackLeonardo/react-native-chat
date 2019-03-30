@@ -1,5 +1,6 @@
 import { AsyncStorage } from "react-native";
 import { call, put, takeLatest } from "redux-saga/effects";
+import i18n from "i18n-js";
 
 import * as actions from "../actions";
 import { selectServerRequest } from "../actions/server";
@@ -18,7 +19,7 @@ const restore = function* restore() {
     } else {
       const locale = yield call([AsyncStorage, "getItem"], "locale");
       if (locale) {
-        yield put(changeLocale(locale));
+        i18n.locale = locale;
       }
       yield put(actions.appStart("outside"));
     }

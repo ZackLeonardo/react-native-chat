@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { View, Text, StyleSheet, Image, Platform } from "react-native";
 import { connect } from "react-redux";
 import { emojify } from "react-emojione";
+import i18n from "i18n-js";
 
 import Avatar from "../containers/Avatar";
 import Status from "../containers/status";
@@ -200,13 +201,13 @@ export default class RoomItem extends React.Component {
       return "";
     }
     if (!lastMessageObject) {
-      return this.props.translate("ran.chat.No_Message");
+      return i18n.t("ran.chat.No_Message");
     }
 
     let prefix = "";
 
     if (lastMessageObject.u.username === this.props.username) {
-      prefix = this.props.translate("ran.chat.You_colon");
+      prefix = i18n.t("ran.chat.You_colon");
     } else if (type !== "d") {
       prefix = `${lastMessageObject.u.username}: `;
     }
@@ -263,25 +264,17 @@ export default class RoomItem extends React.Component {
 
     let accessibilityLabel = name;
     if (unread === 1) {
-      accessibilityLabel += `, ${unread} ${this.props.translate(
-        "ran.chat.alert"
-      )}`;
+      accessibilityLabel += `, ${unread} ${i18n.t("ran.chat.alert")}`;
     } else if (unread > 1) {
-      accessibilityLabel += `, ${unread} ${this.props.translate(
-        "ran.chat.alerts"
-      )}`;
+      accessibilityLabel += `, ${unread} ${i18n.t("ran.chat.alerts")}`;
     }
 
     if (userMentions > 0) {
-      accessibilityLabel += `, ${this.props.translate(
-        "ran.chat.you_were_mentioned"
-      )}`;
+      accessibilityLabel += `, ${i18n.t("ran.chat.you_were_mentioned")}`;
     }
 
     if (date) {
-      accessibilityLabel += `, ${this.props.translate(
-        "ran.chat.last_message"
-      )} ${date}`;
+      accessibilityLabel += `, ${i18n.t("ran.chat.last_message")} ${date}`;
     }
 
     return (

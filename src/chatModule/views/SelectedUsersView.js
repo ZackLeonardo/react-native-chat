@@ -12,6 +12,7 @@ import {
 import { connect } from "react-redux";
 import Icon from "@expo/vector-icons/Ionicons";
 import PubSub from "pubsub-js";
+import i18n from "i18n-js";
 
 import {
   addUser,
@@ -163,19 +164,12 @@ export default class SelectedUsersView extends LoggedView {
     this.props.reset();
   }
 
-  // checkUserSelected = () => {
-  //   if (this.props.users) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
-
   onNavigatorEvent = async () => {
     const { setLoadingInvite, navigation } = this.props;
     const { nextAction, rid } = navigation.state.params;
     if (nextAction === "CREATE_CHANNEL") {
       this.props.navigation.navigate("CreateChannelView", {
-        title: this.props.screenProps.translate("ran.chat.Create_Channel"),
+        title: i18n.t("ran.chat.Create_Channel"),
         backButtonTitle: ""
       });
     } else {
