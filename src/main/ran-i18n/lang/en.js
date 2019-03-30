@@ -66,7 +66,6 @@ module.exports = {
         "If this email is registered, we'll send instructions on how to reset your password. If you do not receive an email shortly, please come back and try again.",
       Reset_password: "Reset password",
       // roomsListView
-      New_Message: "New Message",
       // roomItem
       No_Message: "No Preview Message",
       You_colon: "You: ",
@@ -229,8 +228,6 @@ module.exports = {
       archive: "archive",
       unarchive: "unarchive",
       UNARCHIVE: "UNARCHIVE",
-      Do_you_really_want_to_key_this_room_question_mark:
-        "Do you really want to {{key}} this room?",
       Public: "Public",
       Private: "Private",
       Everyone_can_access_this_channel: "Everyone can access this channel",
@@ -246,7 +243,6 @@ module.exports = {
       Reactions_are_disabled: "Reactions are disabled",
       Allow_Reactions: "Allow Reactions",
       Reactions_are_enabled: "Reactions are enabled",
-      Broadcast_Channel: "Broadcast Channel",
       SAVE: "SAVE",
       Save: "Save",
       RESET: "RESET",

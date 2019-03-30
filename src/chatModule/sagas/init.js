@@ -16,6 +16,10 @@ const restore = function* restore() {
     if (token) {
       yield put(restoreToken(token));
     } else {
+      const locale = yield call([AsyncStorage, "getItem"], "locale");
+      if (locale) {
+        yield put(changeLocale(locale));
+      }
       yield put(actions.appStart("outside"));
     }
 
@@ -32,6 +36,7 @@ const restore = function* restore() {
         const userParsed = JSON.parse(user);
         if (userParsed.language) {
           yield put(changeLocale(userParsed.language));
+          yield call([AsyncStorage, "setItem"], "locale", userParsed.language);
         }
         yield put(selectServerRequest(currentServer));
         yield put(setUser(userParsed));

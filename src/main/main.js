@@ -1,39 +1,14 @@
 import React from "react";
-import {
-  View,
-  I18nManager as RNI18nManager,
-  ActivityIndicator
-} from "react-native";
-import EStyleSheet from "react-native-extended-stylesheet";
 
 import { CoreMain, Screen } from "./ran-core";
-import i18n, { TranslationProvider } from "./ran-i18n";
-import { store } from "../src";
-// import { appInit } from "../chatModule/actions";
+import { TranslationProvider } from "./ran-i18n";
 
 class AppDesk extends React.Component {
-  constructor(props) {
-    super(props);
-
-    // store.dispatch(appInit());
-    this.state = {
-      isI18nInitialized: true
-    };
-  }
-
   render() {
-    if (this.state.isI18nInitialized) {
-      return (
-        <TranslationProvider>
-          <CoreMain {...this.props} />
-        </TranslationProvider>
-      );
-    }
-
     return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-      </View>
+      <TranslationProvider>
+        <CoreMain {...this.props} />
+      </TranslationProvider>
     );
   }
 
@@ -60,14 +35,5 @@ class AppDesk extends React.Component {
   //     .catch(error => console.warn(error));
   // }
 }
-
-const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
 
 export { AppDesk, Screen };
