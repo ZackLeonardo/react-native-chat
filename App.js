@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  AsyncStorage
+} from "react-native";
 import { Localization } from "expo";
 import i18n from "i18n-js";
 
@@ -32,12 +38,45 @@ class SettingsScreen extends React.Component {
 }
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isI18nInitialized: false
+    };
+  }
+
+  async componentDidMount() {
+    const locale = await AsyncStorage.getItem("locale");
+    if (locale) {
+      i18n.locale = locale;
+    }
+    this.setState({ isI18nInitialized: true });
+  }
+
   render() {
     const modules = {
       Home: HomeScreen,
       Setting: SettingsScreen
     };
 
-    return <RNChatApp modules={modules} />;
+    if (this.state.isI18nInitialized) {
+      return <RNChatApp modules={modules} />;
+    }
+
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});

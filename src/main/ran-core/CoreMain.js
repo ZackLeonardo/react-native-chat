@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import i18n from "i18n-js";
 
 import CoreMainNavigator from "./CoreMainNavigator";
 // import LoginView from "../../defaultLoginModule/LoginView";
@@ -43,7 +44,7 @@ class CoreMain extends React.Component {
       Chat: {
         screen: ChatModuleNavigator,
         navigationOptions: {
-          tabBarLabel: "我的",
+          tabBarLabel: i18n.t("ran.chat.chat"),
           tabBarIcon: ({ tintColor }) => (
             <Ionicons
               name={"ios-text"}

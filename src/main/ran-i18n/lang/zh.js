@@ -2,6 +2,7 @@ export default {
   ran: {
     chat: {
       // common
+      chat: "聊天",
       name: "姓名",
       Name: "姓名",
       Username: "用户名",
