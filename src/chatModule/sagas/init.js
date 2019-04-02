@@ -4,7 +4,7 @@ import i18n from "i18n-js";
 
 import * as actions from "../actions";
 import { selectServerRequest } from "../actions/server";
-import { changeLocale } from "../../main/ran-i18n/redux/actions/localeActions";
+// import { changeLocale } from "../../main/ran-i18n/redux/actions/localeActions";
 import { restoreToken, setUser } from "../actions/login";
 import { setAllPreferences } from "../actions/sortPreferences";
 import { APP } from "../actions/actionsTypes";
@@ -36,8 +36,9 @@ const restore = function* restore() {
       if (user) {
         const userParsed = JSON.parse(user);
         if (userParsed.language) {
-          yield put(changeLocale(userParsed.language));
+          // yield put(changeLocale(userParsed.language));
           yield call([AsyncStorage, "setItem"], "locale", userParsed.language);
+          i18n.locale = userParsed.language;
         }
         yield put(selectServerRequest(currentServer));
         yield put(setUser(userParsed));

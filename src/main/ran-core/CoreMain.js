@@ -4,42 +4,14 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import i18n from "i18n-js";
 
 import CoreMainNavigator from "./CoreMainNavigator";
-// import LoginView from "../../defaultLoginModule/LoginView";
-// import { store } from "../../src";
-// import { appInit } from "../../chatModule/actions";
-// import { selectServerRequest } from "../../chatModule/redux/actions/server";
-// import { iconsLoaded } from "../../chatModule/Icons";
-// import { registerScreens } from "../../chatModule/views";
 import { ChatModuleNavigator } from "../../chatModule";
 
-// registerScreens(store);
-// iconsLoaded();
-
 class CoreMain extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   store.dispatch(selectServerRequest({ server: "http://localhost:3000" }));
-  //   store.dispatch(appInit());
-  //   store.subscribe(this.onStoreUpdate).bind(this);
-  // }
-
-  // onStoreUpdate = () => {
-  //   console.log(store.getState());
-
-  //   const { root } = store.getState().app;
-
-  //   if (this.currentRoot !== root) {
-  //     this.currentRoot = root;
-  //     if (root === "outside") {
-  //       console.log("startNotLogged();");
-  //     } else if (root === "inside") {
-  //       console.log("startLogged();");
-  //     }
-  //   }
-  // };
-
   render() {
+    if (!this.props.modules) {
+      return <ChatModuleNavigator />;
+    }
+
     const Nav = CoreMainNavigator({
       Chat: {
         screen: ChatModuleNavigator,
@@ -73,7 +45,7 @@ class CoreMain extends React.Component {
 }
 
 CoreMain.propTypes = {
-  modules: PropTypes.object.isRequired
+  modules: PropTypes.object
 };
 
 export default CoreMain;

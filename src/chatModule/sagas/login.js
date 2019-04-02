@@ -23,7 +23,6 @@ import {
 } from "../actions/login";
 import RocketChat from "../lib/rocketchat";
 import log from "../utils/log";
-import { changeLocale } from "../../main/ran-i18n/redux/actions/localeActions";
 
 const getUser = state => state.login.user;
 const getServer = state => state.server.server;
@@ -154,6 +153,7 @@ const handleSetUser = function* handleSetUser() {
     // TODO: temporary... remove in future releases
     // delete user.user;
     if (user.language) {
+      yield call([AsyncStorage, "setItem"], "locale", user.language);
       i18n.locale = user.language;
     }
   }

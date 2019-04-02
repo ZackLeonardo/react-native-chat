@@ -16,12 +16,11 @@ EStyleSheet.build({
 /**
  * RNChatApp props:
  * modules--stackNavigation views object
- * loginPage--loginPage having default one
- * authProvider--expect a function returning a Promise, to control the application authentication strategy
+ * loginPage--loginPage having default one--not used
+ * authProvider--expect a function returning a Promise, to control the application authentication strategy--not used
  * dataProvider--saga fetch http datasource
  * dataRXProvider--reactive datasource such as using ddp
  * locale--i18n: en zh
- * i18nProvider--
  */
 
 export var store;

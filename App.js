@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Localization } from "expo";
 import i18n from "i18n-js";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import RNChatApp from "./src/src";
 import cn_zh from "./src/main/ran-i18n/lang/zh";
@@ -61,7 +62,7 @@ export default class App extends React.Component {
     };
 
     if (this.state.isI18nInitialized) {
-      return <RNChatApp modules={modules} />;
+      return <RNChatApp />;
     }
 
     return (

@@ -1,4 +1,4 @@
-import { createStore, compose, applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { all, fork } from "redux-saga/effects";
 
