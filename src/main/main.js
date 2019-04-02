@@ -1,10 +1,15 @@
 import React from "react";
 
 import { CoreMain, Screen } from "./ran-core";
+import { TranslationProvider } from "./ran-i18n";
 
 class AppDesk extends React.Component {
   render() {
-    return <CoreMain {...this.props} />;
+    return (
+      <TranslationProvider>
+        <CoreMain {...this.props} />
+      </TranslationProvider>
+    );
   }
 }
 

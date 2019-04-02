@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import i18n from "i18n-js";
 import {
   CHANGE_LOCALE,
