@@ -1,3 +1,5 @@
 import defaultMessages from "./lang/en";
 
-export default () => defaultMessages;
+export default () => {
+  defaultMessages;
+};

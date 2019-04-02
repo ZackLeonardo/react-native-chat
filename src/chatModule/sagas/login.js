@@ -2,6 +2,7 @@ import { AsyncStorage } from "react-native";
 import { delay } from "redux-saga";
 import { put, call, take, takeLatest, select, all } from "redux-saga/effects";
 import i18n from "i18n-js";
+import { changeLocale } from "../../main/ran-i18n/redux/actions/localeActions";
 
 import * as types from "../actions/actionsTypes";
 import { appStart } from "../actions";
@@ -153,8 +154,9 @@ const handleSetUser = function* handleSetUser() {
     // TODO: temporary... remove in future releases
     // delete user.user;
     if (user.language) {
+      yield put(changeLocale(user.language));
       yield call([AsyncStorage, "setItem"], "locale", user.language);
-      i18n.locale = user.language;
+      // i18n.locale = user.language;
     }
   }
   yield AsyncStorage.setItem(

@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
+import i18n from "i18n-js";
 import {
   CHANGE_LOCALE,
   changeLocaleSuccess,
@@ -9,8 +10,8 @@ const loadMessages = function*(i18nProvider, action) {
   const locale = action.payload;
 
   try {
-    const messages = yield call(i18nProvider, locale);
-    yield put(changeLocaleSuccess(locale, messages));
+    i18n.locale = locale;
+    yield put(changeLocaleSuccess(locale));
   } catch (err) {
     yield put(changeLocaleFailure(action.payload.locale, err));
   }

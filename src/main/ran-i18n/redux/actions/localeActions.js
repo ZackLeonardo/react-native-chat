@@ -7,11 +7,10 @@ export const changeLocale = locale => ({
   payload: locale
 });
 
-export const changeLocaleSuccess = (locale, messages) => ({
+export const changeLocaleSuccess = locale => ({
   type: CHANGE_LOCALE_SUCCESS,
   payload: {
-    locale,
-    messages
+    locale
   }
 });
 

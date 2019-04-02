@@ -1,12 +1,10 @@
 import { combineReducers } from "redux";
 import localeReducer from "./localeReducer";
-import messagesReducer from "./messagesReducer";
 import loading from "./loadingReducer";
 
-export default (initialLocale, defaultMessages) =>
+export default initialLocale =>
   combineReducers({
     locale: localeReducer(initialLocale),
-    messages: messagesReducer(defaultMessages),
     loading
   });
 

@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { all, fork } from "redux-saga/effects";
+import i18n from "i18n-js";
 
 // import { USER_LOGOUT } from './actions/authActions';
 import createAppReducer from "../reducers";
@@ -18,8 +19,10 @@ export default ({
   locale = "en"
 }) => {
   //reducers
-  const messages = i18nProvider(locale);
-  const appReducer = createAppReducer(customReducers, locale, messages);
+  i18n.fallbacks = true;
+  i18n.translations = i18nProvider;
+  i18n.locale = locale;
+  const appReducer = createAppReducer(customReducers, locale);
 
   //sagas
   const saga = function* rootSaga() {

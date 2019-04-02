@@ -3,9 +3,9 @@ import i18nReducer from "../../main/ran-i18n/redux/reducers/index";
 // import roomsReducers from "../../chatModule/redux/reducers/roomReducers";
 import rocketReducers from "../../chatModule/reducers/index";
 
-export default (customReducers, locale, messages) =>
+export default (customReducers, locale) =>
   combineReducers({
-    i18n: i18nReducer(locale, messages),
+    i18n: i18nReducer(locale),
     ...rocketReducers,
     ...customReducers
   });
