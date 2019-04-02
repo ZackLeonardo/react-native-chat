@@ -160,7 +160,7 @@ export default {
       Are_you_sure_question_mark: "确定吗?",
       Yes_action_leave: "是的!",
       Actions: "动作",
-      Details: "细节",
+      Details: "详情",
       //roomInfoView
       Room_Info_Edit: "编辑房间信息",
       Room_Info: "房间信息",
