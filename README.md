@@ -1,90 +1,39 @@
-# Base on Rocket.Chat React Native
+# Base on Rocket.Chat(server) and Rocket.Chat React Native(app), but what is different:
 
-## using pure Expo.
+## 1. using pure Expo.
 
-## add outside tabbar and can be used as a chat module with other modules.
-
-# Rocket.Chat React Native Mobile
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/RocketChat/Rocket.Chat.ReactNative.svg)](https://greenkeeper.io/)
-[![Build Status](https://img.shields.io/travis/RocketChat/Rocket.Chat.ReactNative/master.svg)](https://travis-ci.org/RocketChat/Rocket.Chat.ReactNative)
-[![Project Dependencies](https://david-dm.org/RocketChat/Rocket.Chat.ReactNative.svg)](https://david-dm.org/RocketChat/Rocket.Chat.ReactNative)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bb15e2392a71473ea59d3f634f35c54e)](https://www.codacy.com/app/RocketChat/Rocket.Chat.ReactNative?utm_source=github.com&utm_medium=referral&utm_content=RocketChat/Rocket.Chat.ReactNative&utm_campaign=badger)
-[![codecov](https://codecov.io/gh/RocketChat/Rocket.Chat.ReactNative/branch/master/graph/badge.svg)](https://codecov.io/gh/RocketChat/Rocket.Chat.ReactNative)
-[![CodeFactor](https://www.codefactor.io/repository/github/rocketchat/rocket.chat.reactnative/badge)](https://www.codefactor.io/repository/github/rocketchat/rocket.chat.reactnative)
+## 2. add outside tabbar and can be used as a chat module with other modules liking what many apps need.
 
 **Supported Server Versions:** 0.66.0+
 
-## Download
-
-<a href="https://play.google.com/store/apps/details?id=chat.rocket.reactnative">
-  <img alt="Download on Google Play" src="https://play.google.com/intl/en_us/badges/images/badge_new.png" height=43>
-</a>
-<a href="https://itunes.apple.com/us/app/rocket-chat-experimental/id1272915472">
-  <img alt="Download on App Store" src="https://user-images.githubusercontent.com/7317008/43209852-4ca39622-904b-11e8-8ce1-cdc3aee76ae9.png" height=43>
-</a>
-
-## Beta Access
-
-### TestFlight
-
-You can signup to our TestFlight builds by acessing this link: https://testflight.apple.com/join/7I3dLCNT.
-
-### Google Play beta
-
-You can subscribe to Google Play Beta program and download latest versions: https://play.google.com/store/apps/details?id=chat.rocket.reactnative
-
 ## Reporting an Issue
 
-[Github Issues](https://github.com/RocketChat/Rocket.Chat.ReactNative/issues) are used to track todos, bugs, feature requests, and more.
-
-Also check the [#react-native](https://open.rocket.chat/channel/react-native) community on [open.rocket.chat](https://open.rocket.chat). We'd like to help.
+[Github Issues](https://github.com/ZackLeonardo/react-native-chat/issues) are used to track todos, bugs, feature requests, and more.
 
 ## Installing dependencies
 
 Follow the [React Native Getting Started Guide](https://facebook.github.io/react-native/docs/getting-started.html) for detailed instructions on setting up your local machine for development.
 
-## How to run
+## How to run app
 
 - Clone repository and install dependencies:
 
   ```bash
-  $ git clone git@github.com:RocketChat/Rocket.Chat.ReactNative.git
-  $ cd Rocket.Chat.ReactNative
-  $ yarn global add react-native-cli
-  $ yarn
+  $ git clone https://github.com/ZackLeonardo/react-native-chat.git
+  $ cd react-native-chat
+  $ yarn install
   ```
 
 - Run application
   ```bash
-  $ react-native run-ios
-  ```
-  ```bash
-  $ react-native run-android
+  $ expo start
   ```
 
-### Running single server
+### Running Rocket.Chat server
 
-If you don't need multiple servers, there is a branch `single-server` just for that.
-Readme will guide you on how to config.
+Follow the [Rocket.Chat Guide](https://github.com/RocketChat/Rocket.Chat)
 
 ## Current priorities
-
-1. [NEW] Jitsi integration ([#711][i711])
-2. [NEW] Federation ([#706][i706])
-3. [NEW] Threads ([#707][i707])
-4. [NEW] Record video ([#712][i712])
-5. [NEW] Slash Commands ([#405][i405])
-6. [NEW] Draft message per room ([#708][i708])
-7. [NEW] Share extension ([#391][i391])
-
-[i711]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/711
-[i706]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/706
-[i707]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/707
-[i712]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/712
-[i708]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/708
-[i391]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/391
-[i405]: https://github.com/RocketChat/Rocket.Chat.ReactNative/issues/405
 
 ## Features
 
@@ -213,40 +162,3 @@ Readme will guide you on how to config.
 | Mentions List                                                 | ✅     |
 | Attachment List                                               | ✅     |
 | Join a Room                                                   | ✅     |
-
-## Detox (end-to-end tests)
-
-- Build your app
-
-```bash
-$ detox build --configuration ios.sim.release
-```
-
-- Run tests
-
-```bash
-$ detox test --configuration ios.sim.release
-```
-
-## Storybook
-
-- Open index.js
-
-- Uncomment following line
-
-```bash
-import './storybook';
-```
-
-- Comment out following lines
-
-```bash
-import './app/ReactotronConfig';
-import { AppRegistry } from 'react-native';
-import App from './app/index';
-import { name as appName } from './app.json';
-
-AppRegistry.registerComponent(appName, () => App);
-```
-
-- Start your application again
