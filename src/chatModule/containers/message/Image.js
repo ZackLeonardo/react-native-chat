@@ -36,11 +36,12 @@ export default class extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    if (this.remoteUri) {
-      CacheManager.get(this.remoteUri)
-        ? CacheManager.get(this.remoteUri).cancel()
-        : null;
-    }
+    // //cancel method is removed.
+    // if (this.remoteUri) {
+    //   CacheManager.get(this.remoteUri)
+    //     ? CacheManager.get(this.remoteUri).cancel()
+    //     : null;
+    // }
   }
 
   getDescription() {
