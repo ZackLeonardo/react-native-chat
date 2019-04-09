@@ -89,6 +89,8 @@ export default {
       Join: "加入",
       This_room_is_read_only: "该房间为只读",
       This_room_is_blocked: "该房间被禁言",
+      are_typing: "正在输入",
+      is_typing: "正在输入",
       //message
       Message_removed: "消息已删除",
       Has_joined_the_channel: "加入频道",

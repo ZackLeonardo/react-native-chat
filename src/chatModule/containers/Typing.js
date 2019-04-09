@@ -8,7 +8,7 @@ import {
   LayoutAnimation
 } from "react-native";
 import { connect } from "react-redux";
-// import I18n from '../i18n';
+import i18n from "i18n-js";
 
 const styles = StyleSheet.create({
   typing: {
@@ -42,7 +42,7 @@ export default class Typing extends React.Component {
     );
     return users.length
       ? `${users.join(", ")} ${
-          users.length > 1 ? 'I18n.t("are_typing")' : 'I18n.t("is_typing")'
+          users.length > 1 ? i18n.t("are_typing") : i18n.t("is_typing")
         }`
       : "";
   }

@@ -91,6 +91,8 @@ export default {
       Join: "Join",
       This_room_is_read_only: "This room is read only",
       This_room_is_blocked: "This room is blocked",
+      are_typing: "are typing",
+      is_typing: "is typing",
       //message
       Message_removed: "Message removed",
       Has_joined_the_channel: "Has joined the channel",
