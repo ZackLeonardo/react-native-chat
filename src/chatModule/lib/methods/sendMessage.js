@@ -51,10 +51,8 @@ export async function _sendMessageCall(message) {
       : sendMessageByRest.call(this, message));
     return data;
   } catch (e) {
-    database.write(() => {
-      message.status = messagesStatus.ERROR;
-      database.create("messages", message, true);
-    });
+    message.status = messagesStatus.ERROR;
+    database.create("messages", message, true);
   }
 }
 

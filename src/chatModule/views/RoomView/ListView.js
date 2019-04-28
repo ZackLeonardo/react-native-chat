@@ -42,16 +42,18 @@ export class List extends React.Component {
     }
   }
 
-  updateData = async () => {
-    setTimeout(async () => {
-      let data = await database.objects(
-        "messages",
-        `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
-      );
-      if (!shallowequal(this.state.data, data.slice())) {
-        this.setState({ data: data.slice() });
-      }
-    }, 1000);
+  updateData = async (msg = null, data = {}) => {
+    if (!msg || (msg === "messages" && data.get("rid") === this.props.room)) {
+      setTimeout(async () => {
+        let data = await database.objects(
+          "messages",
+          `WHERE rid="${this.props.room}" ORDER BY datetime("ts") DESC`
+        );
+        if (!shallowequal(this.state.data, data.slice())) {
+          this.setState({ data: data.slice() });
+        }
+      }, 1000);
+    }
   };
 
   shouldComponentUpdate(nextProps, nextState) {

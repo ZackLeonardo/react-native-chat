@@ -124,7 +124,7 @@ export default class RoomsListView extends LoggedView {
   constructor(props) {
     super("RoomsListView", props);
 
-    this.data = [];
+    this.dataSortedBy = "";
     this.chats = [];
     this.unread = [];
     this.favorites = [];
@@ -210,111 +210,203 @@ export default class RoomsListView extends LoggedView {
     }
   }
 
-  getUnread = async condition => {
-    let unread = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${condition}, name desc`
-    );
-    this.unread = unread.slice();
-    if (!isEqual(this.unread, this.state.unread)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("unread updating");
-      this.setState({ unread: this.unread });
+  getUnread = async (msg, data) => {
+    console.log("getUnread");
+    console.log(msg);
+    console.log(data);
+
+    if (msg === "subscriptions" && data === "unread") {
+      console.log("getUnread in");
+
+      if (this.dataSortedBy.length) {
+        let unread = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and (unread > 0 OR alert = 1) order by ${
+            this.dataSortedBy
+          }, name desc`
+        );
+        this.unread = unread.slice();
+        if (!isEqual(this.unread, this.state.unread)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("unread updating");
+          this.setState({ unread: this.unread });
+        }
+      }
     }
   };
 
-  getFavorites = async condition => {
-    let favorites = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${condition}`
-    );
-    this.favorites = favorites.slice();
-    if (!isEqual(this.favorites, this.state.favorites)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("favorites updating");
-      this.setState({ favorites: this.favorites });
+  getFavorites = async (msg, data) => {
+    console.log("getFavorites");
+    console.log(msg);
+    console.log(data);
+
+    if (msg === "subscriptions" && data === "favorites") {
+      console.log("getFavorites in");
+
+      if (this.dataSortedBy.length) {
+        let favorites = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and f = 1 order by ${
+            this.dataSortedBy
+          }`
+        );
+        this.favorites = favorites.slice();
+        if (!isEqual(this.favorites, this.state.favorites)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("favorites updating");
+          this.setState({ favorites: this.favorites });
+        }
+      }
     }
   };
 
-  getChannels = async condition => {
-    let channels = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${condition}`
-    );
-    this.channels = channels.slice();
-    if (!isEqual(this.channels, this.state.channels)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("channels updating");
+  getChannels = async (msg, data) => {
+    console.log("getChannels");
+    console.log(msg);
+    console.log(data);
 
-      this.setState({ channels: this.channels });
+    if (msg === "subscriptions" && data === "channels") {
+      console.log("getChannels in");
+
+      if (this.dataSortedBy.length) {
+        let channels = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "c" order by ${
+            this.dataSortedBy
+          }`
+        );
+        this.channels = channels.slice();
+        if (!isEqual(this.channels, this.state.channels)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("channels updating");
+
+          this.setState({ channels: this.channels });
+        }
+      }
     }
   };
 
-  getPrivateGroup = async condition => {
-    let privateGroup = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${condition}`
-    );
-    this.privateGroup = privateGroup.slice();
+  getPrivateGroup = async (msg, data) => {
+    console.log("getPrivateGroup");
+    console.log(msg);
+    console.log(data);
 
-    if (!isEqual(this.privateGroup, this.state.privateGroup)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      this.setState({ privateGroup: this.privateGroup });
+    if (msg === "subscriptions" && data === "privateGroup") {
+      console.log("getPrivateGroup in");
+
+      if (this.dataSortedBy.length) {
+        let privateGroup = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "p" order by ${
+            this.dataSortedBy
+          }`
+        );
+        this.privateGroup = privateGroup.slice();
+
+        if (!isEqual(this.privateGroup, this.state.privateGroup)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          this.setState({ privateGroup: this.privateGroup });
+        }
+      }
     }
   };
 
-  getDirect = async condition => {
-    let direct = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${condition}`
-    );
-    this.direct = direct.slice();
-    if (!isEqual(this.direct, this.state.direct)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("direct updating");
-      this.setState({ direct: this.direct });
+  getDirect = async (msg, data) => {
+    console.log("getDirect");
+    console.log(msg);
+    console.log(data);
+
+    if (msg === "subscriptions" && data === "direct") {
+      console.log("getDirect in");
+
+      if (this.dataSortedBy.length) {
+        let direct = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "d" order by ${
+            this.dataSortedBy
+          }`
+        );
+        this.direct = direct.slice();
+        if (!isEqual(this.direct, this.state.direct)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("direct updating");
+          this.setState({ direct: this.direct });
+        }
+      }
     }
   };
 
-  getLivechat = async condition => {
-    let livechat = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${condition}`
-    );
-    this.livechat = livechat.slice();
+  getLivechat = async (msg, data) => {
+    console.log("getLivechat");
+    console.log(msg);
+    console.log(data);
 
-    if (!isEqual(this.livechat, this.state.livechat)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("livechat updating");
-      this.setState({ livechat: this.livechat });
+    if (msg === "subscriptions" && data === "livechat") {
+      console.log("getLivechat in");
+
+      if (this.dataSortedBy.length) {
+        let livechat = await database.objects(
+          "subscriptions",
+          `WHERE (archived = 0 OR archived is null) and open = 1 and t = "l" order by ${
+            this.dataSortedBy
+          }`
+        );
+        this.livechat = livechat.slice();
+
+        if (!isEqual(this.livechat, this.state.livechat)) {
+          //!_.isEqualWith(this.unread, newUnread)
+          console.log("livechat updating");
+          this.setState({ livechat: this.livechat });
+        }
+      }
     }
   };
 
-  getChatsUnread = async condition => {
-    let chats = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 and unread = 0 and alert = 0 order by ${condition}`
-    );
-    this.chats = chats.slice();
+  getChatsUnread = async (msg, data) => {
+    console.log("getChatsUnread");
+    console.log(msg);
+    console.log(data);
 
-    if (!isEqual(this.chats, this.state.chats)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("chats updating");
-      this.setState({ chats: this.chats });
+    if (msg === "subscriptions" && data === "favorites") {
+      console.log("getChatsUnread in");
+
+      let chats = await database.objects(
+        "subscriptions",
+        `WHERE (archived = 0 OR archived is null) and open = 1 and unread = 0 and alert = 0 order by ${
+          this.dataSortedBy
+        }`
+      );
+      this.chats = chats.slice();
+
+      if (!isEqual(this.chats, this.state.chats)) {
+        //!_.isEqualWith(this.unread, newUnread)
+        console.log("chats updating");
+        this.setState({ chats: this.chats });
+      }
     }
   };
 
-  getChatsDefault = async condition => {
-    let chats = await database.objects(
-      "subscriptions",
-      `WHERE (archived = 0 OR archived is null) and open = 1 order by ${condition}`
-    );
-    this.chats = chats.slice();
+  getChatsDefault = async (msg, data) => {
+    console.log("getChatsDefault");
+    console.log(msg);
+    console.log(data);
 
-    if (!isEqual(this.chats, this.state.chats)) {
-      //!_.isEqualWith(this.unread, newUnread)
-      console.log("chats updating");
-      this.setState({ chats: this.chats });
+    if (msg === "subscriptions" && data === "chatsDefault") {
+      console.log("getChatsDefault in");
+
+      let chats = await database.objects(
+        "subscriptions",
+        `WHERE (archived = 0 OR archived is null) and open = 1 order by ${
+          this.dataSortedBy
+        }`
+      );
+      this.chats = chats.slice();
+
+      if (!isEqual(this.chats, this.state.chats)) {
+        //!_.isEqualWith(this.unread, newUnread)
+        console.log("chats updating");
+        this.setState({ chats: this.chats });
+      }
     }
   };
 
@@ -325,32 +417,31 @@ export default class RoomsListView extends LoggedView {
         //   "subscriptions",
         //   "WHERE (archived = 0 OR archived is null) and open = 1 order by name asc"
         // );
-        this.data = "name asc";
+        this.dataSortedBy = "name asc";
       } else {
         // this.data = await database.objects(
         //   "subscriptions",
         //   "WHERE (archived = 0 OR archived is null) and open = 1 order by roomUpdatedAt desc"
         // );
-        this.data = "roomUpdatedAt desc";
+        this.dataSortedBy = "roomUpdatedAt desc";
       }
 
       // unread
       if (this.props.showUnread) {
-        this.getUnread(this.data);
+        this.getUnread("subscriptions", "unread");
         if (!this.unreadToken) {
-          this.unreadToken = PubSub.subscribe("subscriptions", () =>
-            this.getUnread(this.data)
-          );
+          this.unreadToken = PubSub.subscribe("subscriptions", this.getUnread);
         }
       } else {
         this.removeListener(this.unreadToken);
       }
       // favorites
       if (this.props.showFavorites) {
-        this.getFavorites(this.data);
+        this.getFavorites("subscriptions", "favorites");
         if (!this.favoritesToken) {
-          this.favoritesToken = PubSub.subscribe("subscriptions", () =>
-            this.getFavorites(this.data)
+          this.favoritesToken = PubSub.subscribe(
+            "subscriptions",
+            this.getFavorites
           );
         }
       } else {
@@ -358,24 +449,27 @@ export default class RoomsListView extends LoggedView {
       }
       // type
       if (this.props.groupByType) {
-        this.getChannels(this.data);
-        this.getPrivateGroup(this.data);
-        this.getDirect(this.data);
-        this.getLivechat(this.data);
+        this.getChannels("subscriptions", "channels");
+        this.getPrivateGroup("subscriptions", "privateGroup");
+        this.getDirect("subscriptions", "direct");
+        this.getLivechat("subscriptions", "livechat");
         if (!this.groupByTypeToken) {
-          this.groupByTypeToken = PubSub.subscribe("subscriptions", () => {
-            // channels
-            this.getChannels(this.data);
+          this.groupByTypeToken = PubSub.subscribe(
+            "subscriptions",
+            (msg, data) => {
+              // channels
+              this.getChannels(msg, data);
 
-            // private
-            this.getPrivateGroup(this.data);
+              // private
+              this.getPrivateGroup(msg, data);
 
-            // direct
-            this.getDirect(this.data);
+              // direct
+              this.getDirect(msg, data);
 
-            // livechat
-            this.getLivechat(this.data);
-          });
+              // livechat
+              this.getLivechat(msg, data);
+            }
+          );
         }
 
         this.removeListener(this.chatsToken);
@@ -383,17 +477,19 @@ export default class RoomsListView extends LoggedView {
       } else {
         // chats
         if (this.props.showUnread) {
-          this.getChatsUnread(this.data);
+          this.getChatsUnread("subscriptions", "chatsUnread");
           if (!this.chatsToken) {
-            this.chatsToken = PubSub.subscribe("subscriptions", () =>
-              this.getChatsUnread(this.data)
+            this.chatsToken = PubSub.subscribe(
+              "subscriptions",
+              this.getChatsUnread
             );
           }
         } else {
-          this.getChatsDefault(this.data);
+          this.getChatsDefault("subscriptions", "chatsDefault");
           if (!this.defaultToken) {
-            this.defaultToken = PubSub.subscribe("subscriptions", () =>
-              this.getChatsDefault(this.data)
+            this.defaultToken = PubSub.subscribe(
+              "subscriptions",
+              this.getChatsDefault
             );
           }
         }

@@ -1,6 +1,7 @@
 import { SQLite } from "expo";
 import { isArray } from "lodash";
 import moment from "moment";
+import PubSub from "pubsub-js";
 
 import { pubsubs } from "./pubsubs";
 
@@ -402,6 +403,7 @@ class DB {
   //   values.push(0);
   // }
   create(schema_name, schema_object, update, db = this.database) {
+    const pubkeys = new Map();
     if (update) {
       let sql = `INSERT OR IGNORE INTO ${schema_name} (`;
       let validKeys = [];
@@ -415,6 +417,31 @@ class DB {
           validKeys.push(key);
           sql = sql + key + ", ";
           // values.push(schema_object[key]);
+          if (schema_name === "messages") {
+            if (key === "rid") {
+              pubkeys.set(key, schema_object[key]);
+            }
+          }
+          if (schema_name === "subscriptions") {
+            if (key === "unread") {
+              pubkeys.set(key, schema_object[key]);
+            }
+            if (key === "archived") {
+              pubkeys.set(key, schema_object[key]);
+            }
+            if (key === "open") {
+              pubkeys.set(key, schema_object[key]);
+            }
+            if (key === "alert") {
+              pubkeys.set(key, schema_object[key]);
+            }
+            if (key === "f") {
+              pubkeys.set(key, schema_object[key]);
+            }
+            if (key === "t") {
+              pubkeys.set(key, schema_object[key]);
+            }
+          }
           if (schema_object[key] instanceof Date) {
             values.push(
               moment(schema_object[key]).format("YYYY-MM-DDTHH:mm:ss.SSS")
@@ -458,7 +485,8 @@ class DB {
       updateSql = updateSql.slice(0, updateSql.length - 1);
       updateSql = updateSql + ";";
 
-      console.log("update sql:" + updateSql);
+      console.log("UPDATE update sql:" + updateSql);
+      console.log("UPDATE update sql values:" + values);
 
       db.transaction(
         tx => {
@@ -466,7 +494,7 @@ class DB {
           tx.executeSql(updateSql, values);
         },
         null,
-        pubsubs(schema_name)
+        pubsubs(schema_name, pubkeys)
       );
     } else {
       let sql = `REPLACE INTO ${schema_name} (`;
@@ -498,8 +526,8 @@ class DB {
       sql = sql.slice(0, sql.length - 2);
       sql = sql + ");";
 
-      console.log("create sql:" + sql);
-      console.log("create sql values:" + values);
+      console.log("REPLACE create sql:" + sql);
+      console.log("REPLACE create sql values:" + values);
 
       db.transaction(
         tx => {

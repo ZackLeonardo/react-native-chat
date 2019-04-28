@@ -53,14 +53,15 @@ export default async function() {
         ? getRoomDpp.apply(this)
         : getRoomRest.apply(this));
 
-      const data = rooms.map(room => ({
+      const data = rooms.map(async room => ({
         room,
-        sub: database.objects("subscriptions", `WHERE rid = ${room._id}`)
+        sub: await database.objects("subscriptions", `WHERE rid = ${room._id}`)
       }));
 
-      InteractionManager.runAfterInteractions(() => {
-        subscriptions.forEach(subscription =>
-          database.create("subscriptions", subscription, true)
+      InteractionManager.runAfterInteractions(async () => {
+        subscriptions.forEach(
+          async subscription =>
+            await database.create("subscriptions", subscription, true)
         );
         data.forEach(({ sub, room }) => sub[0] && merge(sub[0], room));
         resolve(data);

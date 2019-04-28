@@ -675,14 +675,16 @@ const RocketChat = {
     }).then(response => response.json());
   },
   async resendMessage(messageId) {
-    const message = await database
-      .objects("messages")
-      .filtered("_id = $0", messageId)[0];
-    database.write(() => {
+    const messages = await database.objects(
+      "messages",
+      `WHERE _id ="${messageId}"`
+    );
+    if (messages) {
+      const message = messages[0];
       message.status = messagesStatus.TEMP;
       database.create("messages", message, true);
-    });
-    return _sendMessageCall(JSON.parse(JSON.stringify(message)));
+      return _sendMessageCall(JSON.parse(JSON.stringify(message)));
+    }
   },
 
   async search({ text, filterUsers = true, filterRooms = true }) {
