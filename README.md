@@ -8,7 +8,7 @@
 
 ## Demo
 
-![Demo gif](https://github.com/ZackLeonardo/react-native-chat/blob/master/demo/demo.gif =200x)
+<img src="https://github.com/ZackLeonardo/react-native-chat/blob/master/demo/demo.gif" width="200" />
 
 ## Reporting an Issue
 
