@@ -6,6 +6,10 @@
 
 **Supported Server Versions:** 0.66.0+
 
+## Demo
+
+![Demo gif](https://github.com/ZackLeonardo/react-native-chat/blob/master/demo/demo.gif)
+
 ## Reporting an Issue
 
 [Github Issues](https://github.com/ZackLeonardo/react-native-chat/issues) are used to track todos, bugs, feature requests, and more.
@@ -32,6 +36,9 @@ Follow the [React Native Getting Started Guide](https://facebook.github.io/react
 ### Running Rocket.Chat server
 
 Follow the [Rocket.Chat Guide](https://github.com/RocketChat/Rocket.Chat)
+
+tested server info:
+![server info](https://github.com/ZackLeonardo/react-native-chat/blob/master/demo/server%20info.png)
 
 ## Current priorities
 
