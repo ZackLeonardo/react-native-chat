@@ -7,7 +7,7 @@ import PubSub from "pubsub-js";
 export const pubsubs = (schema_name, pubkeys) => {
   if (schema_name === "subscriptions") {
     if (!pubkeys.get("archived") && pubkeys.get("open")) {
-      if (pubkeys.get("unread") > 0 || pubkeys.get("alert")) {
+      if (pubkeys.get("unread") >= 0 || pubkeys.get("alert")) {
         PubSub.publish(schema_name, "unread");
       }
       if (pubkeys.get("f") === 1) {

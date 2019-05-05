@@ -52,6 +52,9 @@ export default async function subscribeRooms(id) {
       }
     });
 
+    /**
+     * 由于subscriptions和rooms接收频率快，数据库插入和读取效率问题，导致需要 subscriptions created 需要延时以便获取最新记录，并不是完美解决方案
+     */
     this.ddp.on(
       "stream-notify-user",
       protectedFunction(async ddpMessage => {
@@ -94,7 +97,7 @@ export default async function subscribeRooms(id) {
             } else if (type === "inserted") {
               database.create("rooms", data, true);
             }
-          }, 10);
+          }, 300);
         }
         if (/message/.test(ev)) {
           const [args] = ddpMessage.fields.args;
