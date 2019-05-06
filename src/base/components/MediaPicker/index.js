@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback
 } from "react-native";
-import { StackNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
 import _ from "underscore";
 import { compose, hoistStatics } from "recompose";
@@ -409,7 +409,7 @@ class MediaListScreen extends Component {
   }
 }
 
-const Nav = StackNavigator(
+const Nav = createStackNavigator(
   {
     MediaList: { screen: MediaListScreen },
     MediaGridBrowser: { screen: MediaGridBrowserScreen },

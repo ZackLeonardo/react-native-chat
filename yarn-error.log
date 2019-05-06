@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add DeAsync
+  /usr/local/bin/node /usr/local/bin/yarn install
 
 PATH: 
   /opt/local/bin:/opt/local/sbin:/Users/zoudeyi/Library/Android/sdk/platform-tools:/usr/local/mysql/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/opt/ImageMagick/bin:/Users/zoudeyi/go:/Users/zoudeyi/go/bin:/usr/local/opt/go/libexec:/usr/local/opt/go/libexec/bin:/Users/zoudeyi/Library/Android/sdk
@@ -8,23 +8,15 @@ Yarn version:
   1.10.1
 
 Node version: 
-  8.12.0
+  8.9.4
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: http://registry.npmjs.org/DeAsync: Not found
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:61073:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:120166:22)
-      at emitTwo (events.js:126:13)
-      at Request.emit (events.js:214:7)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:121138:10)
-      at emitOne (events.js:116:13)
-      at Request.emit (events.js:211:7)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:121060:12)
-      at Object.onceWrapper (events.js:313:30)
-      at emitNone (events.js:111:20)
+  Error: write EADDRNOTAVAIL
+      at _errnoException (util.js:1022:11)
+      at WriteWrap.afterWrite [as oncomplete] (net.js:867:14)
 
 npm manifest: 
   {
@@ -42,9 +34,11 @@ npm manifest:
       "babel-plugin-transform-react-jsx-source": "^6.22.0",
       "deep-equal": "^1.0.1",
       "ejson": "^2.1.2",
-      "expo": "^31.0.4",
+      "expo": "^32.0.0",
+      "i18n-js": "^3.2.1",
       "i18next": "^11.6.0",
       "js-base64": "^2.4.9",
+      "js-sha256": "^0.9.0",
       "lodash": "^4.17.11",
       "markdown-it-flowdock": "^0.3.7",
       "moment": "^2.22.2",
@@ -53,10 +47,11 @@ npm manifest:
       "pubsub-js": "^1.7.0",
       "react": "16.5.0",
       "react-emojione": "^5.0.0",
-      "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.1.tar.gz",
+      "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
       "react-native-actionsheet": "^2.4.2",
       "react-native-animatable": "^1.3.0",
       "react-native-communications": "^2.2.1",
+      "react-native-dialog": "^5.5.0",
       "react-native-expo-image-cache": "^3.2.0",
       "react-native-extended-stylesheet": "^0.9.0",
       "react-native-flexi-radio-button": "^0.2.2",
@@ -75,9 +70,9 @@ npm manifest:
       "react-native-slider": "^0.11.0",
       "react-native-swipeout": "^2.3.6",
       "react-native-video": "^4.0.1",
-      "react-navigation": "^2.18.2",
+      "react-navigation": "^3.0.9",
       "react-navigation-redux-helpers": "^2.0.5",
-      "react-redux": "^5.0.7",
+      "react-redux": "^6.0.1",
       "recompose": "^0.30.0",
       "redux": "^4.0.0",
       "redux-enhancer-react-native-appstate": "^0.3.1",
@@ -774,6 +769,13 @@ Lockfile:
     integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
     dependencies:
       regenerator-runtime "^0.12.0"
+  
+  "@babel/runtime@^7.3.1":
+    version "7.4.2"
+    resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.4.2.tgz#f5ab6897320f16decd855eed70b705908a313fe8"
+    integrity sha512-7Bl2rALb7HpvXFL7TETNzKSAeBVCPHELzc0C//9FCxN8nsiueWSJBqaF+2oIJScyILStASR/Cx5WMkXGYTiJFA==
+    dependencies:
+      regenerator-runtime "^0.13.2"
   
   "@babel/template@7.0.0-beta.51":
     version "7.0.0-beta.51"
@@ -3684,6 +3686,13 @@ Lockfile:
     resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
     integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
   
+  hoist-non-react-statics@^3.3.0:
+    version "3.3.0"
+    resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"
+    integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==
+    dependencies:
+      react-is "^16.7.0"
+  
   home-or-tmp@^2.0.0:
     version "2.0.0"
     resolved "https://registry.npmjs.org/home-or-tmp/-/home-or-tmp-2.0.0.tgz#e36c3f2d2cae7d746a857e38d18d5f32a7882db8"
@@ -3727,6 +3736,11 @@ Lockfile:
       assert-plus "^1.0.0"
       jsprim "^1.2.2"
       sshpk "^1.7.0"
+  
+  i18n-js@^3.2.1:
+    version "3.2.1"
+    resolved "https://registry.npmjs.org/i18n-js/-/i18n-js-3.2.1.tgz#26cea8e327207bebccf1030baa761c5245ceb63b"
+    integrity sha512-AN8Ol+7QMcRml338l5W7JeNsJgXZqXHOwF+e2iKu6gqRM87bmbxk3g2CAfapo7+5ASKOhl+0PiH+YP8OjN+rXg==
   
   i18next@^11.6.0:
     version "11.6.0"
@@ -3823,7 +3837,7 @@ Lockfile:
       strip-ansi "^4.0.0"
       through "^2.3.6"
   
-  invariant@2.x.x, invariant@^2.0.0, invariant@^2.1.1, invariant@^2.2.0, invariant@^2.2.2, invariant@^2.2.4:
+  invariant@2.x.x, invariant@^2.1.1, invariant@^2.2.0, invariant@^2.2.2, invariant@^2.2.4:
     version "2.2.4"
     resolved "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
     integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -4511,6 +4525,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/js-base64/-/js-base64-2.4.9.tgz#748911fb04f48a60c4771b375cac45a80df11c03"
     integrity sha512-xcinL3AuDJk7VSzsHgb9DvvIXayBbadtMZ4HFPx8rUszbW1MuNMlwYVC4zzCZ6e1sqZpnNS5ZFYOhXqA39T7LQ==
   
+  js-sha256@^0.9.0:
+    version "0.9.0"
+    resolved "https://registry.npmjs.org/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+    integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
+  
   js-tokens@^3.0.0, js-tokens@^3.0.2:
     version "3.0.2"
     resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -4753,11 +4772,6 @@ Lockfile:
       p-locate "^2.0.0"
       path-exists "^3.0.0"
   
-  lodash-es@^4.17.5:
-    version "4.17.10"
-    resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.10.tgz#62cd7104cdf5dd87f235a837f0ede0e8e5117e05"
-    integrity sha512-iesFYPmxYYGTcmQK0sL8bX3TGHyM6b2qREaB4kamHfQyfPJP0xgoGxp19nsH16nsfquLdiyKyX3mQkfiSGV8Rg==
-  
   lodash._getnative@^3.0.0:
     version "3.9.1"
     resolved "https://registry.npmjs.org/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
@@ -4857,7 +4871,7 @@ Lockfile:
     resolved "https://registry.npmjs.org/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
     integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
   
-  loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1:
+  loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
     version "1.4.0"
     resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
     integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -5981,6 +5995,15 @@ Lockfile:
       loose-envify "^1.3.1"
       object-assign "^4.1.1"
   
+  prop-types@^15.7.2:
+    version "15.7.2"
+    resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
+    integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+    dependencies:
+      loose-envify "^1.4.0"
+      object-assign "^4.1.1"
+      react-is "^16.8.1"
+  
   pseudomap@^1.0.2:
     version "1.0.2"
     resolved "https://registry.npmjs.org/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
@@ -6095,6 +6118,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/react-is/-/react-is-16.6.3.tgz#d2d7462fcfcbe6ec0da56ad69047e47e56e7eac0"
     integrity sha512-u7FDWtthB4rWibG/+mFbVd5FvdI20yde86qKGx4lVUTWmPlSWQ4QxbBIrrs+HnXGbxOUlUzTAP/VDmvCwaP2yA==
   
+  react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
+    version "16.8.5"
+    resolved "https://registry.npmjs.org/react-is/-/react-is-16.8.5.tgz#c54ac229dd66b5afe0de5acbe47647c3da692ff8"
+    integrity sha512-sudt2uq5P/2TznPV4Wtdi+Lnq3yaYW8LfvPKLM9BKD8jJNBkxMVyB0C9/GmVhLw7Jbdmndk/73n7XQGeN9A3QQ==
+  
   react-komposer@^1.8.0:
     version "1.13.1"
     resolved "https://registry.npmjs.org/react-komposer/-/react-komposer-1.13.1.tgz#4b8ac4bcc71323bd7413dcab95c831197f50eed0"
@@ -6140,6 +6168,14 @@ Lockfile:
     version "2.2.1"
     resolved "https://registry.npmjs.org/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
     integrity sha1-eIO1ayCgAu63kMET+GFuqGksp5U=
+  
+  react-native-dialog@^5.5.0:
+    version "5.5.0"
+    resolved "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-5.5.0.tgz#09d13e23264f820d6308b5f93e1f03606f97dee3"
+    integrity sha512-pHijXodWoXcuGD2GHRnYDcZDrptFKZMRbEKhAxAxFtxR1fF/UBNkBNSQnfw+KVvQp6lMqJQEWK/N+Sn9YpUkAQ==
+    dependencies:
+      prop-types "^15.6.0"
+      react-native-modal "^6.4.0"
   
   react-native-dismiss-keyboard@1.0.0:
     version "1.0.0"
@@ -6261,6 +6297,14 @@ Lockfile:
       trackr "^2.0.2"
       underscore "^1.8.3"
       wolfy87-eventemitter "^4.3.0"
+  
+  react-native-modal@^6.4.0:
+    version "6.5.0"
+    resolved "https://registry.npmjs.org/react-native-modal/-/react-native-modal-6.5.0.tgz#46220b2289a41597d344c1db17454611b426a758"
+    integrity sha512-ewchdETAGd32xLGLK93NETEGkRcePtN7ZwjmLSQnNW1Zd0SRUYE8NqftjamPyfKvK0i2DZjX4YAghGZTqaRUbA==
+    dependencies:
+      prop-types "^15.6.1"
+      react-native-animatable "^1.2.4"
   
   react-native-modal@^7.0.0:
     version "7.0.0"
@@ -6527,17 +6571,17 @@ Lockfile:
       lodash "^4.6.1"
       react-deep-force-update "^1.0.0"
   
-  react-redux@^5.0.7:
-    version "5.0.7"
-    resolved "https://registry.npmjs.org/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
-    integrity sha512-5VI8EV5hdgNgyjfmWzBbdrqUkrVRKlyTKk1sGH3jzM2M2Mhj/seQgPXaz6gVAj2lz/nz688AdTqMO18Lr24Zhg==
+  react-redux@^6.0.1:
+    version "6.0.1"
+    resolved "https://registry.npmjs.org/react-redux/-/react-redux-6.0.1.tgz#0d423e2c1cb10ada87293d47e7de7c329623ba4d"
+    integrity sha512-T52I52Kxhbqy/6TEfBv85rQSDz6+Y28V/pf52vDWs1YRXG19mcFOGfHnY2HsNFHyhP+ST34Aih98fvt6tqwVcQ==
     dependencies:
-      hoist-non-react-statics "^2.5.0"
-      invariant "^2.0.0"
-      lodash "^4.17.5"
-      lodash-es "^4.17.5"
-      loose-envify "^1.1.0"
-      prop-types "^15.6.0"
+      "@babel/runtime" "^7.3.1"
+      hoist-non-react-statics "^3.3.0"
+      invariant "^2.2.4"
+      loose-envify "^1.4.0"
+      prop-types "^15.7.2"
+      react-is "^16.8.2"
   
   react-test-renderer@^16.4.2:
     version "16.4.2"
@@ -6699,6 +6743,11 @@ Lockfile:
     version "0.12.1"
     resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
     integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
+  
+  regenerator-runtime@^0.13.2:
+    version "0.13.2"
+    resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
+    integrity sha512-S/TQAZJO+D3m9xeN1WTI8dLKBBiRgXBlTJvbWjCThHWZj9EvHK70Ff50/tYj2J/fvBY6JtFVwRuazHN2E7M9BA==
   
   regenerator-transform@^0.10.0:
     version "0.10.1"

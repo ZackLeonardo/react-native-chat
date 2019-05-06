@@ -219,7 +219,7 @@ export default class RoomView extends LoggedView {
         this.props.navigator.push({
           screen: "RoomActionsView",
           title: i18n.t("ran.chat.Actions"),
-          backButtonTitle: "",
+          headerBackTitle: null,
           passProps: {
             rid: this.state.room.rid
           }

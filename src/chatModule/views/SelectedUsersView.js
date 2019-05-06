@@ -170,7 +170,8 @@ export default class SelectedUsersView extends LoggedView {
     if (nextAction === "CREATE_CHANNEL") {
       this.props.navigation.navigate("CreateChannelView", {
         title: i18n.t("ran.chat.Create_Channel"),
-        backButtonTitle: ""
+        backButtonTitle: null,
+        headerTruncatedBackTitle: null
       });
     } else {
       try {

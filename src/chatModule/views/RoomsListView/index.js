@@ -558,7 +558,8 @@ export default class RoomsListView extends LoggedView {
   goRoom = (rid, name) => {
     this.props.navigation.navigate("RoomView", {
       title: name,
-      rid: rid
+      rid: rid,
+      headerBackTitle: null
     });
     this.cancelSearchingAndroid();
   };

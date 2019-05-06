@@ -106,7 +106,7 @@ const NewMessageViewStack = createStackNavigator(
     RoomsListView: {
       screen: gestureHandlerRootHOC(RoomsListView),
       navigationOptions: {
-        // headerBackTitle: "Cancel"
+        headerBackTitle: null
       }
     },
     NewMessageView: {
@@ -133,7 +133,8 @@ const StackNavigator = createStackNavigator(
     RoomsListView: {
       screen: NewMessageViewStack,
       navigationOptions: {
-        header: null
+        header: null,
+        headerBackTitle: null
       }
     },
     NewServerView: {
