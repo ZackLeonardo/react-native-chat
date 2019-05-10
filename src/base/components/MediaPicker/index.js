@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback
 } from "react-native";
-import { createStackNavigator } from "react-navigation";
+import { createAppContainer, createStackNavigator } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
 import _ from "underscore";
 import { compose, hoistStatics } from "recompose";
@@ -409,15 +409,17 @@ class MediaListScreen extends Component {
   }
 }
 
-const Nav = createStackNavigator(
-  {
-    MediaList: { screen: MediaListScreen },
-    MediaGridBrowser: { screen: MediaGridBrowserScreen },
-    MediaFullScreenBrowser: { screen: MediaFullScreenBrowserScreen }
-  },
-  {
-    headerMode: "screen"
-  }
+const Nav = createAppContainer(
+  createStackNavigator(
+    {
+      MediaList: { screen: MediaListScreen },
+      MediaGridBrowser: { screen: MediaGridBrowserScreen },
+      MediaFullScreenBrowser: { screen: MediaFullScreenBrowserScreen }
+    },
+    {
+      headerMode: "screen"
+    }
+  )
 );
 
 class MediaPicker extends Component {
